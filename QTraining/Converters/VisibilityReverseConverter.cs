@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
+
+namespace QTraining.Converter
+{
+    /// <summary>
+    /// visibility转换器（反向，如collapsed对应true）
+    /// </summary>
+    public class VisibilityReverseConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility valueVisibility)
+            {
+                if (targetType == typeof(bool))
+                    return valueVisibility == Visibility.Visible ? false : true;
+                if (targetType == typeof(Visibility))
+                    return valueVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool valueBool)
+            {
+                return valueBool ? Visibility.Collapsed : Visibility.Visible;
+            }
+            return value;
+        }
+    }
+}

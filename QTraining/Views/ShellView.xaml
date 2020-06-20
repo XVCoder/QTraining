@@ -1,0 +1,135 @@
+﻿<Window x:Class="QTraining.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QTraining.Views"
+        xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
+        xmlns:cal="http://www.caliburnproject.org"
+        mc:Ignorable="d"
+        Title="{DynamicResource Common_ProgramName}" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        cal:Message.Attach="[Event Closed]=[Action Exit];[Event Loaded]=[Action Loaded]">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <!--单选-->
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolReverseConverter}}">
+                        <RadioButton
+                            Content="A"
+                            IsChecked="{Binding IsRadioASelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="10 0"
+                            VerticalAlignment="Center"/>
+                        <RadioButton
+                            Content="B"
+                            IsChecked="{Binding IsRadioBSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                        <RadioButton
+                            Content="C"
+                            IsChecked="{Binding IsRadioCSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                        <RadioButton
+                            Content="D"
+                            IsChecked="{Binding IsRadioDSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!--多选-->
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolConverter}}">
+                        <CheckBox
+                            Content="A"
+                            IsChecked="{Binding IsCheckASelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="10 0"
+                            VerticalAlignment="Center"/>
+                        <CheckBox
+                            Content="B"
+                            IsChecked="{Binding IsCheckBSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                        <CheckBox
+                            Content="C"
+                            IsChecked="{Binding IsCheckCSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                        <CheckBox
+                            Content="D"
+                            IsChecked="{Binding IsCheckDSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                        <CheckBox
+                            Content="E"
+                            IsChecked="{Binding IsCheckESelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 10 0"
+                    Orientation="Horizontal">
+                    <!--下一题-->
+                    <Button
+                        x:Name="NextQuestion"
+                        Content="{DynamicResource Button_NextQuestion}"
+                        Height="22"
+                        Margin="20 0 0 0"
+                        Padding="5 2"/>
+                    <!--上一题-->
+                    <Button
+                        x:Name="PreQuestion"
+                        Content="{DynamicResource Button_PreQuestion}"
+                        Height="22"
+                        Margin="10 0 0 0"
+                        Padding="5 2"/>
+                    <!--交卷-->
+                    <Button
+                        x:Name="Commit"
+                        Content="{DynamicResource Button_Commit}"
+                        Height="22"
+                        Margin="30 0 0 0"
+                        Padding="5 2"/>
+                    <TextBlock
+                        FontSize="16"
+                        Margin="20 0"
+                        VerticalAlignment="Center">
+                    <Run Text="["/>
+                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
+                    <Run Text=" / "/>
+                    <Run Text="{Binding QuestionRangeCount}"/>
+                    <Run Text="]"/>
+                    </TextBlock>
+                    <!--倒计时-->
+                    <TextBlock
+                        Background="Red"
+                        Height="25"
+                        Width="80"
+                        Text="{Binding CountDown}"/>
+                </StackPanel>
+            </Grid>
+            <Grid
+                Grid.Row="1">
+                <Image
+                    HorizontalAlignment="Left"
+                    Source="{Binding CurrentQuestionImage}"
+                    VerticalAlignment="Top"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

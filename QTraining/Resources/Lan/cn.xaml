@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Common_ProgramName">SAA练习</sys:String>
+    <sys:String x:Key="Common_Info">通知</sys:String>
+    <sys:String x:Key="Common_Warning">警告</sys:String>
+    <sys:String x:Key="Common_Error">错误</sys:String>
+    <sys:String x:Key="Common_Question">疑问</sys:String>
+    <sys:String x:Key="Common_Success">成功</sys:String>
+
+    <sys:String x:Key="Button_PreQuestion">上一题</sys:String>
+    <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
+    <sys:String x:Key="Button_Commit">交卷</sys:String>
+</ResourceDictionary>

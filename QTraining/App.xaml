@@ -2,8 +2,25 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:QTraining"
-             StartupUri="MainWindow.xaml">
+             xmlns:cvt="clr-namespace:QTraining.Converter">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <local:AppBoostrapper x:Key="bootstrapper"/>
+                </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/Panuon.UI.Silver;component/Control.xaml" />
+                <ResourceDictionary Source="/Resources/Lan/cn.xaml"/>
+                <ResourceDictionary>
+                    <cvt:BoolConverter x:Key="BoolConverter"/>
+                    <cvt:BoolReverseConverter x:Key="BoolReverseConverter"/>
+                    <cvt:StringConverter x:Key="StringConverter"/>
+                    <cvt:NullConverter x:Key="NullConverter"/>
+                    <cvt:ObjectReverseConverter x:Key="ObjectReverseConverter"/>
+                    <cvt:VisibilityConverter x:Key="VisibilityConverter"/>
+                    <cvt:VisibilityReverseConverter x:Key="VisibilityReverseConverter"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
