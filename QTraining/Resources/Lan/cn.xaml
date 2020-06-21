@@ -7,8 +7,21 @@
     <sys:String x:Key="Common_Error">错误</sys:String>
     <sys:String x:Key="Common_Question">疑问</sys:String>
     <sys:String x:Key="Common_Success">成功</sys:String>
+    <sys:String x:Key="Common_RealResult">答案</sys:String>
+    <sys:String x:Key="Common_Yes">是</sys:String>
+    <sys:String x:Key="Common_No">否</sys:String>
 
     <sys:String x:Key="Button_PreQuestion">上一题</sys:String>
     <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
     <sys:String x:Key="Button_Commit">交卷</sys:String>
+    <sys:String x:Key="Button_Reset">重置</sys:String>
+    <sys:String x:Key="Button_StratTraining">开始练习</sys:String>
+    <sys:String x:Key="Button_ShowRealResult">显示答案</sys:String>
+    <sys:String x:Key="Button_HideRealResult">隐藏答案</sys:String>
+
+    <sys:String x:Key="Text_CountDown">倒计时</sys:String>
+    <sys:String x:Key="Text_TrueAnswer">正确</sys:String>
+    <sys:String x:Key="Text_WrongAnswer">错误</sys:String>
+    <sys:String x:Key="Text_NoAnswer">未答</sys:String>
+    <sys:String x:Key="Text_CommitConfirm">确定交卷？</sys:String>
 </ResourceDictionary>
