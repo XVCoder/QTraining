@@ -154,6 +154,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Resources\PS_Design\" />
     <Folder Include="Views\Controls\" />
   </ItemGroup>
   <ItemGroup>
