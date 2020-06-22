@@ -446,10 +446,10 @@ namespace QTraining.ViewModels
                 }
                 StringBuilder commitConfirmMsg = new StringBuilder();  //确认交卷提示消息
                 commitConfirmMsg.AppendLine(ResourceHelper.GetStrings("Text_CommitConfirm"));
-                commitConfirmMsg.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]");
+                commitConfirmMsg.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
-                    commitConfirmMsg.Append($"Q{randomQuestionBank[noAnswers[i]]}; ");
+                    commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]]};  ");
                 }
                 //确认交卷弹窗提示
                 if (MessageBoxX.Show(App.Current.MainWindow, commitConfirmMsg.ToString(),
@@ -462,13 +462,13 @@ namespace QTraining.ViewModels
                 trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
                 for (int i = 0; i < wrongAnswers.Count; i++)
                 {//错题
-                    trainingResultStr.AppendLine($"Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[i]}[×]; {QuestionInfoModels[randomQuestionBank[i]].RealResult} [√]");
+                    trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
                 }
                 trainingResultStr.AppendLine();
                 trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
-                    trainingResultStr.Append($"Q{randomQuestionBank[noAnswers[i]] + 1}; ");
+                    trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
                 }
                 trainingResultStr.AppendLine();
                 countDownTimer.Stop();
@@ -482,7 +482,7 @@ namespace QTraining.ViewModels
                     var buffer = new byte[fsWrite.Length];
                     fsWrite.Read(buffer, 0, buffer.Length);
                     var str = Encoding.UTF8.GetString(buffer);
-                    str += $"\r\n[{DateTime.Now:yyyy-MM-dd HH:mm}]\n";
+                    str += $"\r\n【{DateTime.Now:yyyy-MM-dd HH:mm}】\n";
                     str += trainingResultStr.ToString();
                     var bufferNew = Encoding.UTF8.GetBytes(str);
                     fsWrite.Write(bufferNew, 0, bufferNew.Length);
