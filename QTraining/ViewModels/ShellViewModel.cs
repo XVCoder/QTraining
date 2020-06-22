@@ -346,6 +346,8 @@ namespace QTraining.ViewModels
             else
             {
                 SaveCurrentQuestionAnswer();
+                IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
+                IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
                 CurrentQuestionIndex--;
                 CurrentQuestionInitial();
                 CanNextQuestion = true;
@@ -365,6 +367,8 @@ namespace QTraining.ViewModels
             else
             {
                 SaveCurrentQuestionAnswer();
+                IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
+                IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
                 //切换
                 CurrentQuestionIndex++;
                 CurrentQuestionInitial();
@@ -415,22 +419,19 @@ namespace QTraining.ViewModels
         {
             if (!IsCommited)
             {//没交卷
-                if (MessageBoxX.Show(App.Current.MainWindow, ResourceHelper.GetStrings("Text_CommitConfirm"),
-                    ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
-                    , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
-                    return;
+                //保存当前查看试题的回答
+                SaveCurrentQuestionAnswer();
                 var trainingResult = new string[questionRangeCount];  //练习结果
                 for (int i = 0; i < answers.Length; i++)
                 {
                     trainingResult[i] = string.IsNullOrEmpty(answers[i]) ? "noanswer" :
                         (QuestionInfoModels[randomQuestionBank[i]].RealResult == answers[i]).ToString();
                 }
-
                 //整理答题结果
                 var wrongAnswers = new List<int>();
                 var noAnswers = new List<int>();
                 for (int i = 0; i < trainingResult.Length; i++)
-                {
+                {//筛选用户的回答
                     switch (trainingResult[i])
                     {
                         case "True":
@@ -443,27 +444,40 @@ namespace QTraining.ViewModels
                             break;
                     }
                 }
-                StringBuilder trainingResultStr = new StringBuilder();
+                StringBuilder commitConfirmMsg = new StringBuilder();  //确认交卷提示消息
+                commitConfirmMsg.AppendLine(ResourceHelper.GetStrings("Text_CommitConfirm"));
+                commitConfirmMsg.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]");
+                for (int i = 0; i < noAnswers.Count; i++)
+                {//未答
+                    commitConfirmMsg.Append($"Q{randomQuestionBank[noAnswers[i]]}; ");
+                }
+                //确认交卷弹窗提示
+                if (MessageBoxX.Show(App.Current.MainWindow, commitConfirmMsg.ToString(),
+                    ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
+                    , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
+                    return;
+                StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
                 trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {questionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
                 trainingResultStr.AppendLine();
                 trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
                 for (int i = 0; i < wrongAnswers.Count; i++)
-                {
+                {//错题
                     trainingResultStr.AppendLine($"Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[i]}[×]; {QuestionInfoModels[randomQuestionBank[i]].RealResult} [√]");
                 }
                 trainingResultStr.AppendLine();
                 trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
-                {
+                {//未答
                     trainingResultStr.Append($"Q{randomQuestionBank[noAnswers[i]] + 1}; ");
                 }
                 trainingResultStr.AppendLine();
                 countDownTimer.Stop();
+                //弹窗显示练习结果
                 QTraining.Common.MessageHelper.Info(trainingResultStr.ToString(), MessageBoxButton.OK);
                 IsCommited = true;
                 //将练习记录写到txt文件中
                 var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
-                using (FileStream fsWrite = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.ReadWrite))
+                using (FileStream fsWrite = new FileStream(trainingRecorderPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     var buffer = new byte[fsWrite.Length];
                     fsWrite.Read(buffer, 0, buffer.Length);
@@ -476,6 +490,8 @@ namespace QTraining.ViewModels
             }
             else
             {//已交卷，重置试题
+                IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
+                IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
                 GenerateRandomQuestionBank(questionRangeCount);
                 answers = new string[questionRangeCount];
                 CurrentQuestionIndex = 0;
@@ -615,8 +631,6 @@ namespace QTraining.ViewModels
             }
             //切换前先保存当前题目的答案
             answers[CurrentQuestionIndex] = answer;
-            IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
-            IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
         }
         #endregion
     }

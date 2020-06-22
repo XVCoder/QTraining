@@ -23,5 +23,5 @@
     <sys:String x:Key="Text_TrueAnswer">正确</sys:String>
     <sys:String x:Key="Text_WrongAnswer">错误</sys:String>
     <sys:String x:Key="Text_NoAnswer">未答</sys:String>
-    <sys:String x:Key="Text_CommitConfirm">确定交卷？</sys:String>
+    <sys:String x:Key="Text_CommitConfirm">以下试题未答，确定交卷？</sys:String>
 </ResourceDictionary>
