@@ -446,7 +446,7 @@ namespace QTraining.ViewModels
                 }
                 StringBuilder commitConfirmMsg = new StringBuilder();  //确认交卷提示消息
                 commitConfirmMsg.AppendLine(ResourceHelper.GetStrings("Text_CommitConfirm"));
-                commitConfirmMsg.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
+                commitConfirmMsg.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
                     commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]]};  ");
@@ -457,15 +457,15 @@ namespace QTraining.ViewModels
                     , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
                     return;
                 StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
-                trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {questionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
+                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {questionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
                 trainingResultStr.AppendLine();
-                trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
+                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
                 for (int i = 0; i < wrongAnswers.Count; i++)
                 {//错题
                     trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
                 }
                 trainingResultStr.AppendLine();
-                trainingResultStr.AppendLine($"[ {QTraining.Common.ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
+                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
                     trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
@@ -477,15 +477,28 @@ namespace QTraining.ViewModels
                 IsCommited = true;
                 //将练习记录写到txt文件中
                 var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
-                using (FileStream fsWrite = new FileStream(trainingRecorderPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                StreamWriter tw = null;
+                try
                 {
-                    var buffer = new byte[fsWrite.Length];
-                    fsWrite.Read(buffer, 0, buffer.Length);
-                    var str = Encoding.UTF8.GetString(buffer);
-                    str += $"\r\n【{DateTime.Now:yyyy-MM-dd HH:mm}】\n";
-                    str += trainingResultStr.ToString();
-                    var bufferNew = Encoding.UTF8.GetBytes(str);
-                    fsWrite.Write(bufferNew, 0, bufferNew.Length);
+                    if (!File.Exists(trainingRecorderPath))
+                        File.Create(trainingRecorderPath);
+                    using (tw = File.AppendText(trainingRecorderPath))
+                    {
+                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】\n";
+                        str += trainingResultStr.ToString();
+                        str += "\r\n";
+                        tw.WriteLine(str);
+                        tw.Flush();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    if (tw != null)
+                        tw.Close();
                 }
             }
             else

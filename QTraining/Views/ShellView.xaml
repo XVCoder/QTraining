@@ -52,22 +52,26 @@
                         Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolReverseConverter}}">
                         <RadioButton
                             Content="A"
+                            Focusable="False"
                             IsChecked="{Binding IsRadioASelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                             Margin="10 0"
                             VerticalAlignment="Center"/>
                         <RadioButton
                             Content="B"
+                            Focusable="False"
                             IsChecked="{Binding IsRadioBSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"/>
                         <RadioButton
                             Content="C"
+                            Focusable="False"
                             IsChecked="{Binding IsRadioCSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"
                             Visibility="{Binding IsRadioCVisible,Converter={StaticResource BoolConverter}}"/>
                         <RadioButton
                             Content="D"
+                            Focusable="False"
                             IsChecked="{Binding IsRadioDSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"
