@@ -425,7 +425,7 @@ namespace QTraining.ViewModels
                 for (int i = 0; i < answers.Length; i++)
                 {
                     trainingResult[i] = string.IsNullOrEmpty(answers[i]) ? "noanswer" :
-                        (QuestionInfoModels[randomQuestionBank[i]].RealResult == answers[i]).ToString();
+                        (QuestionInfoModels[randomQuestionBank[i]].RealResult.ToUpper() == answers[i].ToUpper()).ToString();
                 }
                 //整理答题结果
                 var wrongAnswers = new List<int>();
