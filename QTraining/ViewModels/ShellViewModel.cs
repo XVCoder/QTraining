@@ -249,6 +249,10 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 当前秒数
         /// </summary>
+        private long currentSeconds;
+        /// <summary>
+        /// 开始时的计时周期数
+        /// </summary>
         private long startTimeTicks;
 
         private bool isTrainingStart = false;
@@ -395,14 +399,14 @@ namespace QTraining.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            var currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
+            currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
             if (currentSeconds >= countSecond)
             {
                 (sender as DispatcherTimer).Stop();
                 Commit();  //自动交卷计算结果
                 return;
             }
-            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2,'0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2, '0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -485,7 +489,7 @@ namespace QTraining.ViewModels
                         File.Create(trainingRecorderPath);
                     using (tw = File.AppendText(trainingRecorderPath))
                     {
-                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】\n";
+                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n";
                         str += trainingResultStr.ToString();
                         str += "\r\n";
                         tw.WriteLine(str);
@@ -525,18 +529,18 @@ namespace QTraining.ViewModels
                 MessageHelper.Error(ResourceHelper.GetStrings("Common_FileNotExist"), MessageBoxButton.OK);
                 return;
             }
-
+            var history = "";
             using (FileStream fsRead = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.Read))
             {
                 byte[] buffer = new byte[fsRead.Length];
                 fsRead.Read(buffer, 0, buffer.Length);
-                var history = Encoding.UTF8.GetString(buffer);
-                var historyView = new HistoryView
-                {
-                    DataContext = new HistoryViewModel { History = history }
-                };
-                historyView.Show();
+                history = Encoding.UTF8.GetString(buffer);
             }
+            var historyView = new HistoryView
+            {
+                DataContext = new HistoryViewModel { History = history }
+            };
+            historyView.Show();
         }
 
         /// <summary>
