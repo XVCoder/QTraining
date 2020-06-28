@@ -334,7 +334,7 @@ namespace QTraining.ViewModels
                 IsRadioDVisible = true;
             }
             IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
-            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString("##")}/{countSecond / 60}:{(countSecond % 60).ToString("##")}";
+            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace QTraining.ViewModels
                 Commit();  //自动交卷计算结果
                 return;
             }
-            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString("##")} / {countSecond / 60}:{(countSecond % 60).ToString("##")}";
+            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2,'0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
