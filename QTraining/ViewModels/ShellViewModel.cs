@@ -402,7 +402,7 @@ namespace QTraining.ViewModels
                 Commit();  //自动交卷计算结果
                 return;
             }
-            CountDown = $"{(countSecond - currentSeconds) / 60}:{(countSecond - currentSeconds) % 60} / {countSecond / 60}:{countSecond % 60}";
+            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString("##")} / {countSecond / 60}:{(countSecond % 60).ToString("##")}";
         }
 
         /// <summary>
