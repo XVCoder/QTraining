@@ -7,7 +7,7 @@
     <sys:String x:Key="Common_Error">错误</sys:String>
     <sys:String x:Key="Common_Question">疑问</sys:String>
     <sys:String x:Key="Common_Success">成功</sys:String>
-    <sys:String x:Key="Common_RealResult">答案</sys:String>
+    <sys:String x:Key="Common_RealResult">正确答案</sys:String>
     <sys:String x:Key="Common_Yes">是</sys:String>
     <sys:String x:Key="Common_No">否</sys:String>
 

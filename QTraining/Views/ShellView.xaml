@@ -184,6 +184,12 @@
                         <Run Text=": "/>
                         <Run Text="{Binding CurrentQuestion.RealResult}"/>
                     </TextBlock>
+                    <!--解析-->
+                    <TextBlock
+                        Foreground="Green"
+                        Margin="10 10 0 0"
+                        Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"
+                        Text="{Binding CurrentQuestion.Note}"/>
                 </StackPanel>
             </Grid>
             <!--背景-->
