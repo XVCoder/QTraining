@@ -1,0 +1,21 @@
+﻿<Window x:Class="QTraining.Views.HistoryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QTraining.Views"
+        xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
+        mc:Ignorable="d"
+        Title="HistoryWindow" Height="450" Width="600"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <TextBox
+            FontSize="12"
+            IsReadOnly="True"
+            Text="{Binding History}"
+            TextWrapping="Wrap"
+            VerticalScrollBarVisibility="Auto"
+            pu:ScrollViewerHelper.ScrollButtons="TopBottom"
+            pu:ScrollViewerHelper.ScrollBarThickness="8"/>
+    </Grid>
+</Window>

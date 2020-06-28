@@ -10,6 +10,7 @@
     <sys:String x:Key="Common_RealResult">正确答案</sys:String>
     <sys:String x:Key="Common_Yes">是</sys:String>
     <sys:String x:Key="Common_No">否</sys:String>
+    <sys:String x:Key="Common_FileNotExist">文件不存在</sys:String>
 
     <sys:String x:Key="Button_PreQuestion">上一题</sys:String>
     <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
@@ -18,6 +19,7 @@
     <sys:String x:Key="Button_StratTraining">开始练习</sys:String>
     <sys:String x:Key="Button_ShowRealResult">显示答案</sys:String>
     <sys:String x:Key="Button_HideRealResult">隐藏答案</sys:String>
+    <sys:String x:Key="Button_ShowHistory">查看历史记录</sys:String>
 
     <sys:String x:Key="Message_ProgramIsRunning">程序运行中！</sys:String>
 

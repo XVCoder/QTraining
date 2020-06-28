@@ -3,6 +3,7 @@ using Panuon.UI.Silver;
 using QTraining.Common;
 using QTraining.DAL;
 using QTraining.Models;
+using QTraining.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -333,7 +334,7 @@ namespace QTraining.ViewModels
                 IsRadioDVisible = true;
             }
             IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
-            CountDown = $"{(countSecond - startTimeTicks) / 60}:{(countSecond - startTimeTicks) % 60}/{countSecond / 60}:{countSecond % 60}";
+            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString("##")}/{countSecond / 60}:{(countSecond % 60).ToString("##")}";
         }
 
         /// <summary>
@@ -510,6 +511,31 @@ namespace QTraining.ViewModels
                 CurrentQuestionIndex = 0;
                 IsCommited = false;
                 IsTrainingStart = false;
+            }
+        }
+
+        /// <summary>
+        /// 查看历史记录
+        /// </summary>
+        public void ShowHistory()
+        {
+            string trainingRecorderPath = $"{Environment.CurrentDirectory}/training_recorder.txt";
+            if (!File.Exists(trainingRecorderPath))
+            {
+                MessageHelper.Error(ResourceHelper.GetStrings("Common_FileNotExist"), MessageBoxButton.OK);
+                return;
+            }
+
+            using (FileStream fsRead = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.Read))
+            {
+                byte[] buffer = new byte[fsRead.Length];
+                fsRead.Read(buffer, 0, buffer.Length);
+                var history = Encoding.UTF8.GetString(buffer);
+                var historyView = new HistoryView
+                {
+                    DataContext = new HistoryViewModel { History = history }
+                };
+                historyView.Show();
             }
         }
 

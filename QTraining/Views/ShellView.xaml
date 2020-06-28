@@ -200,19 +200,6 @@
                     <ColumnDefinition Width=".1"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <!--试题索引-->
-                <TextBlock
-                    FontSize="14"
-                    Foreground="LightSlateGray"
-                    HorizontalAlignment="Left"
-                    Margin="15 0 5 10"
-                    VerticalAlignment="Bottom">
-                    <Run Text="["/>
-                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
-                    <Run Text=" / "/>
-                    <Run Text="{Binding QuestionRangeCount}"/>
-                    <Run Text="]"/>
-                </TextBlock>
                 <!--上一题-->
                 <Grid
                     Grid.Column="0"
@@ -233,7 +220,15 @@
                     Margin="0 0 0 50"
                     Opacity=".3"
                     Text="{DynamicResource Button_PreQuestion}"
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger
+                            EventName="MouseDown">
+                            <cal:ActionMessage
+                                 MethodName="PreQuestion"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBlock>
                 <!--分界线-->
                 <Border
                     BorderBrush="DimGray"
@@ -260,7 +255,39 @@
                     Margin="0 0 0 50"
                     Opacity=".3"
                     Text="{DynamicResource Button_NextQuestion}"
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger
+                            EventName="MouseDown">
+                            <cal:ActionMessage
+                                 MethodName="NextQuestion"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBlock>
+                <!--试题索引-->
+                <TextBlock
+                    FontSize="14"
+                    Foreground="LightSlateGray"
+                    HorizontalAlignment="Left"
+                    Margin="15 0 5 10"
+                    VerticalAlignment="Bottom">
+                    <Run Text="["/>
+                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
+                    <Run Text=" / "/>
+                    <Run Text="{Binding QuestionRangeCount}"/>
+                    <Run Text="]"/>
+                </TextBlock>
+                <!--查看历史记录-->
+                <Button
+                    x:Name="ShowHistory"
+                    Grid.Column="2"
+                    Content="{DynamicResource Button_ShowHistory}"
+                    FontSize="14"
+                    Foreground="LightGray"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 15 10"
+                    VerticalAlignment="Bottom"
+                    pu:ButtonHelper.ButtonStyle="Link"/>
             </Grid>
         </Grid>
         <!--蒙版+开始按钮-->
