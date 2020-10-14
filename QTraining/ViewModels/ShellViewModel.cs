@@ -44,7 +44,7 @@ namespace QTraining.ViewModels
         private int questionRangeCount = 65;  //题组大小
         public int QuestionRangeCount
         {
-            get { return questionRangeCount; }
+            get => questionRangeCount;
             set { questionRangeCount = value; NotifyOfPropertyChange(() => QuestionRangeCount); }
         }
 
@@ -289,43 +289,73 @@ namespace QTraining.ViewModels
         #region Events
         public void Loaded()
         {
-            var dataCount = questionInfoDAL.GetDataCount();
-            if (dataCount == 0)
-            {//从TXT文件中加载数据
-                var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
-                using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
+            #region Old
+            //var dataCount = questionInfoDAL.GetDataCount();
+            //if (dataCount == 0)
+            //{//从TXT文件中加载数据
+            //    var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
+            //    using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
+            //    {
+            //        var buffer = new byte[fsRead.Length];
+            //        fsRead.Read(buffer, 0, buffer.Length);
+            //        var questionInfo = Encoding.UTF8.GetString(buffer);
+            //        var lines = questionInfo.Split('\n');
+            //        var lst = new ObservableCollection<QuestionInfoModel>();
+            //        foreach (var item in lines)
+            //        {
+            //            var dataItem = item.Replace("\r", "");
+            //            var dataParams = dataItem.Split(';');
+            //            var model = new QuestionInfoModel
+            //            {
+            //                Id = dataParams[0],
+            //                ResultCount = int.Parse(dataParams[1]),
+            //                RealResult = dataParams[2],
+            //                Note = dataParams.Length == 4 ? dataParams[3] : ""
+            //            };
+            //            lst.Add(model);
+            //        }
+            //        QuestionInfoModels = lst;
+            //    }
+            //}
+            //else
+            //{//从数据库中加载数据
+            //    var lst = questionInfoDAL.GetAll();
+            //    var ocollection = new ObservableCollection<QuestionInfoModel>();
+            //    lst.ForEach(x => ocollection.Add(x));
+            //    QuestionInfoModels = ocollection;
+            //} 
+            #endregion
+
+            //从TXT文件中加载数据
+            var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
+            using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
+            {
+                var buffer = new byte[fsRead.Length];
+                fsRead.Read(buffer, 0, buffer.Length);
+                var questionInfo = Encoding.UTF8.GetString(buffer);
+                var lines = questionInfo.Split('\n');
+                var lst = new ObservableCollection<QuestionInfoModel>();
+                foreach (var item in lines)
                 {
-                    var buffer = new byte[fsRead.Length];
-                    fsRead.Read(buffer, 0, buffer.Length);
-                    var questionInfo = Encoding.UTF8.GetString(buffer);
-                    var lines = questionInfo.Split('\n');
-                    var lst = new ObservableCollection<QuestionInfoModel>();
-                    foreach (var item in lines)
+                    var dataItem = item.Replace("\r", "");
+                    var dataParams = dataItem.Split(';');
+                    var model = new QuestionInfoModel
                     {
-                        var dataItem = item.Replace("\r", "");
-                        var dataParams = dataItem.Split(';');
-                        var model = new QuestionInfoModel();
-                        model.Id = dataParams[0];
-                        model.ResultCount = int.Parse(dataParams[1]);
-                        model.RealResult = dataParams[2];
-                        model.Note = dataParams.Length == 4 ? dataParams[3] : "";
-                        lst.Add(model);
-                    }
-                    QuestionInfoModels = lst;
+                        Id = dataParams[0],
+                        ResultCount = int.Parse(dataParams[1]),
+                        RealResult = dataParams[2],
+                        Note = dataParams.Length == 4 ? dataParams[3] : ""
+                    };
+                    lst.Add(model);
                 }
+                QuestionInfoModels = lst;
             }
-            else
-            {//从数据库中加载数据
-                var lst = questionInfoDAL.GetAll();
-                var ocollection = new ObservableCollection<QuestionInfoModel>();
-                lst.ForEach(x => ocollection.Add(x));
-                QuestionInfoModels = ocollection;
-            }
-            GenerateRandomQuestionBank(questionRangeCount);  //根据设定好的题组大小生成随机题组
+
+            GenerateRandomQuestionBank();  //根据设定好的题组大小生成随机题组
             CurrentQuestionIndex = 0;
             CanPreQuestion = false;
             CanNextQuestion = true;
-            answers = new string[questionRangeCount];  //初始化用户回答的结果
+            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
             if (CurrentQuestion.ResultCount < 4)
             {
                 IsRadioDVisible = false;
@@ -367,7 +397,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public void NextQuestion()
         {
-            if (CurrentQuestionIndex == questionRangeCount - 1)
+            if (CurrentQuestionIndex == QuestionRangeCount - 1)
                 CanNextQuestion = false;
             else
             {
@@ -378,7 +408,7 @@ namespace QTraining.ViewModels
                 CurrentQuestionIndex++;
                 CurrentQuestionInitial();
                 CanPreQuestion = true;
-                if (CurrentQuestionIndex == questionRangeCount - 1)
+                if (CurrentQuestionIndex == QuestionRangeCount - 1)
                     CanNextQuestion = false;
             }
             IsRealResultVisible = false;
@@ -426,7 +456,7 @@ namespace QTraining.ViewModels
             {//没交卷
                 //保存当前查看试题的回答
                 SaveCurrentQuestionAnswer();
-                var trainingResult = new string[questionRangeCount];  //练习结果
+                var trainingResult = new string[QuestionRangeCount];  //练习结果
                 for (int i = 0; i < answers.Length; i++)
                 {
                     trainingResult[i] = string.IsNullOrEmpty(answers[i]) ? "noanswer" :
@@ -462,7 +492,7 @@ namespace QTraining.ViewModels
                     , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
                     return;
                 StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
-                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {questionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
+                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {QuestionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
                 trainingResultStr.AppendLine();
                 trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
                 for (int i = 0; i < wrongAnswers.Count; i++)
@@ -510,8 +540,8 @@ namespace QTraining.ViewModels
             {//已交卷，重置试题
                 IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
                 IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
-                GenerateRandomQuestionBank(questionRangeCount);
-                answers = new string[questionRangeCount];
+                GenerateRandomQuestionBank();
+                answers = new string[QuestionRangeCount];
                 CurrentQuestionIndex = 0;
                 IsCommited = false;
                 IsTrainingStart = false;
@@ -556,11 +586,10 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 根据题库和题组大小生成随机题目
         /// </summary>
-        /// <param name="questionRangeCount">题组中包含题目的个数</param>
-        private void GenerateRandomQuestionBank(int questionRangeCount)
+        private void GenerateRandomQuestionBank()
         {
-            var questionRange = new int[questionRangeCount];
-            for (int i = 0; i < questionRangeCount; i++)
+            int[] questionRange = new int[QuestionRangeCount];
+            for (int i = 0; i < QuestionRangeCount; i++)
             {
                 int randomNum;
                 do
@@ -597,49 +626,54 @@ namespace QTraining.ViewModels
             if (answer == null || answer.Length == 0)
                 return;
             if (answer.Contains("A"))
-            {
-                IsRadioASelected = true;
-                IsCheckASelected = true;
-            }
+                CommitA(true);
             else
-            {
-                IsRadioASelected = false;
-                IsCheckASelected = false;
-            }
+                CommitA(false);
             if (answer.Contains("B"))
-            {
-                IsRadioBSelected = true;
-                IsCheckBSelected = true;
-            }
+                CommitB(true);
             else
-            {
-                IsRadioBSelected = false;
-                IsCheckBSelected = false;
-            }
+                CommitB(false);
             if (answer.Contains("C"))
-            {
-                IsRadioCSelected = true;
-                IsCheckCSelected = true;
-            }
+                CommitC(true);
             else
-            {
-                IsRadioCSelected = false;
-                IsCheckCSelected = false;
-            }
+                CommitC(false);
             if (answer.Contains("D"))
-            {
-                IsRadioDSelected = true;
-                IsCheckDSelected = true;
-            }
+                CommitD(true);
             else
-            {
-                IsRadioDSelected = false;
-                IsCheckDSelected = false;
-            }
+                CommitD(false);
             if (answer.Contains("E"))
-                IsCheckESelected = true;
+                CommitE(true);
             else
-                IsCheckESelected = false;
+                CommitE(false);
+        }
+
+        private void CommitA(bool isCheckOrSelected)
+        {
+            IsRadioASelected = isCheckOrSelected;
+            IsCheckASelected = isCheckOrSelected;
+        }
+
+        private void CommitB(bool isCheckOrSelected)
+        {
+            IsRadioBSelected = isCheckOrSelected;
+            IsCheckBSelected = isCheckOrSelected;
+        }
+
+        private void CommitC(bool isCheckOrSelected)
+        {
+            IsRadioCSelected = isCheckOrSelected;
+            IsCheckCSelected = isCheckOrSelected;
+        }
+
+        private void CommitD(bool isCheckOrSelected)
+        {
+            IsRadioDSelected = isCheckOrSelected;
+            IsCheckDSelected = isCheckOrSelected;
+        }
+
+        private void CommitE(bool isCheckOrSelected)
+        {
+            IsCheckESelected = isCheckOrSelected;
         }
 
         /// <summary>
