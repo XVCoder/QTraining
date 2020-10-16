@@ -41,11 +41,17 @@ namespace QTraining.ViewModels
         private TrainingInfoDAL trainingInfoDAL;
         DispatcherTimer countDownTimer;  //倒计时
 
-        private int questionRangeCount = 65;  //题组大小
+        /// <summary>
+        /// 题组大小
+        /// </summary>
         public int QuestionRangeCount
         {
-            get => questionRangeCount;
-            set { questionRangeCount = value; NotifyOfPropertyChange(() => QuestionRangeCount); }
+            get => Properties.Settings.Default.QuestionRangeCount;
+            set
+            {
+                Properties.Settings.Default.QuestionRangeCount = value;
+                Properties.Settings.Default.Save();
+            }
         }
 
         private List<int> randomQuestionBank;  //题目索引随机组合
@@ -53,10 +59,7 @@ namespace QTraining.ViewModels
 
         public QuestionInfoModel CurrentQuestion
         {
-            get
-            {
-                return QuestionInfoModels == null || randomQuestionBank == null ? null : QuestionInfoModels[randomQuestionBank[CurrentQuestionIndex]];
-            }
+            get => QuestionInfoModels == null || randomQuestionBank == null ? null : QuestionInfoModels[randomQuestionBank[CurrentQuestionIndex]];
         }
 
         private int currentQuestionIndex = 0;
@@ -65,7 +68,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public int CurrentQuestionIndex
         {
-            get { return currentQuestionIndex; }
+            get => currentQuestionIndex;
             set
             {
                 currentQuestionIndex = value;
@@ -86,7 +89,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public string CurrentQuestionImage
         {
-            get { return randomQuestionBank == null ? "" : $"{Environment.CurrentDirectory}/Resources/QuestionBank/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png"; }
+            get => randomQuestionBank == null ? "" : $"{Environment.CurrentDirectory}/Resources/QuestionBank/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png";
         }
 
         private ObservableCollection<QuestionInfoModel> questionInfoModels;
@@ -95,7 +98,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public ObservableCollection<QuestionInfoModel> QuestionInfoModels
         {
-            get { return questionInfoModels; }
+            get => questionInfoModels;
             set { questionInfoModels = value; NotifyOfPropertyChange(() => QuestionInfoModels); }
         }
 
@@ -105,7 +108,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsMultiSelect
         {
-            get { return isMultiSelect; }
+            get => isMultiSelect;
             set { isMultiSelect = value; NotifyOfPropertyChange(() => IsMultiSelect); }
         }
 
@@ -115,7 +118,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool CanPreQuestion
         {
-            get { return canPreQuestion; }
+            get => canPreQuestion;
             set { canPreQuestion = value; NotifyOfPropertyChange(() => CanPreQuestion); }
         }
 
@@ -125,42 +128,56 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool CanNextQuestion
         {
-            get { return canNextQuestion; }
+            get => canNextQuestion;
             set { canNextQuestion = value; NotifyOfPropertyChange(() => CanNextQuestion); }
         }
 
         private bool isRadioASelected;
         public bool IsRadioASelected
         {
-            get { return isRadioASelected; }
+            get => isRadioASelected;
             set { isRadioASelected = value; NotifyOfPropertyChange(() => IsRadioASelected); }
         }
 
         private bool isRadioBSelected;
         public bool IsRadioBSelected
         {
-            get { return isRadioBSelected; }
+            get => isRadioBSelected;
             set { isRadioBSelected = value; NotifyOfPropertyChange(() => IsRadioBSelected); }
         }
 
         private bool isRadioCSelected;
         public bool IsRadioCSelected
         {
-            get { return isRadioCSelected; }
+            get => isRadioCSelected;
             set { isRadioCSelected = value; NotifyOfPropertyChange(() => IsRadioCSelected); }
         }
 
         private bool isRadioDSelected;
         public bool IsRadioDSelected
         {
-            get { return isRadioDSelected; }
+            get => isRadioDSelected;
             set { isRadioDSelected = value; NotifyOfPropertyChange(() => IsRadioDSelected); }
+        }
+
+        private bool isRadioOrderTrainingSelected;
+        public bool IsRadioOrderTrainingSelected
+        {
+            get => isRadioOrderTrainingSelected;
+            set { isRadioOrderTrainingSelected = value; NotifyOfPropertyChange(() => IsRadioOrderTrainingSelected); }
+        }
+
+        private bool isRadioSimulationTrainingSelected;
+        public bool IsRadioSimulationTrainingSelected
+        {
+            get => isRadioSimulationTrainingSelected;
+            set { isRadioSimulationTrainingSelected = value; NotifyOfPropertyChange(() => IsRadioSimulationTrainingSelected); }
         }
 
         private bool isCheckASelected;
         public bool IsCheckASelected
         {
-            get { return isCheckASelected; }
+            get => isCheckASelected;
             set
             {
                 isCheckASelected = value;
@@ -171,7 +188,7 @@ namespace QTraining.ViewModels
         private bool isCheckBSelected;
         public bool IsCheckBSelected
         {
-            get { return isCheckBSelected; }
+            get => isCheckBSelected;
             set
             {
                 isCheckBSelected = value;
@@ -182,7 +199,7 @@ namespace QTraining.ViewModels
         private bool isCheckCSelected;
         public bool IsCheckCSelected
         {
-            get { return isCheckCSelected; }
+            get => isCheckCSelected;
             set
             {
                 isCheckCSelected = value;
@@ -193,7 +210,7 @@ namespace QTraining.ViewModels
         private bool isCheckDSelected;
         public bool IsCheckDSelected
         {
-            get { return isCheckDSelected; }
+            get => isCheckDSelected;
             set
             {
                 isCheckDSelected = value;
@@ -204,11 +221,22 @@ namespace QTraining.ViewModels
         private bool isCheckESelected;
         public bool IsCheckESelected
         {
-            get { return isCheckESelected; }
+            get => isCheckESelected;
             set
             {
                 isCheckESelected = value;
                 NotifyOfPropertyChange(() => IsCheckESelected);
+            }
+        }
+
+        private bool isCheckFSelected;
+        public bool IsCheckFSelected
+        {
+            get => isCheckFSelected;
+            set
+            {
+                isCheckFSelected = value;
+                NotifyOfPropertyChange(() => IsCheckFSelected);
             }
         }
 
@@ -218,7 +246,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsRadioCVisible
         {
-            get { return isRadioCVisible; }
+            get => isRadioCVisible;
             set { isRadioCVisible = value; NotifyOfPropertyChange(() => IsRadioCVisible); }
         }
 
@@ -228,7 +256,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsRadioDVisible
         {
-            get { return isRadioDVisible; }
+            get => isRadioDVisible;
             set { isRadioDVisible = value; NotifyOfPropertyChange(() => IsRadioDVisible); }
         }
 
@@ -238,7 +266,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public string CountDown
         {
-            get { return countDown; }
+            get => countDown;
             set { countDown = value; NotifyOfPropertyChange(() => CountDown); }
         }
 
@@ -261,7 +289,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsTrainingStart
         {
-            get { return isTrainingStart; }
+            get => isTrainingStart;
             set { isTrainingStart = value; NotifyOfPropertyChange(() => IsTrainingStart); }
         }
 
@@ -271,7 +299,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsRealResultVisible
         {
-            get { return isRealResultVisible; }
+            get => isRealResultVisible;
             set { isRealResultVisible = value; NotifyOfPropertyChange(() => IsRealResultVisible); }
         }
 
@@ -281,7 +309,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public bool IsCommited
         {
-            get { return isCommited; }
+            get => isCommited;
             set { isCommited = value; NotifyOfPropertyChange(() => IsCommited); }
         }
         #endregion
@@ -419,12 +447,23 @@ namespace QTraining.ViewModels
         /// </summary>
         public void StartTraining()
         {
-            IsTrainingStart = true;
-            countDownTimer = new DispatcherTimer();
-            countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            countDownTimer.Tick += Timer_Tick;
-            startTimeTicks = DateTime.Now.Ticks;
-            countDownTimer.Start();
+            if (IsRadioSimulationTrainingSelected)
+            {//模拟仿真
+                IsTrainingStart = true;
+                countDownTimer = new DispatcherTimer();
+                countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
+                countDownTimer.Tick += Timer_Tick;
+                startTimeTicks = DateTime.Now.Ticks;
+                countDownTimer.Start();
+            }
+            else if (IsRadioOrderTrainingSelected)
+            {//顺序练习
+                MessageBoxX.Show("暂未实现", "提示", MessageBoxButton.OK, MessageBoxIcon.Info);
+            }
+            else
+            {//提示选择模式
+                MessageBoxX.Show("请选择模式", "提示", MessageBoxButton.OK, MessageBoxIcon.Info);
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -645,6 +684,10 @@ namespace QTraining.ViewModels
                 CommitE(true);
             else
                 CommitE(false);
+            if (answer.Contains("F"))
+                CommitF(true);
+            else
+                CommitF(false);
         }
 
         private void CommitA(bool isCheckOrSelected)
@@ -676,6 +719,11 @@ namespace QTraining.ViewModels
             IsCheckESelected = isCheckOrSelected;
         }
 
+        private void CommitF(bool isCheckOrSelected)
+        {
+            IsCheckFSelected = isCheckOrSelected;
+        }
+
         /// <summary>
         /// 保存当前题目答案
         /// </summary>
@@ -705,6 +753,8 @@ namespace QTraining.ViewModels
                     answer += "D";
                 if (IsCheckESelected)
                     answer += "E";
+                if (IsCheckFSelected)
+                    answer += "F";
             }
             //切换前先保存当前题目的答案
             answers[CurrentQuestionIndex] = answer;

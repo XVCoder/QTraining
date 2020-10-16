@@ -16,7 +16,7 @@
     <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
     <sys:String x:Key="Button_Commit">交卷</sys:String>
     <sys:String x:Key="Button_Reset">重置</sys:String>
-    <sys:String x:Key="Button_StratTraining">开始练习</sys:String>
+    <sys:String x:Key="Button_Strat">开始</sys:String>
     <sys:String x:Key="Button_ShowRealResult">显示答案</sys:String>
     <sys:String x:Key="Button_HideRealResult">隐藏答案</sys:String>
     <sys:String x:Key="Button_ShowHistory">查看历史记录</sys:String>
@@ -29,4 +29,6 @@
     <sys:String x:Key="Text_NoAnswer">未答</sys:String>
     <sys:String x:Key="Text_CommitConfirm">以下试题未答，确定交卷？</sys:String>
     <sys:String x:Key="Text_TimeCosts">耗时</sys:String>
+    <sys:String x:Key="Text_OrderTraining">顺序练习(所有)</sys:String>
+    <sys:String x:Key="Text_SimulationTraining">仿真模拟</sys:String>
 </ResourceDictionary>

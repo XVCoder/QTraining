@@ -295,13 +295,50 @@
             Background="Black"
             Opacity=".6"
             Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
-            <Grid>
+            <Grid
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Grid
+                    Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton
+                        Grid.Column="0"
+                        Content="{DynamicResource Text_OrderTraining}"
+                        Focusable="False"
+                        IsChecked="{Binding IsRadioOrderTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        HorizontalAlignment="Right"
+                        Margin="0 0 10 0"
+                        Width="200"
+                        pu:RadioButtonHelper.CheckedBackground="Green"
+                        pu:RadioButtonHelper.RadioButtonStyle="Button"
+                        pu:RadioButtonHelper.CornerRadius="3"/>
+                    <RadioButton
+                        Grid.Column="1"
+                        Content="{DynamicResource Text_SimulationTraining}"
+                        Focusable="False"
+                        HorizontalAlignment="Left"
+                        IsChecked="{Binding IsRadioSimulationTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        Margin="10 0 0 0"
+                        Width="200"
+                        pu:RadioButtonHelper.CheckedBackground="Green"
+                        pu:RadioButtonHelper.RadioButtonStyle="Button"
+                        pu:RadioButtonHelper.CornerRadius="3"/>
+                </Grid>
                 <Button
                     x:Name="StartTraining"
-                    FontWeight="Bold"
+                    Grid.Row="2"
                     Foreground="Black"
-                    Content="{DynamicResource Button_StratTraining}"
-                    Height="30"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    Content="{DynamicResource Button_Strat}"
+                    Height="40"
                     Width="100"
                     pu:ButtonHelper.CornerRadius="10"/>
             </Grid>
