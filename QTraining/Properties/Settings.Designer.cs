@@ -37,13 +37,13 @@ namespace QTraining.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("65")]
-        public int QuestionRangeCount {
+        [global::System.Configuration.DefaultSettingValueAttribute("SAA")]
+        public string QuestionBankType {
             get {
-                return ((int)(this["QuestionRangeCount"]));
+                return ((string)(this["QuestionBankType"]));
             }
             set {
-                this["QuestionRangeCount"] = value;
+                this["QuestionBankType"] = value;
             }
         }
     }

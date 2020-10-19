@@ -138,7 +138,7 @@
                     <Button
                         x:Name="Commit"
                         Height="22"
-                        Margin="30 0 0 0"
+                        Margin="30 0 10 0"
                         Padding="5 2"
                         pu:ButtonHelper.CornerRadius="5">
                         <Button.Content>
@@ -159,6 +159,7 @@
                         Foreground="OrangeRed"
                         Margin="20 0 0 0"
                         Padding="10 5 0 0"
+                        Visibility="{Binding CountDownVisibility}"
                         Width="180">
                         <Run Text="{DynamicResource Text_CountDown}"/>
                         <Run Text=": "/>
@@ -274,7 +275,7 @@
                     <Run Text="["/>
                     <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
                     <Run Text=" / "/>
-                    <Run Text="{Binding QuestionRangeCount}"/>
+                    <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
                     <Run Text="]"/>
                 </TextBlock>
                 <!--查看历史记录-->
@@ -292,8 +293,8 @@
         </Grid>
         <!--蒙版+开始按钮-->
         <Grid
-            Background="Black"
-            Opacity=".6"
+            Background="Gray"
+            Opacity="1"
             Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
             <Grid
                 VerticalAlignment="Center">
@@ -308,6 +309,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+                    <!--顺序练习-->
                     <RadioButton
                         Grid.Column="0"
                         Content="{DynamicResource Text_OrderTraining}"
@@ -319,6 +321,7 @@
                         pu:RadioButtonHelper.CheckedBackground="Green"
                         pu:RadioButtonHelper.RadioButtonStyle="Button"
                         pu:RadioButtonHelper.CornerRadius="3"/>
+                    <!--仿真模拟-->
                     <RadioButton
                         Grid.Column="1"
                         Content="{DynamicResource Text_SimulationTraining}"

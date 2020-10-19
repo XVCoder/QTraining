@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Panuon.UI.Silver;
+using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.DAL;
 using QTraining.Models;
@@ -20,11 +21,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using static QTraining.Common.EnumDefine;
 
 namespace QTraining.ViewModels
 {
     [Export(typeof(IShell))]
-    public class ShellViewModel : PropertyChangedBase, IShell
+    public class ShellViewModel : Caliburn.Micro.PropertyChangedBase, IShell
     {
         #region Constructors
         public ShellViewModel()
@@ -32,6 +34,21 @@ namespace QTraining.ViewModels
             doubtInfoDAL = new DoubtInfoDAL();
             questionInfoDAL = new QuestionInfoDAL();
             trainingInfoDAL = new TrainingInfoDAL();
+
+            //根据试题类型设置题数
+            var questionBankType = (QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType);
+            switch (questionBankType)
+            {
+                case QuestionBankType.SAA:
+                    QuestionRangeCount = 65;
+                    break;
+                case QuestionBankType.SAP:
+                    QuestionRangeCount = 75;
+                    break;
+                default:
+                    QuestionRangeCount = 100;
+                    break;
+            }
         }
         #endregion
 
@@ -41,16 +58,17 @@ namespace QTraining.ViewModels
         private TrainingInfoDAL trainingInfoDAL;
         DispatcherTimer countDownTimer;  //倒计时
 
+        private int questionRangeCount;
         /// <summary>
         /// 题组大小
         /// </summary>
         public int QuestionRangeCount
         {
-            get => Properties.Settings.Default.QuestionRangeCount;
+            get => questionRangeCount;
             set
             {
-                Properties.Settings.Default.QuestionRangeCount = value;
-                Properties.Settings.Default.Save();
+                questionRangeCount = value;
+                NotifyOfPropertyChange(() => QuestionRangeCount);
             }
         }
 
@@ -273,7 +291,21 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond = 130 * 60;
+        private int countSecond
+        {
+            get
+            {
+                switch ((QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType))
+                {
+                    case QuestionBankType.SAA:
+                        return 130 * 60;
+                    case QuestionBankType.SAP:
+                        return 190 * 60;
+                    default:
+                        return 120 * 60;
+                }
+            }
+        }
         /// <summary>
         /// 当前秒数
         /// </summary>
@@ -311,6 +343,20 @@ namespace QTraining.ViewModels
         {
             get => isCommited;
             set { isCommited = value; NotifyOfPropertyChange(() => IsCommited); }
+        }
+
+        private Visibility countDownVisibility = Visibility.Collapsed;
+        /// <summary>
+        /// 倒计时可见性
+        /// </summary>
+        public Visibility CountDownVisibility
+        {
+            get { return countDownVisibility; }
+            set
+            {
+                countDownVisibility = value;
+                NotifyOfPropertyChange(() => CountDownVisibility);
+            }
         }
         #endregion
 
@@ -378,25 +424,6 @@ namespace QTraining.ViewModels
                 }
                 QuestionInfoModels = lst;
             }
-
-            GenerateRandomQuestionBank();  //根据设定好的题组大小生成随机题组
-            CurrentQuestionIndex = 0;
-            CanPreQuestion = false;
-            CanNextQuestion = true;
-            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
-            if (CurrentQuestion.ResultCount < 4)
-            {
-                IsRadioDVisible = false;
-                if (CurrentQuestion.ResultCount < 3)
-                    IsRadioCVisible = false;
-            }
-            else
-            {
-                IsRadioCVisible = true;
-                IsRadioDVisible = true;
-            }
-            IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
-            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -449,16 +476,39 @@ namespace QTraining.ViewModels
         {
             if (IsRadioSimulationTrainingSelected)
             {//模拟仿真
-                IsTrainingStart = true;
-                countDownTimer = new DispatcherTimer();
-                countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
-                countDownTimer.Tick += Timer_Tick;
-                startTimeTicks = DateTime.Now.Ticks;
-                countDownTimer.Start();
+                CountDownVisibility = Visibility.Visible;
+                //设置题数
+                switch ((QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType))
+                {
+                    case QuestionBankType.SAA:
+                        QuestionRangeCount = 65;
+                        break;
+                    case QuestionBankType.SAP:
+                        QuestionRangeCount = 75;
+                        break;
+                    default:
+                        QuestionRangeCount = 100;
+                        break;
+                }
+                //根据设定好的题组大小生成随机题组
+                GenerateRandomQuestionBank();
+                //初始化答题板
+                AnswerBoardInitial();
+                //开始计时
+                CountDownStart();
             }
             else if (IsRadioOrderTrainingSelected)
             {//顺序练习
-                MessageBoxX.Show("暂未实现", "提示", MessageBoxButton.OK, MessageBoxIcon.Info);
+                //设置题数
+                QuestionRangeCount = QuestionInfoModels.Count;
+                //隐藏倒计时
+                CountDownVisibility = Visibility.Collapsed;
+                //生成题库
+                GenerateOrderQuestionBank();
+                //初始化答题板
+                AnswerBoardInitial();
+                //开始计时
+                CountDownStart();
             }
             else
             {//提示选择模式
@@ -466,6 +516,11 @@ namespace QTraining.ViewModels
             }
         }
 
+        /// <summary>
+        /// 计时器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
             currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
@@ -476,6 +531,43 @@ namespace QTraining.ViewModels
                 return;
             }
             CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2, '0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+        }
+
+        /// <summary>
+        /// 开始计时
+        /// </summary>
+        private void CountDownStart()
+        {
+            IsTrainingStart = true;
+            countDownTimer = new DispatcherTimer();
+            countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            countDownTimer.Tick += Timer_Tick;
+            startTimeTicks = DateTime.Now.Ticks;
+            countDownTimer.Start();
+        }
+
+        /// <summary>
+        /// 初始化答题板
+        /// </summary>
+        private void AnswerBoardInitial()
+        {
+            CurrentQuestionIndex = 0;
+            CanPreQuestion = false;
+            CanNextQuestion = true;
+            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
+            if (CurrentQuestion.ResultCount < 4)
+            {
+                IsRadioDVisible = false;
+                if (CurrentQuestion.ResultCount < 3)
+                    IsRadioCVisible = false;
+            }
+            else
+            {
+                IsRadioCVisible = true;
+                IsRadioDVisible = true;
+            }
+            IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
+            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -547,7 +639,7 @@ namespace QTraining.ViewModels
                 trainingResultStr.AppendLine();
                 countDownTimer.Stop();
                 //弹窗显示练习结果
-                QTraining.Common.MessageHelper.Info(trainingResultStr.ToString(), MessageBoxButton.OK);
+                MessageHelper.Info(trainingResultStr.ToString(), MessageBoxButton.OK);
                 IsCommited = true;
                 //将练习记录写到txt文件中
                 var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
@@ -579,9 +671,9 @@ namespace QTraining.ViewModels
             {//已交卷，重置试题
                 IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
                 IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
-                GenerateRandomQuestionBank();
-                answers = new string[QuestionRangeCount];
-                CurrentQuestionIndex = 0;
+                //GenerateRandomQuestionBank();
+                //answers = new string[QuestionRangeCount];
+                //CurrentQuestionIndex = 0;
                 IsCommited = false;
                 IsTrainingStart = false;
             }
@@ -623,7 +715,7 @@ namespace QTraining.ViewModels
 
         #region Private methods
         /// <summary>
-        /// 根据题库和题组大小生成随机题目
+        /// 根据题库和题组大小生成随机题组
         /// </summary>
         private void GenerateRandomQuestionBank()
         {
@@ -635,6 +727,19 @@ namespace QTraining.ViewModels
                     randomNum = new Random(Guid.NewGuid().GetHashCode()).Next(0, QuestionInfoModels.Count - 1);
                 while (questionRange.Contains(randomNum));
                 questionRange[i] = randomNum;
+            }
+            randomQuestionBank = questionRange.ToList();
+        }
+
+        /// <summary>
+        /// 根据题库生成顺序练习题组
+        /// </summary>
+        private void GenerateOrderQuestionBank()
+        {
+            int[] questionRange = new int[QuestionRangeCount];
+            for (int i = 0; i < QuestionRangeCount; i++)
+            {
+                questionRange[i] = i;
             }
             randomQuestionBank = questionRange.ToList();
         }

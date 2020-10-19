@@ -98,6 +98,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\EnumDefine.cs" />
     <Compile Include="Common\MessageHelper.cs" />
     <Compile Include="Common\ResourceHelper.cs" />
     <Compile Include="Common\SysLogHelper.cs" />

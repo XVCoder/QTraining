@@ -5,8 +5,8 @@
     <Setting Name="QuestionBankDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="QuestionRangeCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">65</Value>
+    <Setting Name="QuestionBankType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SAA</Value>
     </Setting>
   </Settings>
 </SettingsFile>
