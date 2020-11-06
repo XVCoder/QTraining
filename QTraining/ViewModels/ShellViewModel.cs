@@ -704,6 +704,7 @@ namespace QTraining.ViewModels
             {//调用事件来自题号输入框
                 if (e is KeyEventArgs eKey)
                 {//事件类型为KeyUp，且按键为回车  →  直接执行跳转的代码
+                    eKey.Handled = eKey.Key == Key.Space;
                     if ((eKey.Key >= Key.D0 && eKey.Key <= Key.D9) || eKey.Key == Key.Enter)
                     {
                         if (eKey.Key != Key.Enter)
@@ -741,6 +742,24 @@ namespace QTraining.ViewModels
         {
             Regex re = new Regex("[^0-9.-]+");  // new Regex("[^0-9.\\-]+");
             e.Handled = re.IsMatch(e.Text);
+        }
+
+        /// <summary>
+        /// 在跳转题号输入框中按下按键时
+        /// </summary>
+        /// <param name="o"></param>
+        public void PreviewKeyDown(KeyEventArgs e)
+        {
+            var ctl = e.OriginalSource as TextBox;
+            e.Handled = e.Key == Key.Space || e.Key == Key.OemPeriod;  //忽略空格键的输入
+            if (e.Key == Key.Back || e.Key == Key.Delete)
+            {
+                if (ctl.Text.Length <= 1 || ctl.SelectedText == ctl.Text)
+                {
+                    ctl.Text = "1";
+                    e.Handled = true;
+                }
+            }
         }
 
         /// <summary>

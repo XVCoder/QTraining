@@ -278,7 +278,7 @@
                         Text="{Binding TurnToNum,Mode=TwoWay}"
                         Width="50"
                         pu:TextBoxHelper.CornerRadius="3"
-                        cal:Message.Attach="[Event KeyUp]=[Action TurnTo($eventArgs)];[Event PreviewTextInput]=[Action PreviewTextInput($eventArgs)]"/>
+                        cal:Message.Attach="[Event KeyUp]=[Action TurnTo($eventArgs)];[Event PreviewTextInput]=[Action PreviewTextInput($eventArgs)];[Event PreviewKeyDown]=[Action PreviewKeyDown($eventArgs)]"/>
                     <!--跳转按钮-->
                     <Button
                         x:Name="TurnTo"
