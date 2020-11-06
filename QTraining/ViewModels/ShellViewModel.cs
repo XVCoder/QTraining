@@ -16,10 +16,12 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using static QTraining.Common.EnumDefine;
 
@@ -351,11 +353,25 @@ namespace QTraining.ViewModels
         /// </summary>
         public Visibility CountDownVisibility
         {
-            get { return countDownVisibility; }
+            get => countDownVisibility;
             set
             {
                 countDownVisibility = value;
                 NotifyOfPropertyChange(() => CountDownVisibility);
+            }
+        }
+
+        private int turnToNum = 1;
+        /// <summary>
+        /// 跳转题号
+        /// </summary>
+        public int TurnToNum
+        {
+            get => turnToNum;
+            set
+            {
+                turnToNum = value;
+                NotifyOfPropertyChange(() => TurnToNum);
             }
         }
         #endregion
@@ -677,6 +693,54 @@ namespace QTraining.ViewModels
                 IsCommited = false;
                 IsTrainingStart = false;
             }
+        }
+
+        /// <summary>
+        /// 跳转
+        /// </summary>
+        public void TurnTo(object e)
+        {
+            if (e != null)
+            {//调用事件来自题号输入框
+                if (e is KeyEventArgs eKey)
+                {//事件类型为KeyUp，且按键为回车  →  直接执行跳转的代码
+                    if ((eKey.Key >= Key.D0 && eKey.Key <= Key.D9) || eKey.Key == Key.Enter)
+                    {
+                        if (eKey.Key != Key.Enter)
+                            return;
+                        if (int.TryParse((eKey.OriginalSource as TextBox).Text, out int value))
+                            TurnToNum = value;
+                        if (value == 0)
+                            TurnToNum = 1;
+                    }
+                    else
+                        return;
+                }
+            }
+            if (TurnToNum < 1 || TurnToNum > QuestionRangeCount)
+            {//跳转题号合法性监测
+                TurnToNum = 0;
+                return;
+            }
+            SaveCurrentQuestionAnswer();
+            IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
+            IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
+            //跳转到指定题号
+            CurrentQuestionIndex = TurnToNum - 1;
+            CurrentQuestionInitial();
+            CanPreQuestion = CurrentQuestionIndex != 0;
+            CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
+            IsRealResultVisible = false;
+        }
+
+        /// <summary>
+        /// 只允许输入数字
+        /// </summary>
+        /// <param name="e"></param>
+        public void PreviewTextInput(TextCompositionEventArgs e)
+        {
+            Regex re = new Regex("[^0-9.-]+");  // new Regex("[^0-9.\\-]+");
+            e.Handled = re.IsMatch(e.Text);
         }
 
         /// <summary>

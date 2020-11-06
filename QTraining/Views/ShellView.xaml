@@ -7,6 +7,7 @@
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
         mc:Ignorable="d"
         Title="{DynamicResource Common_ProgramName}" Height="600" Width="800"
         MinHeight="600" MinWidth="800"
@@ -265,19 +266,39 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBlock>
-                <!--试题索引-->
-                <TextBlock
-                    FontSize="14"
-                    Foreground="LightSlateGray"
+                <StackPanel
                     HorizontalAlignment="Left"
                     Margin="15 0 5 10"
+                    Orientation="Horizontal"
                     VerticalAlignment="Bottom">
-                    <Run Text="["/>
-                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
-                    <Run Text=" / "/>
-                    <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
-                    <Run Text="]"/>
-                </TextBlock>
+                    <!--跳转输入框-->
+                    <TextBox
+                        FontSize="10"
+                        input:InputMethod.IsInputMethodEnabled="False"
+                        Text="{Binding TurnToNum,Mode=TwoWay}"
+                        Width="50"
+                        pu:TextBoxHelper.CornerRadius="3"
+                        cal:Message.Attach="[Event KeyUp]=[Action TurnTo($eventArgs)];[Event PreviewTextInput]=[Action PreviewTextInput($eventArgs)]"/>
+                    <!--跳转按钮-->
+                    <Button
+                        x:Name="TurnTo"
+                        Content="{DynamicResource Button_TurnTo}"
+                        Height="22"
+                        Margin="5 0 0 0"
+                        Padding="5 2"
+                        pu:ButtonHelper.CornerRadius="5"/>
+                    <!--试题索引-->
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="LightSlateGray"
+                        Margin="30 2 0 0">
+                        <Run Text="["/>
+                        <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
+                        <Run Text=" / "/>
+                        <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
+                        <Run Text="]"/>
+                    </TextBlock>
+                </StackPanel>
                 <!--查看历史记录-->
                 <Button
                     x:Name="ShowHistory"

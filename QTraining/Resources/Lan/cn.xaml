@@ -20,6 +20,7 @@
     <sys:String x:Key="Button_ShowRealResult">显示答案</sys:String>
     <sys:String x:Key="Button_HideRealResult">隐藏答案</sys:String>
     <sys:String x:Key="Button_ShowHistory">查看历史记录</sys:String>
+    <sys:String x:Key="Button_TurnTo">跳转</sys:String>
 
     <sys:String x:Key="Message_ProgramIsRunning">程序运行中！</sys:String>
 
