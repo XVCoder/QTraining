@@ -771,9 +771,15 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 退出
         /// </summary>
-        public void Exit()
+        public void Exit(object o)
         {
-            Environment.Exit(0);
+            if (MessageBoxX.Show(App.Current.MainWindow, ResourceHelper.GetStrings("Text_ExitConfirm"),
+                    ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
+                    , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
+            {
+                if (o is CancelEventArgs args)
+                    args.Cancel = true;
+            }
         }
         #endregion
 

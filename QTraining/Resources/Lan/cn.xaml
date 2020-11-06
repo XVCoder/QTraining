@@ -32,4 +32,6 @@
     <sys:String x:Key="Text_TimeCosts">耗时</sys:String>
     <sys:String x:Key="Text_OrderTraining">顺序练习(所有)</sys:String>
     <sys:String x:Key="Text_SimulationTraining">仿真模拟</sys:String>
+    <sys:String x:Key="Text_History">历史记录</sys:String>
+    <sys:String x:Key="Text_ExitConfirm">确认退出？</sys:String>
 </ResourceDictionary>

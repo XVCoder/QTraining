@@ -13,7 +13,7 @@
         MinHeight="600" MinWidth="800"
         WindowStartupLocation="CenterScreen"
         Icon="/logo.ico"
-        cal:Message.Attach="[Event Closed]=[Action Exit];[Event Loaded]=[Action Loaded]">
+        cal:Message.Attach="[Event Closing]=[Action Exit($eventArgs)];[Event Loaded]=[Action Loaded]">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>

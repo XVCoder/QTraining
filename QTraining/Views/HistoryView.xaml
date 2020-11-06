@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QTraining.Views"
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         mc:Ignorable="d"
-        Title="HistoryWindow" Height="450" Width="600"
+        Title="{DynamicResource Text_History}" Height="450" Width="600"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <TextBox
