@@ -291,13 +291,25 @@
                     <TextBlock
                         FontSize="12"
                         Foreground="LightSlateGray"
-                        Margin="30 2 0 0">
-                        <Run Text="["/>
+                        Margin="20 0 0 0"
+                        VerticalAlignment="Center">
+                        <Run Text="【"/>
                         <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
                         <Run Text=" / "/>
                         <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
-                        <Run Text="]"/>
+                        <Run Text="】"/>
                     </TextBlock>
+                    <!--上次阅读跳转提示-->
+                    <Button
+                        Content="{Binding LastReadingIndexHint,Mode=OneWay}"
+                        FontSize="12"
+                        Foreground="Salmon"
+                        Margin="10 0 0 0"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
+                        pu:ButtonHelper.ButtonStyle="Link"
+                        pu:ButtonHelper.HoverBrush="OrangeRed"
+                        cal:Message.Attach="[Event Click]=[Action TurnToLastReadingIndex]"/>
                 </StackPanel>
                 <!--查看历史记录-->
                 <Button

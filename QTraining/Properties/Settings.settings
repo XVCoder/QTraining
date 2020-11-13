@@ -8,5 +8,8 @@
     <Setting Name="QuestionBankType" Type="System.String" Scope="User">
       <Value Profile="(Default)">SAA</Value>
     </Setting>
+    <Setting Name="LastReadingIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

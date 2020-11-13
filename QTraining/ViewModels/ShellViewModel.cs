@@ -70,7 +70,7 @@ namespace QTraining.ViewModels
             set
             {
                 questionRangeCount = value;
-                NotifyOfPropertyChange(() => QuestionRangeCount);
+                NotifyOfPropertyChange(nameof(QuestionRangeCount));
             }
         }
 
@@ -92,10 +92,10 @@ namespace QTraining.ViewModels
             set
             {
                 currentQuestionIndex = value;
-                NotifyOfPropertyChange(() => CurrentQuestionIndex);
-                NotifyOfPropertyChange(() => CurrentQuestionImage);
-                NotifyOfPropertyChange(() => CurrentQuestionIndexForDisplay);
-                NotifyOfPropertyChange(() => CurrentQuestion);
+                NotifyOfPropertyChange(nameof(CurrentQuestionIndex));
+                NotifyOfPropertyChange(nameof(CurrentQuestionImage));
+                NotifyOfPropertyChange(nameof(CurrentQuestionIndexForDisplay));
+                NotifyOfPropertyChange(nameof(CurrentQuestion));
             }
         }
 
@@ -119,7 +119,7 @@ namespace QTraining.ViewModels
         public ObservableCollection<QuestionInfoModel> QuestionInfoModels
         {
             get => questionInfoModels;
-            set { questionInfoModels = value; NotifyOfPropertyChange(() => QuestionInfoModels); }
+            set { questionInfoModels = value; NotifyOfPropertyChange(nameof(QuestionInfoModels)); }
         }
 
         private bool isMultiSelect;
@@ -129,7 +129,7 @@ namespace QTraining.ViewModels
         public bool IsMultiSelect
         {
             get => isMultiSelect;
-            set { isMultiSelect = value; NotifyOfPropertyChange(() => IsMultiSelect); }
+            set { isMultiSelect = value; NotifyOfPropertyChange(nameof(IsMultiSelect)); }
         }
 
         private bool canPreQuestion;
@@ -139,7 +139,7 @@ namespace QTraining.ViewModels
         public bool CanPreQuestion
         {
             get => canPreQuestion;
-            set { canPreQuestion = value; NotifyOfPropertyChange(() => CanPreQuestion); }
+            set { canPreQuestion = value; NotifyOfPropertyChange(nameof(CanPreQuestion)); }
         }
 
         private bool canNextQuestion;
@@ -149,49 +149,63 @@ namespace QTraining.ViewModels
         public bool CanNextQuestion
         {
             get => canNextQuestion;
-            set { canNextQuestion = value; NotifyOfPropertyChange(() => CanNextQuestion); }
+            set { canNextQuestion = value; NotifyOfPropertyChange(nameof(CanNextQuestion)); }
         }
 
         private bool isRadioASelected;
         public bool IsRadioASelected
         {
             get => isRadioASelected;
-            set { isRadioASelected = value; NotifyOfPropertyChange(() => IsRadioASelected); }
+            set { isRadioASelected = value; NotifyOfPropertyChange(nameof(IsRadioASelected)); }
         }
 
         private bool isRadioBSelected;
         public bool IsRadioBSelected
         {
             get => isRadioBSelected;
-            set { isRadioBSelected = value; NotifyOfPropertyChange(() => IsRadioBSelected); }
+            set { isRadioBSelected = value; NotifyOfPropertyChange(nameof(IsRadioBSelected)); }
         }
 
         private bool isRadioCSelected;
         public bool IsRadioCSelected
         {
             get => isRadioCSelected;
-            set { isRadioCSelected = value; NotifyOfPropertyChange(() => IsRadioCSelected); }
+            set { isRadioCSelected = value; NotifyOfPropertyChange(nameof(IsRadioCSelected)); }
         }
 
         private bool isRadioDSelected;
         public bool IsRadioDSelected
         {
             get => isRadioDSelected;
-            set { isRadioDSelected = value; NotifyOfPropertyChange(() => IsRadioDSelected); }
+            set { isRadioDSelected = value; NotifyOfPropertyChange(nameof(IsRadioDSelected)); }
         }
 
         private bool isRadioOrderTrainingSelected;
+        /// <summary>
+        /// 顺序练习模式选中
+        /// </summary>
         public bool IsRadioOrderTrainingSelected
         {
             get => isRadioOrderTrainingSelected;
-            set { isRadioOrderTrainingSelected = value; NotifyOfPropertyChange(() => IsRadioOrderTrainingSelected); }
+            set
+            {
+                isRadioOrderTrainingSelected = value;
+                NotifyOfPropertyChange(nameof(IsRadioOrderTrainingSelected));
+            }
         }
 
         private bool isRadioSimulationTrainingSelected;
+        /// <summary>
+        /// 仿真模拟模式选中
+        /// </summary>
         public bool IsRadioSimulationTrainingSelected
         {
             get => isRadioSimulationTrainingSelected;
-            set { isRadioSimulationTrainingSelected = value; NotifyOfPropertyChange(() => IsRadioSimulationTrainingSelected); }
+            set
+            {
+                isRadioSimulationTrainingSelected = value;
+                NotifyOfPropertyChange(nameof(IsRadioSimulationTrainingSelected));
+            }
         }
 
         private bool isCheckASelected;
@@ -201,7 +215,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckASelected = value;
-                NotifyOfPropertyChange(() => IsCheckASelected);
+                NotifyOfPropertyChange(nameof(IsCheckASelected));
             }
         }
 
@@ -212,7 +226,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckBSelected = value;
-                NotifyOfPropertyChange(() => IsCheckBSelected);
+                NotifyOfPropertyChange(nameof(IsCheckBSelected));
             }
         }
 
@@ -223,7 +237,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckCSelected = value;
-                NotifyOfPropertyChange(() => IsCheckCSelected);
+                NotifyOfPropertyChange(nameof(IsCheckCSelected));
             }
         }
 
@@ -234,7 +248,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckDSelected = value;
-                NotifyOfPropertyChange(() => IsCheckDSelected);
+                NotifyOfPropertyChange(nameof(IsCheckDSelected));
             }
         }
 
@@ -245,7 +259,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckESelected = value;
-                NotifyOfPropertyChange(() => IsCheckESelected);
+                NotifyOfPropertyChange(nameof(IsCheckESelected));
             }
         }
 
@@ -256,7 +270,7 @@ namespace QTraining.ViewModels
             set
             {
                 isCheckFSelected = value;
-                NotifyOfPropertyChange(() => IsCheckFSelected);
+                NotifyOfPropertyChange(nameof(IsCheckFSelected));
             }
         }
 
@@ -267,7 +281,7 @@ namespace QTraining.ViewModels
         public bool IsRadioCVisible
         {
             get => isRadioCVisible;
-            set { isRadioCVisible = value; NotifyOfPropertyChange(() => IsRadioCVisible); }
+            set { isRadioCVisible = value; NotifyOfPropertyChange(nameof(IsRadioCVisible)); }
         }
 
         private bool isRadioDVisible = true;
@@ -277,7 +291,7 @@ namespace QTraining.ViewModels
         public bool IsRadioDVisible
         {
             get => isRadioDVisible;
-            set { isRadioDVisible = value; NotifyOfPropertyChange(() => IsRadioDVisible); }
+            set { isRadioDVisible = value; NotifyOfPropertyChange(nameof(IsRadioDVisible)); }
         }
 
         private string countDown;
@@ -287,7 +301,7 @@ namespace QTraining.ViewModels
         public string CountDown
         {
             get => countDown;
-            set { countDown = value; NotifyOfPropertyChange(() => CountDown); }
+            set { countDown = value; NotifyOfPropertyChange(nameof(CountDown)); }
         }
 
         /// <summary>
@@ -324,7 +338,7 @@ namespace QTraining.ViewModels
         public bool IsTrainingStart
         {
             get => isTrainingStart;
-            set { isTrainingStart = value; NotifyOfPropertyChange(() => IsTrainingStart); }
+            set { isTrainingStart = value; NotifyOfPropertyChange(nameof(IsTrainingStart)); }
         }
 
         private bool isRealResultVisible = false;
@@ -334,7 +348,7 @@ namespace QTraining.ViewModels
         public bool IsRealResultVisible
         {
             get => isRealResultVisible;
-            set { isRealResultVisible = value; NotifyOfPropertyChange(() => IsRealResultVisible); }
+            set { isRealResultVisible = value; NotifyOfPropertyChange(nameof(IsRealResultVisible)); }
         }
 
         private bool isCommited;
@@ -344,7 +358,7 @@ namespace QTraining.ViewModels
         public bool IsCommited
         {
             get => isCommited;
-            set { isCommited = value; NotifyOfPropertyChange(() => IsCommited); }
+            set { isCommited = value; NotifyOfPropertyChange(nameof(IsCommited)); }
         }
 
         private Visibility countDownVisibility = Visibility.Collapsed;
@@ -357,7 +371,7 @@ namespace QTraining.ViewModels
             set
             {
                 countDownVisibility = value;
-                NotifyOfPropertyChange(() => CountDownVisibility);
+                NotifyOfPropertyChange(nameof(CountDownVisibility));
             }
         }
 
@@ -371,7 +385,44 @@ namespace QTraining.ViewModels
             set
             {
                 turnToNum = value;
-                NotifyOfPropertyChange(() => TurnToNum);
+                NotifyOfPropertyChange(nameof(TurnToNum));
+            }
+        }
+
+        /// <summary>
+        /// 最后一次浏览时的题目的索引（用于顺序练习）
+        /// </summary>
+        public int LastReadingIndex
+        {
+            get => Properties.Settings.Default.LastReadingIndex;
+            set
+            {
+                Properties.Settings.Default.LastReadingIndex = value;
+                Properties.Settings.Default.Save();
+                NotifyOfPropertyChange(nameof(LastReadingIndex));
+                NotifyOfPropertyChange(nameof(LastReadingIndexHint));
+            }
+        }
+
+        /// <summary>
+        /// 最后一次浏览时的题目的索引提示（用于顺序练习）
+        /// </summary>
+        public string LastReadingIndexHint
+        {
+            get => string.Format(ResourceHelper.GetStrings("Format_LastReadingIndexHint"), LastReadingIndex + 1);
+        }
+
+        private bool isLastReadingIndexHintVisible;
+        /// <summary>
+        /// 最后一次浏览时的题目的索引提示的可见性
+        /// </summary>
+        public bool IsLastReadingIndexHintVisible
+        {
+            get => isLastReadingIndexHintVisible;
+            set
+            {
+                isLastReadingIndexHintVisible = value;
+                NotifyOfPropertyChange(nameof(IsLastReadingIndexHintVisible));
             }
         }
         #endregion
@@ -459,6 +510,9 @@ namespace QTraining.ViewModels
                 CanNextQuestion = true;
                 if (CurrentQuestionIndex == 0)
                     CanPreQuestion = false;
+                //隐藏上次浏览位置提示
+                if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
+                    IsLastReadingIndexHintVisible = false;
             }
             IsRealResultVisible = false;
         }
@@ -481,6 +535,9 @@ namespace QTraining.ViewModels
                 CanPreQuestion = true;
                 if (CurrentQuestionIndex == QuestionRangeCount - 1)
                     CanNextQuestion = false;
+                //隐藏上次浏览位置提示
+                if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
+                    IsLastReadingIndexHintVisible = false;
             }
             IsRealResultVisible = false;
         }
@@ -510,6 +567,8 @@ namespace QTraining.ViewModels
                 GenerateRandomQuestionBank();
                 //初始化答题板
                 AnswerBoardInitial();
+                //练习开始
+                IsTrainingStart = true;
                 //开始计时
                 CountDownStart();
             }
@@ -523,8 +582,13 @@ namespace QTraining.ViewModels
                 GenerateOrderQuestionBank();
                 //初始化答题板
                 AnswerBoardInitial();
-                //开始计时
-                CountDownStart();
+                //根据当前题组总数判断是否显示上次阅读
+                if (LastReadingIndex == 0 || LastReadingIndex > QuestionRangeCount)
+                    IsLastReadingIndexHintVisible = false;
+                else
+                    IsLastReadingIndexHintVisible = true;
+                //练习开始
+                IsTrainingStart = true;
             }
             else
             {//提示选择模式
@@ -554,7 +618,6 @@ namespace QTraining.ViewModels
         /// </summary>
         private void CountDownStart()
         {
-            IsTrainingStart = true;
             countDownTimer = new DispatcherTimer();
             countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
             countDownTimer.Tick += Timer_Tick;
@@ -792,6 +855,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public void Exit(object o)
         {
+            //退出提醒
             if (MessageBoxX.Show(App.Current.MainWindow, ResourceHelper.GetStrings("Text_ExitConfirm"),
                     ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
                     , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
@@ -799,6 +863,27 @@ namespace QTraining.ViewModels
                 if (o is CancelEventArgs args)
                     args.Cancel = true;
             }
+
+            if (IsTrainingStart)
+                Commit();  //交卷
+
+            if (IsTrainingStart && IsRadioOrderTrainingSelected && IsRadioOrderTrainingSelected)
+            {//顺序练习模式，保存最后浏览的题号
+                LastReadingIndex = CurrentQuestionIndex;
+            }
+        }
+
+        /// <summary>
+        /// 跳转到上次浏览的位置
+        /// </summary>
+        public void TurnToLastReadingIndex()
+        {
+            CurrentQuestionIndex = LastReadingIndex;
+            CurrentQuestionInitial();
+            CanPreQuestion = CurrentQuestionIndex != 0;
+            CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
+            IsRealResultVisible = false;
+            IsLastReadingIndexHintVisible = false;
         }
         #endregion
 
