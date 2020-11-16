@@ -863,9 +863,11 @@ namespace QTraining.ViewModels
                 if (o is CancelEventArgs args)
                     args.Cancel = true;
             }
-
-            if (IsTrainingStart)
-                Commit();  //交卷
+            else
+            {
+                if (IsTrainingStart)
+                    Commit();  //交卷
+            }
 
             if (IsTrainingStart && IsRadioOrderTrainingSelected && IsRadioOrderTrainingSelected)
             {//顺序练习模式，保存最后浏览的题号

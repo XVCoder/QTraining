@@ -114,6 +114,10 @@
     <Compile Include="DAL\QuestionInfoDAL.cs" />
     <Compile Include="Common\SqliteHelper.cs" />
     <Compile Include="DAL\TrainingInfoDAL.cs" />
+    <Compile Include="CaliburnPlugins\Input\KeySequence.cs" />
+    <Compile Include="CaliburnPlugins\Input\KeyTrigger.cs" />
+    <Compile Include="CaliburnPlugins\Input\MultiKeyGesture.cs" />
+    <Compile Include="CaliburnPlugins\Input\MultiKeyGestureConverter.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Models\DoubtInfoModel.cs" />
     <Compile Include="Models\QuestionInfoModel.cs" />

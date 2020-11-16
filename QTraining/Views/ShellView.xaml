@@ -6,14 +6,16 @@
         xmlns:local="clr-namespace:QTraining.Views"
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         xmlns:cal="http://www.caliburnproject.org"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
         mc:Ignorable="d"
         Title="{DynamicResource Common_ProgramName}" Height="600" Width="800"
         MinHeight="600" MinWidth="800"
         WindowStartupLocation="CenterScreen"
         Icon="/logo.ico"
-        cal:Message.Attach="[Event Closing]=[Action Exit($eventArgs)];[Event Loaded]=[Action Loaded]">
+        cal:Message.Attach="
+        [Event Closing]=[Exit($eventArgs)];
+        [Event Loaded]=[Loaded];
+        [Gesture LeftCtrl]=[ShowRealResult]">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -33,6 +35,7 @@
                         Height="22"
                         Margin="10 0 0 0"
                         Padding="5 2"
+                        ToolTip="{DynamicResource ToolTip_ShowAnswerHotKey}"
                         pu:ButtonHelper.CornerRadius="5">
                         <Button.Content>
                             <StackPanel>
@@ -181,6 +184,7 @@
                     <!--答案-->
                     <TextBlock
                         Margin="10 50 0 0"
+                        HorizontalAlignment="Left"
                         Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}">
                         <Run Text="{DynamicResource Common_RealResult}"/>
                         <Run Text=": "/>
@@ -189,9 +193,12 @@
                     <!--解析-->
                     <TextBlock
                         Foreground="Green"
+                        HorizontalAlignment="Left"
                         Margin="10 10 0 0"
+                        Text="{Binding CurrentQuestion.Note}"
+                        TextWrapping="Wrap"
                         Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"
-                        Text="{Binding CurrentQuestion.Note}"/>
+                        Width="750"/>
                 </StackPanel>
             </Grid>
             <!--背景-->
@@ -206,31 +213,17 @@
                 <Grid
                     Grid.Column="0"
                     Background="White"
-                    Opacity=".01">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger
-                            EventName="MouseDown">
-                            <cal:ActionMessage
-                                 MethodName="PreQuestion"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Grid>
+                    Opacity=".01"
+                    cal:Message.Attach="[Event MouseDown]=[PreQuestion]"/>
                 <TextBlock
                     FontSize="20"
                     Foreground="Black"
                     HorizontalAlignment="Center"
                     Margin="0 0 0 50"
-                    Opacity=".3"
+                    Opacity=".1"
                     Text="{DynamicResource Button_PreQuestion}"
-                    VerticalAlignment="Bottom">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger
-                            EventName="MouseDown">
-                            <cal:ActionMessage
-                                 MethodName="PreQuestion"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBlock>
+                    VerticalAlignment="Bottom"
+                    cal:Message.Attach="[Event MouseDown]=[PreQuestion]"/>
                 <!--分界线-->
                 <Border
                     BorderBrush="DimGray"
@@ -240,32 +233,18 @@
                 <Grid
                     Grid.Column="2"
                     Background="White"
-                    Opacity=".01">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger
-                            EventName="MouseDown">
-                            <cal:ActionMessage
-                                 MethodName="NextQuestion"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Grid>
+                    Opacity=".01"
+                    cal:Message.Attach="[Event MouseDown]=[NextQuestion]"/>
                 <TextBlock
                     Grid.Column="2"
                     FontSize="20"
                     Foreground="Black"
                     HorizontalAlignment="Center"
                     Margin="0 0 0 50"
-                    Opacity=".3"
+                    Opacity=".1"
                     Text="{DynamicResource Button_NextQuestion}"
-                    VerticalAlignment="Bottom">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger
-                            EventName="MouseDown">
-                            <cal:ActionMessage
-                                 MethodName="NextQuestion"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBlock>
+                    VerticalAlignment="Bottom"
+                    cal:Message.Attach="[Event MouseDown]=[NextQuestion]"/>
                 <StackPanel
                     HorizontalAlignment="Left"
                     Margin="15 0 5 10"
@@ -278,7 +257,10 @@
                         Text="{Binding TurnToNum,Mode=TwoWay}"
                         Width="50"
                         pu:TextBoxHelper.CornerRadius="3"
-                        cal:Message.Attach="[Event KeyUp]=[Action TurnTo($eventArgs)];[Event PreviewTextInput]=[Action PreviewTextInput($eventArgs)];[Event PreviewKeyDown]=[Action PreviewKeyDown($eventArgs)]"/>
+                        cal:Message.Attach="
+                        [Event KeyUp]=[TurnTo($eventArgs)];
+                        [Event PreviewTextInput]=[PreviewTextInput($eventArgs)];
+                        [Event PreviewKeyDown]=[PreviewKeyDown($eventArgs)]"/>
                     <!--跳转按钮-->
                     <Button
                         x:Name="TurnTo"
@@ -309,7 +291,7 @@
                         Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
                         pu:ButtonHelper.ButtonStyle="Link"
                         pu:ButtonHelper.HoverBrush="OrangeRed"
-                        cal:Message.Attach="[Event Click]=[Action TurnToLastReadingIndex]"/>
+                        cal:Message.Attach="[Event Click]=[TurnToLastReadingIndex]"/>
                 </StackPanel>
                 <!--查看历史记录-->
                 <Button
