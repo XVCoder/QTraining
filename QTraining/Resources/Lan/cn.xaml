@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    <sys:String x:Key="Common_ProgramName">QTraining</sys:String>
+    <sys:String x:Key="Common_ProgramName">AWS认证考试模拟工具 (BCCEC项目组版权所有)</sys:String>
     <sys:String x:Key="Common_Info">通知</sys:String>
     <sys:String x:Key="Common_Warning">警告</sys:String>
     <sys:String x:Key="Common_Error">错误</sys:String>
