@@ -898,6 +898,14 @@ namespace QTraining.ViewModels
             IsRealResultVisible = false;
             IsLastReadingIndexHintVisible = false;
         }
+
+        /// <summary>
+        /// 隐藏上次阅读位置提醒
+        /// </summary>
+        public void HideLastReadingIndexHint()
+        {
+            IsLastReadingIndexHintVisible = false;
+        }
         #endregion
 
         #region Private methods

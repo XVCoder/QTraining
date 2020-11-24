@@ -21,6 +21,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -245,66 +246,81 @@
                     Text="{DynamicResource Button_NextQuestion}"
                     VerticalAlignment="Bottom"
                     cal:Message.Attach="[Event MouseDown]=[NextQuestion]"/>
-                <StackPanel
+            </Grid>
+            <!--底部栏-->
+            <StackPanel
+                Grid.Row="2"
                     HorizontalAlignment="Left"
                     Margin="15 0 5 10"
                     Orientation="Horizontal"
                     VerticalAlignment="Bottom">
-                    <!--跳转输入框-->
-                    <TextBox
-                        FontSize="10"
-                        input:InputMethod.IsInputMethodEnabled="False"
-                        Text="{Binding TurnToNum,Mode=TwoWay}"
-                        Width="50"
-                        pu:TextBoxHelper.CornerRadius="3"
-                        cal:Message.Attach="
-                        [Event KeyUp]=[TurnTo($eventArgs)];
-                        [Event PreviewTextInput]=[PreviewTextInput($eventArgs)];
-                        [Event PreviewKeyDown]=[PreviewKeyDown($eventArgs)]"/>
-                    <!--跳转按钮-->
-                    <Button
-                        x:Name="TurnTo"
-                        Content="{DynamicResource Button_TurnTo}"
-                        Height="22"
-                        Margin="5 0 0 0"
-                        Padding="5 2"
-                        pu:ButtonHelper.CornerRadius="5"/>
-                    <!--试题索引-->
-                    <TextBlock
-                        FontSize="12"
-                        Foreground="LightSlateGray"
-                        Margin="20 0 0 0"
-                        VerticalAlignment="Center">
-                        <Run Text="【"/>
-                        <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
-                        <Run Text=" / "/>
-                        <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
-                        <Run Text="】"/>
-                    </TextBlock>
-                    <!--上次阅读跳转提示-->
-                    <Button
-                        Content="{Binding LastReadingIndexHint,Mode=OneWay}"
-                        FontSize="12"
-                        Foreground="Salmon"
-                        Margin="10 0 0 0"
-                        VerticalAlignment="Center"
-                        Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
-                        pu:ButtonHelper.ButtonStyle="Link"
-                        pu:ButtonHelper.HoverBrush="OrangeRed"
-                        cal:Message.Attach="[Event Click]=[TurnToLastReadingIndex]"/>
-                </StackPanel>
-                <!--查看历史记录-->
+                <!--跳转输入框-->
+                <TextBox
+                    FontSize="10"
+                    input:InputMethod.IsInputMethodEnabled="False"
+                    Text="{Binding TurnToNum,Mode=TwoWay}"
+                    Width="50"
+                    pu:TextBoxHelper.CornerRadius="3"
+                    cal:Message.Attach="
+                    [Event KeyUp]=[TurnTo($eventArgs)];
+                    [Event PreviewTextInput]=[PreviewTextInput($eventArgs)];
+                    [Event PreviewKeyDown]=[PreviewKeyDown($eventArgs)]"/>
+                <!--跳转按钮-->
                 <Button
-                    x:Name="ShowHistory"
-                    Grid.Column="2"
-                    Content="{DynamicResource Button_ShowHistory}"
-                    FontSize="14"
-                    Foreground="LightGray"
-                    HorizontalAlignment="Right"
-                    Margin="0 0 15 10"
-                    VerticalAlignment="Bottom"
-                    pu:ButtonHelper.ButtonStyle="Link"/>
-            </Grid>
+                    x:Name="TurnTo"
+                    Content="{DynamicResource Button_TurnTo}"
+                    Height="22"
+                    Margin="5 0 0 0"
+                    Padding="5 2"
+                    pu:ButtonHelper.CornerRadius="5"/>
+                <!--试题索引-->
+                <TextBlock
+                    FontSize="12"
+                    Foreground="LightSlateGray"
+                    Margin="20 0 0 0"
+                    VerticalAlignment="Center">
+                    <Run Text="【"/>
+                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
+                    <Run Text=" / "/>
+                    <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
+                    <Run Text="】"/>
+                </TextBlock>
+                <!--上次阅读跳转提示-->
+                <Button
+                    Content="{Binding LastReadingIndexHint,Mode=OneWay}"
+                    FontSize="12"
+                    Foreground="Salmon"
+                    Margin="10 0 0 0"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
+                    pu:ButtonHelper.ButtonStyle="Link"
+                    pu:ButtonHelper.HoverBrush="OrangeRed"
+                    cal:Message.Attach="[Event Click]=[TurnToLastReadingIndex]"/>
+                <Button
+                    Content="&#xe92d;"
+                    FontFamily="{StaticResource PanuonIconFont}"
+                    FontSize="10"
+                    FontWeight="Bold"
+                    Margin="0 2 0 0"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
+                    Width="30"
+                    pu:ButtonHelper.ButtonStyle="Link"
+                    pu:ButtonHelper.HoverBrush="Red"
+                    cal:Message.Attach="[Event Click]=[HideLastReadingIndexHint]"/>
+            </StackPanel>
+            <!--查看历史记录-->
+            <Button
+                x:Name="ShowHistory"
+                Grid.Column="2"
+                Grid.Row="2"
+                Content="{DynamicResource Button_ShowHistory}"
+                FontSize="14"
+                Foreground="LightGray"
+                HorizontalAlignment="Right"
+                Margin="0 0 15 10"
+                VerticalAlignment="Bottom"
+                pu:ButtonHelper.ButtonStyle="Link"/>
         </Grid>
         <!--蒙版+开始按钮-->
         <Grid
