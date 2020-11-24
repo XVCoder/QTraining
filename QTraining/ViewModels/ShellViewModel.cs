@@ -597,59 +597,6 @@ namespace QTraining.ViewModels
         }
 
         /// <summary>
-        /// 计时器
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
-            if (currentSeconds >= countSecond)
-            {
-                (sender as DispatcherTimer).Stop();
-                Commit();  //自动交卷计算结果
-                return;
-            }
-            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2, '0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
-        }
-
-        /// <summary>
-        /// 开始计时
-        /// </summary>
-        private void CountDownStart()
-        {
-            countDownTimer = new DispatcherTimer();
-            countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            countDownTimer.Tick += Timer_Tick;
-            startTimeTicks = DateTime.Now.Ticks;
-            countDownTimer.Start();
-        }
-
-        /// <summary>
-        /// 初始化答题板
-        /// </summary>
-        private void AnswerBoardInitial()
-        {
-            CurrentQuestionIndex = 0;
-            CanPreQuestion = false;
-            CanNextQuestion = true;
-            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
-            if (CurrentQuestion.ResultCount < 4)
-            {
-                IsRadioDVisible = false;
-                if (CurrentQuestion.ResultCount < 3)
-                    IsRadioCVisible = false;
-            }
-            else
-            {
-                IsRadioCVisible = true;
-                IsRadioDVisible = true;
-            }
-            IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
-            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
-        }
-
-        /// <summary>
         /// 显示/隐藏答案
         /// </summary>
         public void ShowRealResult()
@@ -890,6 +837,58 @@ namespace QTraining.ViewModels
         #endregion
 
         #region Private methods
+        /// <summary>
+        /// 计时器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
+            if (currentSeconds >= countSecond)
+            {
+                (sender as DispatcherTimer).Stop();
+                Commit();  //自动交卷计算结果
+                return;
+            }
+            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2, '0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+        }
+
+        /// <summary>
+        /// 开始计时
+        /// </summary>
+        private void CountDownStart()
+        {
+            countDownTimer = new DispatcherTimer();
+            countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            countDownTimer.Tick += Timer_Tick;
+            startTimeTicks = DateTime.Now.Ticks;
+            countDownTimer.Start();
+        }
+
+        /// <summary>
+        /// 初始化答题板
+        /// </summary>
+        private void AnswerBoardInitial()
+        {
+            CurrentQuestionIndex = 0;
+            CanPreQuestion = false;
+            CanNextQuestion = true;
+            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
+            if (CurrentQuestion.ResultCount < 4)
+            {
+                IsRadioDVisible = false;
+                if (CurrentQuestion.ResultCount < 3)
+                    IsRadioCVisible = false;
+            }
+            else
+            {
+                IsRadioCVisible = true;
+                IsRadioDVisible = true;
+            }
+            IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
+            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+        }
         /// <summary>
         /// 根据题库和题组大小生成随机题组
         /// </summary>
