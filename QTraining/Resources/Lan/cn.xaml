@@ -36,6 +36,9 @@
     <sys:String x:Key="Text_SimulationTraining">仿真模拟</sys:String>
     <sys:String x:Key="Text_History">历史记录</sys:String>
     <sys:String x:Key="Text_ExitConfirm">确认退出？</sys:String>
+    <sys:String x:Key="Text_QuestionType">试题类型</sys:String>
+    <sys:String x:Key="Text_QuestionTypeSAA">SAA</sys:String>
+    <sys:String x:Key="Text_QuestionTypeSAP">SAP</sys:String>
 
     <sys:String x:Key="ToolTip_ShowAnswerHotKey">点击键盘左侧 [Ctrl] 显示答案</sys:String>
 </ResourceDictionary>

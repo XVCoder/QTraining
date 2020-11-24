@@ -10,8 +10,8 @@ namespace QTraining.Common
     {
         public enum QuestionBankType
         {
-            SAA,
-            SAP
+            SAA = 0,
+            SAP = 1
         }
     }
 }

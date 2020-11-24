@@ -55,6 +55,9 @@ namespace QTraining.ViewModels
         #endregion
 
         #region Fields & Properties
+        private const string QUESTIONBANK_SAA = "./Resources/QuestionBank/SAA";
+        private const string QUESTIONBANK_SAP = "./Resources/QuestionBank/SAP";
+
         private DoubtInfoDAL doubtInfoDAL;
         private QuestionInfoDAL questionInfoDAL;
         private TrainingInfoDAL trainingInfoDAL;
@@ -73,6 +76,28 @@ namespace QTraining.ViewModels
                 NotifyOfPropertyChange(nameof(QuestionRangeCount));
             }
         }
+
+        private int selectedQuestionTypeIndex;
+        /// <summary>
+        /// 选中实体类型索引值
+        /// </summary>
+        public int SelectedQuestionTypeIndex
+        {
+            get
+            {
+                var index = (int)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType);
+                return index < 0 ? 0 : index;
+            }
+            set
+            {
+                selectedQuestionTypeIndex = value;
+                Properties.Settings.Default.QuestionBankType = ((QuestionBankType)value).ToString();
+                Properties.Settings.Default.Save();
+                NotifyOfPropertyChange(nameof(SelectedQuestionTypeIndex));
+            }
+        }
+
+        private string currentQuestionBankPath = "";
 
         private List<int> randomQuestionBank;  //题目索引随机组合
         private string[] answers;  //用户回答结果
@@ -109,7 +134,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public string CurrentQuestionImage
         {
-            get => randomQuestionBank == null ? "" : $"{Environment.CurrentDirectory}/Resources/QuestionBank/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png";
+            get => randomQuestionBank == null ? "" : $"{Path.GetFullPath(currentQuestionBankPath)}/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png";
         }
 
         private ObservableCollection<QuestionInfoModel> questionInfoModels;
@@ -467,30 +492,31 @@ namespace QTraining.ViewModels
             //} 
             #endregion
 
-            //从TXT文件中加载数据
-            var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
-            using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
-            {
-                var buffer = new byte[fsRead.Length];
-                fsRead.Read(buffer, 0, buffer.Length);
-                var questionInfo = Encoding.UTF8.GetString(buffer);
-                var lines = questionInfo.Split('\n');
-                var lst = new ObservableCollection<QuestionInfoModel>();
-                foreach (var item in lines)
-                {
-                    var dataItem = item.Replace("\r", "");
-                    var dataParams = dataItem.Split(';');
-                    var model = new QuestionInfoModel
-                    {
-                        Id = dataParams[0],
-                        ResultCount = int.Parse(dataParams[1]),
-                        RealResult = dataParams[2],
-                        Note = dataParams.Length == 4 ? dataParams[3] : ""
-                    };
-                    lst.Add(model);
-                }
-                QuestionInfoModels = lst;
-            }
+            ////从TXT文件中加载数据
+            //var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
+            //using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
+            //{
+            //    var buffer = new byte[fsRead.Length];
+            //    fsRead.Read(buffer, 0, buffer.Length);
+            //    var questionInfo = Encoding.UTF8.GetString(buffer);
+            //    var lines = questionInfo.Split('\n');
+            //    var lst = new ObservableCollection<QuestionInfoModel>();
+            //    foreach (var item in lines)
+            //    {
+            //        var dataItem = item.Replace("\r", "");
+            //        var dataParams = dataItem.Split(';');
+            //        var model = new QuestionInfoModel
+            //        {
+            //            Id = dataParams[0],
+            //            ResultCount = int.Parse(dataParams[1]),
+            //            RealResult = dataParams[2],
+            //            Note = dataParams.Length == 4 ? dataParams[3] : ""
+            //        };
+            //        lst.Add(model);
+            //    }
+            //    QuestionInfoModels = lst;
+            //}
+            IsRadioOrderTrainingSelected = true;
         }
 
         /// <summary>
@@ -547,6 +573,44 @@ namespace QTraining.ViewModels
         /// </summary>
         public void StartTraining()
         {
+            string questionInfoPath = "";
+            switch ((QuestionBankType)SelectedQuestionTypeIndex)
+            {
+                case QuestionBankType.SAA:
+                    currentQuestionBankPath = QUESTIONBANK_SAA;
+                    questionInfoPath = QUESTIONBANK_SAA + "/QuestionInfo.txt";
+                    break;
+                case QuestionBankType.SAP:
+                    currentQuestionBankPath = QUESTIONBANK_SAP;
+                    questionInfoPath = QUESTIONBANK_SAP + "/QuestionInfo.txt";
+                    break;
+                default:
+                    break;
+            }
+            //从TXT文件中加载数据
+            using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
+            {
+                var buffer = new byte[fsRead.Length];
+                fsRead.Read(buffer, 0, buffer.Length);
+                var questionInfo = Encoding.UTF8.GetString(buffer);
+                var lines = questionInfo.Split('\n');
+                var lst = new ObservableCollection<QuestionInfoModel>();
+                foreach (var item in lines)
+                {
+                    var dataItem = item.Replace("\r", "");
+                    var dataParams = dataItem.Split(';');
+                    var model = new QuestionInfoModel
+                    {
+                        Id = dataParams[0],
+                        ResultCount = int.Parse(dataParams[1]),
+                        RealResult = dataParams[2],
+                        Note = dataParams.Length == 4 ? dataParams[3] : ""
+                    };
+                    lst.Add(model);
+                }
+                QuestionInfoModels = lst;
+            }
+
             if (IsRadioSimulationTrainingSelected)
             {//模拟仿真
                 CountDownVisibility = Visibility.Visible;
@@ -889,6 +953,7 @@ namespace QTraining.ViewModels
             IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
             CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
         }
+
         /// <summary>
         /// 根据题库和题组大小生成随机题组
         /// </summary>
