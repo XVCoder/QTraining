@@ -116,6 +116,12 @@
                             IsChecked="{Binding IsCheckESelected,Mode=TwoWay}"
                             Margin="0 0 10 0"
                             VerticalAlignment="Center"/>
+                        <CheckBox
+                            Content="F"
+                            Focusable="False"
+                            IsChecked="{Binding IsCheckFSelected,Mode=TwoWay}"
+                            Margin="0 0 10 0"
+                            VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
                 <!--操作按钮-->
