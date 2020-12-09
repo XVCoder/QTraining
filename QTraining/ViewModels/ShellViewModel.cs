@@ -167,7 +167,7 @@ namespace QTraining.ViewModels
             set { canPreQuestion = value; NotifyOfPropertyChange(nameof(CanPreQuestion)); }
         }
 
-        private bool canNextQuestion;
+        private bool canNextQuestion = true;
         /// <summary>
         /// 下一题按钮可用性
         /// </summary>
@@ -376,6 +376,26 @@ namespace QTraining.ViewModels
             set { isRealResultVisible = value; NotifyOfPropertyChange(nameof(IsRealResultVisible)); }
         }
 
+        private bool isAnalysisVisible = false;
+        /// <summary>
+        /// 是否显示解析
+        /// </summary>
+        public bool IsAnalysisVisible
+        {
+            get => isAnalysisVisible;
+            set { isAnalysisVisible = value; NotifyOfPropertyChange(nameof(IsAnalysisVisible)); }
+        }
+
+        private bool isAnalysisEditorVisible = false;
+        /// <summary>
+        /// 是否显示解析编辑框
+        /// </summary>
+        public bool IsAnalysisEditorVisible
+        {
+            get => isAnalysisEditorVisible;
+            set { isAnalysisEditorVisible = value; NotifyOfPropertyChange(nameof(IsAnalysisEditorVisible)); }
+        }
+
         private bool isCommited;
         /// <summary>
         /// 是否已交卷
@@ -449,6 +469,16 @@ namespace QTraining.ViewModels
                 isLastReadingIndexHintVisible = value;
                 NotifyOfPropertyChange(nameof(IsLastReadingIndexHintVisible));
             }
+        }
+
+        private string editingAnalysis;
+        /// <summary>
+        /// 正在编辑的解析
+        /// </summary>
+        public string EditingAnalysis
+        {
+            get => editingAnalysis;
+            set { editingAnalysis = value; NotifyOfPropertyChange(nameof(EditingAnalysis)); }
         }
         #endregion
 
@@ -525,7 +555,10 @@ namespace QTraining.ViewModels
         public void PreQuestion()
         {
             if (CurrentQuestionIndex == 0)
+            {
                 CanPreQuestion = false;
+                CanNextQuestion = true;
+            }
             else
             {
                 SaveCurrentQuestionAnswer();
@@ -533,14 +566,14 @@ namespace QTraining.ViewModels
                 IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
                 CurrentQuestionIndex--;
                 CurrentQuestionInitial();
-                CanNextQuestion = true;
                 if (CurrentQuestionIndex == 0)
                     CanPreQuestion = false;
+                CanNextQuestion = true;
                 //隐藏上次浏览位置提示
                 if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
                     IsLastReadingIndexHintVisible = false;
             }
-            IsRealResultVisible = false;
+            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
         }
 
         /// <summary>
@@ -549,7 +582,10 @@ namespace QTraining.ViewModels
         public void NextQuestion()
         {
             if (CurrentQuestionIndex == QuestionRangeCount - 1)
+            {
                 CanNextQuestion = false;
+                CanPreQuestion = true;
+            }
             else
             {
                 SaveCurrentQuestionAnswer();
@@ -558,14 +594,14 @@ namespace QTraining.ViewModels
                 //切换
                 CurrentQuestionIndex++;
                 CurrentQuestionInitial();
-                CanPreQuestion = true;
                 if (CurrentQuestionIndex == QuestionRangeCount - 1)
                     CanNextQuestion = false;
+                CanPreQuestion = true;
                 //隐藏上次浏览位置提示
                 if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
                     IsLastReadingIndexHintVisible = false;
             }
-            IsRealResultVisible = false;
+            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
         }
 
         /// <summary>
@@ -665,7 +701,9 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ShowRealResult()
         {
-            IsRealResultVisible = !IsRealResultVisible;
+            IsAnalysisVisible = IsRealResultVisible = !IsRealResultVisible;
+            if (!IsRealResultVisible)
+                IsAnalysisEditorVisible = false;
         }
 
         /// <summary>
@@ -805,7 +843,7 @@ namespace QTraining.ViewModels
             CurrentQuestionInitial();
             CanPreQuestion = CurrentQuestionIndex != 0;
             CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
-            IsRealResultVisible = false;
+            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
         }
 
         /// <summary>
@@ -895,7 +933,7 @@ namespace QTraining.ViewModels
             CurrentQuestionInitial();
             CanPreQuestion = CurrentQuestionIndex != 0;
             CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
-            IsRealResultVisible = false;
+            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
             IsLastReadingIndexHintVisible = false;
         }
 
@@ -905,6 +943,63 @@ namespace QTraining.ViewModels
         public void HideLastReadingIndexHint()
         {
             IsLastReadingIndexHintVisible = false;
+        }
+
+        /// <summary>
+        /// 选中选项1
+        /// </summary>
+        public void SelectOpt1()
+        {
+            IsRadioASelected = IsCheckASelected = !IsCheckASelected;
+        }
+
+        /// <summary>
+        /// 选中选项2
+        /// </summary>
+        public void SelectOpt2()
+        {
+            IsRadioBSelected = IsCheckBSelected = !IsCheckBSelected;
+        }
+
+        /// <summary>
+        /// 选中选项3
+        /// </summary>
+        public void SelectOpt3()
+        {
+            IsRadioCSelected = IsCheckCSelected = !IsCheckCSelected;
+        }
+
+        /// <summary>
+        /// 选中选项4
+        /// </summary>
+        public void SelectOpt4()
+        {
+            IsRadioDSelected = IsCheckDSelected = !IsCheckDSelected;
+        }
+
+        /// <summary>
+        /// 选中选项5
+        /// </summary>
+        public void SelectOpt5()
+        {
+            IsCheckESelected = !IsCheckESelected;
+        }
+
+        /// <summary>
+        /// 选中选项6
+        /// </summary>
+        public void SelectOpt6()
+        {
+            IsCheckFSelected = !IsCheckFSelected;
+        }
+
+        /// <summary>
+        /// 编辑解析
+        /// </summary>
+        public void EditAnalysis()
+        {
+            IsAnalysisVisible = false;
+            IsAnalysisEditorVisible = true;
         }
         #endregion
 

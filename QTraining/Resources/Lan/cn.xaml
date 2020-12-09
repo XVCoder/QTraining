@@ -40,5 +40,7 @@
     <sys:String x:Key="Text_QuestionTypeSAA">SAA</sys:String>
     <sys:String x:Key="Text_QuestionTypeSAP">SAP</sys:String>
 
-    <sys:String x:Key="ToolTip_ShowAnswerHotKey">点击键盘左侧 [Ctrl] 显示答案</sys:String>
+    <sys:String x:Key="ToolTip_ShowAnswerHotKey">快捷键 [Ctrl]</sys:String>
+    <sys:String x:Key="ToolTip_PreQuestionHotKey">快捷键 [←]</sys:String>
+    <sys:String x:Key="ToolTip_NextQuestionHotKey">快捷键 [→]</sys:String>
 </ResourceDictionary>

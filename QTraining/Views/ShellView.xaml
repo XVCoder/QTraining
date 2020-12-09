@@ -15,12 +15,29 @@
         cal:Message.Attach="
         [Event Closing]=[Exit($eventArgs)];
         [Event Loaded]=[Loaded];
-        [Gesture LeftCtrl]=[ShowRealResult]">
+        [Gesture LeftCtrl]=[ShowRealResult];
+        [Gesture RightCtrl]=[ShowRealResult];
+        [Gesture Left]=[PreQuestion];
+        [Gesture Right]=[NextQuestion];
+        [Gesture D1]=[SelectOpt1];
+        [Gesture D2]=[SelectOpt2];
+        [Gesture D3]=[SelectOpt3];
+        [Gesture D4]=[SelectOpt4];
+        [Gesture D5]=[SelectOpt5];
+        [Gesture D6]=[SelectOpt6];
+        [Gesture NumPad1]=[SelectOpt1];
+        [Gesture NumPad2]=[SelectOpt2];
+        [Gesture NumPad3]=[SelectOpt3];
+        [Gesture NumPad4]=[SelectOpt4];
+        [Gesture NumPad5]=[SelectOpt5];
+        [Gesture NumPad6]=[SelectOpt6];">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="120"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid>
@@ -32,12 +49,12 @@
                     Orientation="Horizontal">
                     <!--显示答案/隐藏答案-->
                     <Button
-                        x:Name="ShowRealResult"
                         Height="22"
                         Margin="10 0 0 0"
                         Padding="5 2"
                         ToolTip="{DynamicResource ToolTip_ShowAnswerHotKey}"
-                        pu:ButtonHelper.CornerRadius="5">
+                        pu:ButtonHelper.CornerRadius="5"
+                        cal:Message.Attach="ShowRealResult">
                         <Button.Content>
                             <StackPanel>
                                 <!--显示答案-->
@@ -131,27 +148,29 @@
                     Orientation="Horizontal">
                     <!--上一题-->
                     <Button
-                        x:Name="PreQuestion"
                         Content="{DynamicResource Button_PreQuestion}"
                         Height="22"
                         Margin="10 0 0 0"
                         Padding="5 2"
-                        pu:ButtonHelper.CornerRadius="5"/>
+                        ToolTip="{DynamicResource ToolTip_PreQuestionHotKey}"
+                        pu:ButtonHelper.CornerRadius="5"
+                        cal:Message.Attach="PreQuestion"/>
                     <!--下一题-->
                     <Button
-                        x:Name="NextQuestion"
                         Content="{DynamicResource Button_NextQuestion}"
                         Height="22"
                         Margin="20 0 0 0"
                         Padding="5 2"
-                        pu:ButtonHelper.CornerRadius="5"/>
+                        ToolTip="{DynamicResource ToolTip_NextQuestionHotKey}"
+                        pu:ButtonHelper.CornerRadius="5"
+                        cal:Message.Attach="NextQuestion"/>
                     <!--交卷-->
                     <Button
-                        x:Name="Commit"
                         Height="22"
                         Margin="30 0 10 0"
                         Padding="5 2"
-                        pu:ButtonHelper.CornerRadius="5">
+                        pu:ButtonHelper.CornerRadius="5"
+                        cal:Message.Attach="Commit">
                         <Button.Content>
                             <StackPanel>
                                 <TextBlock
@@ -179,37 +198,20 @@
                 </StackPanel>
             </Grid>
             <!--试题显示区域-->
+            <ScrollViewer
+                Grid.Row="1"
+                pu:ScrollViewerHelper.ScrollBarThickness="8"
+                pu:ScrollViewerHelper.ScrollBarCornerRadius="5">
+                <!--试题-->
+                <Image
+                    HorizontalAlignment="Left"
+                    Margin="5"
+                    Source="{Binding CurrentQuestionImage}"
+                    VerticalAlignment="Top"/>
+            </ScrollViewer>
+            <!--翻页板-->
             <Grid
-                Grid.Row="1">
-                <StackPanel
-                    Orientation="Vertical">
-                    <!--试题-->
-                    <Image
-                        HorizontalAlignment="Left"
-                        Source="{Binding CurrentQuestionImage}"
-                        VerticalAlignment="Top"/>
-                    <!--答案-->
-                    <TextBlock
-                        Margin="10 50 0 0"
-                        HorizontalAlignment="Left"
-                        Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}">
-                        <Run Text="{DynamicResource Common_RealResult}"/>
-                        <Run Text=": "/>
-                        <Run Text="{Binding CurrentQuestion.RealResult}"/>
-                    </TextBlock>
-                    <!--解析-->
-                    <TextBlock
-                        Foreground="Green"
-                        HorizontalAlignment="Left"
-                        Margin="10 10 0 0"
-                        Text="{Binding CurrentQuestion.Note}"
-                        TextWrapping="Wrap"
-                        Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"
-                        Width="750"/>
-                </StackPanel>
-            </Grid>
-            <!--背景-->
-            <Grid
+                Visibility="Collapsed"
                 Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -253,13 +255,59 @@
                     VerticalAlignment="Bottom"
                     cal:Message.Attach="[Event MouseDown]=[NextQuestion]"/>
             </Grid>
+            <GridSplitter
+                Grid.Row="2"
+                Background="LightGray"
+                Focusable="False"
+                HorizontalAlignment="Stretch"/>
+            <!--答案及解析模块-->
+            <Grid
+                Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--答案-->
+                <TextBlock
+                    Margin="10 3 0 0"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}">
+                    <Run Text="{DynamicResource Common_RealResult}"/>
+                    <Run Text=": "/>
+                    <Run Text="{Binding CurrentQuestion.RealResult}"/>
+                </TextBlock>
+                <!--解析-->
+                <TextBlock
+                    Grid.Row="1"
+                    Foreground="Green"
+                    HorizontalAlignment="Left"
+                    Margin="10 10 0 0"
+                    Text="{Binding CurrentQuestion.Note}"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding IsAnalysisVisible,Converter={StaticResource BoolConverter}}"
+                    Width="750"
+                    cal:Message.Attach="[Event MouseDown]=[EditAnalysis]"/>
+                <TextBox
+                    Grid.Row="1"
+                    Height="50"
+                    Margin="10 0 10 0"
+                    HorizontalContentAlignment="Left"
+                    Padding="5 8"
+                    Text="{Binding EditingAnalysis}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Top"
+                    VerticalScrollBarVisibility="Auto"
+                    Visibility="{Binding IsAnalysisEditorVisible,Converter={StaticResource BoolConverter}}"
+                    pu:TextBoxHelper.CornerRadius="5"/>
+            </Grid>
             <!--底部栏-->
             <StackPanel
-                Grid.Row="2"
-                    HorizontalAlignment="Left"
-                    Margin="15 0 5 10"
-                    Orientation="Horizontal"
-                    VerticalAlignment="Bottom">
+                Grid.Row="4"
+                HorizontalAlignment="Left"
+                Margin="15 0 5 10"
+                Orientation="Horizontal"
+                VerticalAlignment="Bottom">
                 <!--跳转输入框-->
                 <TextBox
                     FontSize="10"
@@ -273,12 +321,12 @@
                     [Event PreviewKeyDown]=[PreviewKeyDown($eventArgs)]"/>
                 <!--跳转按钮-->
                 <Button
-                    x:Name="TurnTo"
                     Content="{DynamicResource Button_TurnTo}"
                     Height="22"
                     Margin="5 0 0 0"
                     Padding="5 2"
-                    pu:ButtonHelper.CornerRadius="5"/>
+                    pu:ButtonHelper.CornerRadius="5"
+                    cal:Message.Attach="TurnTo"/>
                 <!--试题索引-->
                 <TextBlock
                     FontSize="12"
@@ -301,7 +349,7 @@
                     Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
                     pu:ButtonHelper.ButtonStyle="Link"
                     pu:ButtonHelper.HoverBrush="OrangeRed"
-                    cal:Message.Attach="[Event Click]=[TurnToLastReadingIndex]"/>
+                    cal:Message.Attach="TurnToLastReadingIndex"/>
                 <Button
                     Content="&#xe92d;"
                     FontFamily="{StaticResource PanuonIconFont}"
@@ -313,20 +361,20 @@
                     Width="30"
                     pu:ButtonHelper.ButtonStyle="Link"
                     pu:ButtonHelper.HoverBrush="Red"
-                    cal:Message.Attach="[Event Click]=[HideLastReadingIndexHint]"/>
+                    cal:Message.Attach="HideLastReadingIndexHint"/>
             </StackPanel>
             <!--查看历史记录-->
             <Button
-                x:Name="ShowHistory"
                 Grid.Column="2"
-                Grid.Row="2"
+                Grid.Row="4"
                 Content="{DynamicResource Button_ShowHistory}"
                 FontSize="14"
                 Foreground="LightGray"
                 HorizontalAlignment="Right"
                 Margin="0 0 15 10"
                 VerticalAlignment="Bottom"
-                pu:ButtonHelper.ButtonStyle="Link"/>
+                pu:ButtonHelper.ButtonStyle="Link"
+                cal:Message.Attach="ShowHistory"/>
         </Grid>
         <!--蒙版+开始按钮-->
         <Grid
@@ -393,7 +441,6 @@
                         pu:RadioButtonHelper.RadioButtonStyle="Button"/>
                 </Grid>
                 <Button
-                    x:Name="StartTraining"
                     Grid.Row="4"
                     Foreground="Black"
                     FontSize="15"
@@ -401,7 +448,8 @@
                     Content="{DynamicResource Button_Strat}"
                     Height="40"
                     Width="100"
-                    pu:ButtonHelper.CornerRadius="10"/>
+                    pu:ButtonHelper.CornerRadius="10"
+                    cal:Message.Attach="StartTraining"/>
             </Grid>
         </Grid>
     </Grid>
