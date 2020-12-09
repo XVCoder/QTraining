@@ -376,24 +376,24 @@ namespace QTraining.ViewModels
             set { isRealResultVisible = value; NotifyOfPropertyChange(nameof(IsRealResultVisible)); }
         }
 
-        private bool isAnalysisVisible = false;
+        private bool isNoteVisible = false;
         /// <summary>
         /// 是否显示解析
         /// </summary>
-        public bool IsAnalysisVisible
+        public bool IsNoteVisible
         {
-            get => isAnalysisVisible;
-            set { isAnalysisVisible = value; NotifyOfPropertyChange(nameof(IsAnalysisVisible)); }
+            get => isNoteVisible;
+            set { isNoteVisible = value; NotifyOfPropertyChange(nameof(IsNoteVisible)); }
         }
 
-        private bool isAnalysisEditorVisible = false;
+        private bool isNoteEditorVisible = false;
         /// <summary>
         /// 是否显示解析编辑框
         /// </summary>
-        public bool IsAnalysisEditorVisible
+        public bool IsNoteEditorVisible
         {
-            get => isAnalysisEditorVisible;
-            set { isAnalysisEditorVisible = value; NotifyOfPropertyChange(nameof(IsAnalysisEditorVisible)); }
+            get => isNoteEditorVisible;
+            set { isNoteEditorVisible = value; NotifyOfPropertyChange(nameof(IsNoteEditorVisible)); }
         }
 
         private bool isCommited;
@@ -471,14 +471,24 @@ namespace QTraining.ViewModels
             }
         }
 
-        private string editingAnalysis;
+        private string editingNote;
         /// <summary>
         /// 正在编辑的解析
         /// </summary>
-        public string EditingAnalysis
+        public string EditingNote
         {
-            get => editingAnalysis;
-            set { editingAnalysis = value; NotifyOfPropertyChange(nameof(EditingAnalysis)); }
+            get => editingNote;
+            set { editingNote = value; NotifyOfPropertyChange(nameof(EditingNote)); }
+        }
+
+        private bool isTurnToBoxFocusable = false;
+        /// <summary>
+        /// 跳转题号输入框可聚焦性
+        /// </summary>
+        public bool IsTurnToBoxFocusable
+        {
+            get => isTurnToBoxFocusable;
+            set { isTurnToBoxFocusable = value; NotifyOfPropertyChange(nameof(IsTurnToBoxFocusable)); }
         }
         #endregion
 
@@ -573,7 +583,7 @@ namespace QTraining.ViewModels
                 if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
                     IsLastReadingIndexHintVisible = false;
             }
-            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
+            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
         }
 
         /// <summary>
@@ -601,7 +611,7 @@ namespace QTraining.ViewModels
                 if (IsRadioOrderTrainingSelected && CurrentQuestionIndex == LastReadingIndex)
                     IsLastReadingIndexHintVisible = false;
             }
-            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
+            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
         }
 
         /// <summary>
@@ -701,9 +711,9 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ShowRealResult()
         {
-            IsAnalysisVisible = IsRealResultVisible = !IsRealResultVisible;
+            IsNoteVisible = IsRealResultVisible = !IsRealResultVisible;
             if (!IsRealResultVisible)
-                IsAnalysisEditorVisible = false;
+                IsNoteEditorVisible = false;
         }
 
         /// <summary>
@@ -843,7 +853,8 @@ namespace QTraining.ViewModels
             CurrentQuestionInitial();
             CanPreQuestion = CurrentQuestionIndex != 0;
             CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
-            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
+            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
+            IsTurnToBoxFocusable = false;
         }
 
         /// <summary>
@@ -879,12 +890,9 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ShowHistory()
         {
-            string trainingRecorderPath = $"{Environment.CurrentDirectory}/training_recorder.txt";
+            string trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
             if (!File.Exists(trainingRecorderPath))
-            {
-                MessageHelper.Error(ResourceHelper.GetStrings("Common_FileNotExist"), MessageBoxButton.OK);
-                return;
-            }
+                using (File.Create(trainingRecorderPath)) ;
             var history = "";
             using (FileStream fsRead = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.Read))
             {
@@ -933,7 +941,7 @@ namespace QTraining.ViewModels
             CurrentQuestionInitial();
             CanPreQuestion = CurrentQuestionIndex != 0;
             CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
-            IsAnalysisEditorVisible = IsAnalysisVisible = IsRealResultVisible = false;
+            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsLastReadingIndexHintVisible = false;
         }
 
@@ -994,12 +1002,38 @@ namespace QTraining.ViewModels
         }
 
         /// <summary>
-        /// 编辑解析
+        /// 编辑笔记或解析
         /// </summary>
-        public void EditAnalysis()
+        public void EditNote()
         {
-            IsAnalysisVisible = false;
-            IsAnalysisEditorVisible = true;
+            IsNoteVisible = false;
+            IsNoteEditorVisible = true;
+            EditingNote = CurrentQuestion.Note;
+        }
+
+        /// <summary>
+        /// 鼠标点击跳转题号输入框
+        /// </summary>
+        public void TurnToBoxMouseDown()
+        {
+            IsTurnToBoxFocusable = true;
+        }
+
+        /// <summary>
+        /// 保存笔记或解析
+        /// </summary>
+        public void SaveNote()
+        {
+
+        }
+
+        /// <summary>
+        /// 取消保存
+        /// </summary>
+        public void SaveNoteCancel()
+        {
+            IsNoteEditorVisible = false;
+            IsNoteVisible = true;
         }
         #endregion
 
