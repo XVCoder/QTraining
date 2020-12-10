@@ -633,6 +633,11 @@ namespace QTraining.ViewModels
                 default:
                     break;
             }
+            if (!File.Exists(questionInfoPath))
+            {//题库路径不存在，提示检查
+                MessageHelper.Error(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"));
+                return;
+            }
             //从TXT文件中加载数据
             using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
             {
@@ -702,7 +707,7 @@ namespace QTraining.ViewModels
             }
             else
             {//提示选择模式
-                MessageBoxX.Show("请选择模式", "提示", MessageBoxButton.OK, MessageBoxIcon.Info);
+                MessageHelper.Warning("Message_TrainingModeSelectRequired", null, MessageBoxButton.OK);
             }
         }
 
@@ -756,9 +761,7 @@ namespace QTraining.ViewModels
                     commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]]};  ");
                 }
                 //确认交卷弹窗提示
-                if (MessageBoxX.Show(App.Current.MainWindow, commitConfirmMsg.ToString(),
-                    ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
-                    , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
+                if (MessageHelper.Warning(commitConfirmMsg.ToString()) == MessageBoxResult.No)
                     return;
                 StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
                 trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {QuestionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
@@ -777,7 +780,7 @@ namespace QTraining.ViewModels
                 trainingResultStr.AppendLine();
                 countDownTimer.Stop();
                 //弹窗显示练习结果
-                MessageHelper.Info(trainingResultStr.ToString(), MessageBoxButton.OK);
+                MessageHelper.Info(trainingResultStr.ToString());
                 IsCommited = true;
                 //将练习记录写到txt文件中
                 var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
@@ -913,9 +916,7 @@ namespace QTraining.ViewModels
         public void Exit(object o)
         {
             //退出提醒
-            if (MessageBoxX.Show(App.Current.MainWindow, ResourceHelper.GetStrings("Text_ExitConfirm"),
-                    ResourceHelper.GetStrings("Common_ProgramName"), MessageBoxButton.YesNo
-                    , MessageBoxIcon.Warning, DefaultButton.CancelNo) == MessageBoxResult.No)
+            if (MessageHelper.Warning(ResourceHelper.GetStrings("Text_ExitConfirm")) == MessageBoxResult.No)
             {
                 if (o is CancelEventArgs args)
                     args.Cancel = true;
@@ -1022,9 +1023,37 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 保存笔记或解析
         /// </summary>
-        public void SaveNote()
+        public void SaveNote(object o)
         {
+            var note = "";
+            if (o is TextBox editor)
+                note = editor.Text;  //按Enter键执行时EditingNote不会及时更新，需要从界面直接取值
+            else
+                note = EditingNote;
+            QuestionInfoModels[CurrentQuestionIndex].Note = note.Replace(';', '；');
+            NotifyOfPropertyChange(nameof(CurrentQuestion));
+            IsNoteEditorVisible = false;
+            IsNoteVisible = true;
 
+            //更新笔记到txt文件
+            using (FileStream fsWrite = new FileStream(currentQuestionBankPath + "/QuestionInfo.txt", FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                var lstStr = new List<string>();
+                QuestionInfoModels.ToList().ForEach(x =>
+                {
+                    var savingStr = new StringBuilder();
+                    savingStr.Append(x.Id);
+                    savingStr.Append(";");
+                    savingStr.Append(x.ResultCount);
+                    savingStr.Append(";");
+                    savingStr.Append(x.RealResult);
+                    savingStr.Append(";");
+                    savingStr.Append(x.Note);
+                    lstStr.Add(savingStr.ToString());
+                });
+                var buffer = Encoding.UTF8.GetBytes(string.Join("\r\n", lstStr.ToArray()));
+                fsWrite.Write(buffer, 0, buffer.Length);
+            }
         }
 
         /// <summary>

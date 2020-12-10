@@ -223,32 +223,52 @@
                 <!--上一题-->
                 <Grid
                     Grid.Column="0"
-                    Background="#23333333"
-                    Height="50"
+                    Height="80"
                     HorizontalAlignment="Left"
                     ToolTip="{DynamicResource Button_PreQuestion}"
-                    Width="25"
+                    Width="40"
                     cal:Message.Attach="[Event MouseDown]=[PreQuestion]">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#23333333"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
                     <TextBlock
                         FontFamily="{StaticResource PanuonIconFont}"
                         Foreground="DimGray"
                         HorizontalAlignment="Center"
+                        Opacity=".8"
                         Text="&#xe91c;"
                         VerticalAlignment="Center"/>
                 </Grid>
                 <!--下一题-->
                 <Grid
                     Grid.Column="2"
-                    Background="#23333333"
-                    Height="50"
+                    Height="80"
                     HorizontalAlignment="Right"
                     ToolTip="{DynamicResource Button_NextQuestion}"
-                    Width="25"
+                    Width="40"
                     cal:Message.Attach="[Event MouseDown]=[NextQuestion]">
+                    <Grid.Resources>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#23333333"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Resources>
                     <TextBlock
                         FontFamily="{StaticResource PanuonIconFont}"
                         Foreground="DimGray"
                         HorizontalAlignment="Center"
+                        Opacity=".8"
                         Text="&#xe91e;"
                         VerticalAlignment="Center"/>
                 </Grid>
@@ -278,7 +298,7 @@
                     Foreground="DimGray"
                     HorizontalAlignment="Left"
                     Margin="10 0 0 5"
-                    Text="{Binding CurrentQuestion.Note}"
+                    Text="{Binding CurrentQuestion.Note,Mode=OneWay}"
                     TextWrapping="Wrap"
                     Visibility="{Binding IsNoteVisible,Converter={StaticResource BoolConverter}}"
                     Width="750"
@@ -297,7 +317,7 @@
                         Height="50"
                         Margin="2 5 110 5"
                         HorizontalContentAlignment="Left"
-                        Text="{Binding EditingNote}"
+                        Text="{Binding EditingNote,Mode=TwoWay}"
                         TextWrapping="Wrap"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Top"
@@ -307,7 +327,11 @@
                         pu:TextBoxHelper.FocusedShadowColor="Transparent"
                         pu:TextBoxHelper.Watermark="{DynamicResource Text_NoteEditHint}"
                         pu:ScrollViewerHelper.ScrollBarThickness="5"
-                        pu:ScrollViewerHelper.ScrollBarCornerRadius="3"/>
+                        pu:ScrollViewerHelper.ScrollBarCornerRadius="3"
+                        cal:Message.Attach="
+                        [Gesture Enter]=[SaveNote($source)];
+                        [Gesture Esc]=[SaveNoteCancel]
+                        "/>
                 </Border>
                 <!--解析内容保存按钮-->
                 <Button
@@ -318,12 +342,13 @@
                     Foreground="White"
                     HorizontalAlignment="Right"
                     Margin="0 5 68 5"
+                    ToolTip="{DynamicResource ToolTip_SaveNoteHotKey}"
                     Padding="8 5 8 6"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"
                     pu:ButtonHelper.CornerRadius="5"
                     pu:ButtonHelper.HoverBrush="Green"
-                    cal:Message.Attach="SaveNote"/>
+                    cal:Message.Attach="SaveNote($source)"/>
                 <!--取消按钮-->
                 <Button
                     Grid.Row="1"
@@ -333,6 +358,7 @@
                     Foreground="White"
                     HorizontalAlignment="Right"
                     Margin="0 5 22 5"
+                    ToolTip="{DynamicResource ToolTip_SaveNoteCancelHotKey}"
                     Padding="8 5 8 6"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"

@@ -38,9 +38,9 @@ namespace QTraining.Common
         /// <param name="msg">消息</param>
         /// <param name="button">按钮</param>
         /// <param name="owner">窗体拥有者（为空则取当前的MainWindow）</param>
-        public static MessageBoxResult Info(string msg, MessageBoxButton button, DefaultButton defaultButton = DefaultButton.YesOK, Window owner = null)
+        public static MessageBoxResult Info(string msg, Window owner = null, MessageBoxButton button = MessageBoxButton.OK, DefaultButton defaultButton = DefaultButton.YesOK)
         {
-            return MessageBase(msg, ResourceHelper.GetStrings("Common_ProgramName"), button, MessageBoxIcon.Info, defaultButton, owner);
+            return MessageBase(msg, ResourceHelper.GetStrings("Common_Info"), button, MessageBoxIcon.Info, defaultButton, owner);
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace QTraining.Common
         /// <param name="msg">消息</param>
         /// <param name="button">按钮</param>
         /// <param name="owner">窗体拥有者（为空则取当前的MainWindow）</param>
-        public static MessageBoxResult Warning(string msg, MessageBoxButton button, DefaultButton defaultButton = DefaultButton.CancelNo, Window owner = null)
+        public static MessageBoxResult Warning(string msg, Window owner = null, MessageBoxButton button = MessageBoxButton.YesNo, DefaultButton defaultButton = DefaultButton.CancelNo)
         {
-            return MessageBase(msg, ResourceHelper.GetStrings("Common_ProgramName"), button, MessageBoxIcon.Warning, defaultButton, owner);
+            return MessageBase(msg, ResourceHelper.GetStrings("Common_Warning"), button, MessageBoxIcon.Warning, defaultButton, owner);
         }
 
         /// <summary>
@@ -60,9 +60,9 @@ namespace QTraining.Common
         /// <param name="msg">消息</param>
         /// <param name="button">按钮</param>
         /// <param name="owner">窗体拥有者（为空则取当前的MainWindow）</param>
-        public static MessageBoxResult Error(string msg, MessageBoxButton button, DefaultButton defaultButton = DefaultButton.YesOK, Window owner = null)
+        public static MessageBoxResult Error(string msg, Window owner = null, MessageBoxButton button = MessageBoxButton.OK, DefaultButton defaultButton = DefaultButton.YesOK)
         {
-            return MessageBase(msg, ResourceHelper.GetStrings("Common_ProgramName"), button, MessageBoxIcon.Error, defaultButton, owner);
+            return MessageBase(msg, ResourceHelper.GetStrings("Common_Error"), button, MessageBoxIcon.Error, defaultButton, owner);
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace QTraining.Common
         /// <param name="msg">消息</param>
         /// <param name="button">按钮</param>
         /// <param name="owner">窗体拥有者（为空则取当前的MainWindow）</param>
-        public static MessageBoxResult Question(string msg, MessageBoxButton button, DefaultButton defaultButton = DefaultButton.CancelNo, Window owner = null)
+        public static MessageBoxResult Question(string msg, Window owner = null, MessageBoxButton button = MessageBoxButton.YesNo, DefaultButton defaultButton = DefaultButton.CancelNo)
         {
-            return MessageBase(msg, ResourceHelper.GetStrings("Common_ProgramName"), button, MessageBoxIcon.Question, defaultButton, owner);
+            return MessageBase(msg, ResourceHelper.GetStrings("Common_Question"), button, MessageBoxIcon.Question, defaultButton, owner);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@ namespace QTraining.Common
         /// <param name="msg">消息</param>
         /// <param name="button">按钮</param>
         /// <param name="owner">窗体拥有者（为空则取当前的MainWindow）</param>
-        public static MessageBoxResult Success(string msg, MessageBoxButton button, DefaultButton defaultButton = DefaultButton.YesOK, Window owner = null)
+        public static MessageBoxResult Success(string msg, Window owner = null, MessageBoxButton button = MessageBoxButton.OK, DefaultButton defaultButton = DefaultButton.YesOK)
         {
-            return MessageBase(msg, ResourceHelper.GetStrings("Common_ProgramName"), button, MessageBoxIcon.Success, defaultButton, owner);
+            return MessageBase(msg, ResourceHelper.GetStrings("Common_Success"), button, MessageBoxIcon.Success, defaultButton, owner);
         }
     }
 }

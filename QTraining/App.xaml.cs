@@ -24,7 +24,7 @@ namespace QTraining
             }
             else
             {
-                MessageHelper.Info(ResourceHelper.GetStrings("Message_ProgramIsRunning"), MessageBoxButton.OK, Panuon.UI.Silver.DefaultButton.YesOK, App.Current.MainWindow);
+                MessageHelper.Info(ResourceHelper.GetStrings("Message_ProgramIsRunning"));
                 this.Shutdown();
             }
         }

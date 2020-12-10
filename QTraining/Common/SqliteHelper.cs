@@ -64,7 +64,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
                 dt = null;
             }
@@ -150,7 +150,7 @@ namespace QTraining.Common
                 ret = -1;
                 affectedRows = 0;
                 newid = -1;
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
             catch (Exception ex)
@@ -158,7 +158,7 @@ namespace QTraining.Common
                 ret = -1;
                 affectedRows = 0;
                 newid = -1;
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
             return ret;
@@ -175,7 +175,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
         }
@@ -192,7 +192,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
         }
@@ -209,7 +209,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
         }
@@ -227,7 +227,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
         }
@@ -245,7 +245,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
         }
@@ -266,7 +266,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
             }
             finally
@@ -303,7 +303,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
                 return DateTime.MinValue;
             }
@@ -371,7 +371,7 @@ namespace QTraining.Common
             }
             catch (Exception ex)
             {
-                MessageHelper.Error(ex.Message, System.Windows.MessageBoxButton.OK);
+                MessageHelper.Error(ex.Message);
                 SysLogHelper.WriteLog(ex.Message);
                 dt = null;
             }
