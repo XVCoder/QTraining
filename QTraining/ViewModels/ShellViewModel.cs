@@ -1030,7 +1030,10 @@ namespace QTraining.ViewModels
                 note = editor.Text;  //按Enter键执行时EditingNote不会及时更新，需要从界面直接取值
             else
                 note = EditingNote;
-            QuestionInfoModels[CurrentQuestionIndex].Note = note.Replace(';', '；');
+            if (IsRadioOrderTrainingSelected)
+                QuestionInfoModels[CurrentQuestionIndex].Note = note.Replace(';', '；');
+            else
+                QuestionInfoModels[randomQuestionBank[CurrentQuestionIndex]].Note = note.Replace(';', '；');
             NotifyOfPropertyChange(nameof(CurrentQuestion));
             IsNoteEditorVisible = false;
             IsNoteVisible = true;
