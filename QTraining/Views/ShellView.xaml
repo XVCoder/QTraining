@@ -130,13 +130,15 @@
                             Focusable="False"
                             IsChecked="{Binding IsCheckESelected,Mode=TwoWay}"
                             Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
+                            VerticalAlignment="Center"
+                            Visibility="{Binding IsCheckBoxEVisible,Converter={StaticResource BoolConverter}}"/>
                         <CheckBox
                             Content="F"
                             Focusable="False"
                             IsChecked="{Binding IsCheckFSelected,Mode=TwoWay}"
                             Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
+                            VerticalAlignment="Center"
+                            Visibility="{Binding IsCheckBoxFVisible,Converter={StaticResource BoolConverter}}"/>
                     </StackPanel>
                 </StackPanel>
                 <!--操作按钮-->

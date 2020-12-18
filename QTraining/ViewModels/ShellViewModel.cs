@@ -490,6 +490,34 @@ namespace QTraining.ViewModels
             get => isTurnToBoxFocusable;
             set { isTurnToBoxFocusable = value; NotifyOfPropertyChange(nameof(IsTurnToBoxFocusable)); }
         }
+
+        private bool isCheckBoxEVisible = true;
+        /// <summary>
+        /// 复选框E可见性
+        /// </summary>
+        public bool IsCheckBoxEVisible
+        {
+            get => isCheckBoxEVisible;
+            set
+            {
+                isCheckBoxEVisible = value;
+                NotifyOfPropertyChange(nameof(IsCheckBoxEVisible));
+            }
+        }
+
+        private bool isCheckBoxFVisible = false;
+        /// <summary>
+        /// 复选框F可见性
+        /// </summary>
+        public bool IsCheckBoxFVisible
+        {
+            get => isCheckBoxFVisible;
+            set
+            {
+                isCheckBoxFVisible = value;
+                NotifyOfPropertyChange(nameof(IsCheckBoxFVisible));
+            }
+        }
         #endregion
 
         #region Events
@@ -1175,7 +1203,20 @@ namespace QTraining.ViewModels
                 IsMultiSelect = false;
             }
             else
+            {//多选
                 IsMultiSelect = true;
+                if (CurrentQuestion.ResultCount == 5)
+                {//显示E，隐藏F
+                    IsCheckBoxEVisible = true;
+                    IsCheckBoxFVisible = false;
+                }
+                else if (CurrentQuestion.ResultCount == 6)
+                {//显示E和F
+                    IsCheckBoxEVisible = true;
+                    IsCheckBoxFVisible = true;
+                }
+            }
+
             if (answer == null || answer.Length == 0)
                 return;
             if (answer.Contains("A"))
