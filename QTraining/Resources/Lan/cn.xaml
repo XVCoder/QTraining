@@ -44,7 +44,7 @@
     <sys:String x:Key="Text_QuestionTypeSAA">SAA</sys:String>
     <sys:String x:Key="Text_QuestionTypeSAP">SAP</sys:String>
     <sys:String x:Key="Text_NoteEditHint">添加笔记或解析</sys:String>
-    <sys:String x:Key="Text_ClickToEditNoteHint">点击此处添加笔记或解析</sys:String>
+    <sys:String x:Key="Text_ClickToEditNoteHint">点击此处添加或编辑笔记</sys:String>
 
     <sys:String x:Key="ToolTip_ShowAnswerHotKey">快捷键 [Ctrl]</sys:String>
     <sys:String x:Key="ToolTip_PreQuestionHotKey">快捷键 [←]</sys:String>
