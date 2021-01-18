@@ -302,6 +302,7 @@
                     Margin="10 0 0 5"
                     Text="{Binding CurrentQuestion.Note,Mode=OneWay}"
                     TextWrapping="Wrap"
+                    ToolTip="{DynamicResource Text_ClickToEditNoteHint}"
                     Visibility="{Binding IsNoteVisible,Converter={StaticResource BoolConverter}}"
                     Width="750"
                     cal:Message.Attach="[Event MouseDown]=[EditNote]"/>
