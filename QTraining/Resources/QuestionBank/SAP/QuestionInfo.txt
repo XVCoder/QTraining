@@ -13,9 +13,9 @@ Q12;4;D;
 Q13;4;B;
 Q14;4;A;
 Q15;4;A;
-Q16;4;A;
+Q16;4;A;题中说明了处于vpc中的lambda被invoke了，但是Saas服务没有收到，只有A解释了二者为什么没有连接。
 Q17;6;AEF;
-Q18;4;B;
+Q18;4;B;RDS中不包括DB2，故A、C错；SMS不支持z/OS，只支持windows和linux，故D错。
 Q19;5;BD;
 Q20;4;A;
 Q21;4;B;
