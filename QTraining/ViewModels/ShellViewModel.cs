@@ -461,6 +461,9 @@ namespace QTraining.ViewModels
         {
             get
             {
+                if (Enum.GetNames(typeof(QuestionBankType)).ToList().Where(x => !Properties.Settings.Default.LastReadingIndex.Contains(x)).Count() > 0)
+                    Properties.Settings.Default.LastReadingIndex = string.Join(";", Enum.GetNames(typeof(QuestionBankType)).ToList().Select(x => x + ":0"));
+
                 var dic = new Dictionary<QuestionBankType, int>();
                 Properties.Settings.Default.LastReadingIndex.Split(';').ToList().ForEach(x =>
                 {
