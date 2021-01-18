@@ -49,10 +49,10 @@ namespace QTraining.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LastReadingIndex {
+        [global::System.Configuration.DefaultSettingValueAttribute("SAA:0;SAP:0;")]
+        public string LastReadingIndex {
             get {
-                return ((int)(this["LastReadingIndex"]));
+                return ((string)(this["LastReadingIndex"]));
             }
             set {
                 this["LastReadingIndex"] = value;

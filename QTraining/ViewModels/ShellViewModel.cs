@@ -79,7 +79,7 @@ namespace QTraining.ViewModels
 
         private int selectedQuestionTypeIndex;
         /// <summary>
-        /// 选中实体类型索引值
+        /// 选中试题类型索引值
         /// </summary>
         public int SelectedQuestionTypeIndex
         {
@@ -96,6 +96,11 @@ namespace QTraining.ViewModels
                 NotifyOfPropertyChange(nameof(SelectedQuestionTypeIndex));
             }
         }
+
+        /// <summary>
+        /// 选中试题类型
+        /// </summary>
+        private QuestionBankType SelectedQuestionType => (QuestionBankType)SelectedQuestionTypeIndex;
 
         private string currentQuestionBankPath = "";
 
@@ -439,13 +444,35 @@ namespace QTraining.ViewModels
         /// </summary>
         public int LastReadingIndex
         {
-            get => Properties.Settings.Default.LastReadingIndex;
+            get => DicLastReadingIndex[SelectedQuestionType];
             set
             {
-                Properties.Settings.Default.LastReadingIndex = value;
+                Properties.Settings.Default.LastReadingIndex = string.Join(";", DicLastReadingIndex.Select(x => $"{x.Key}:{(x.Key == SelectedQuestionType ? value : x.Value)}").ToList());
                 Properties.Settings.Default.Save();
                 NotifyOfPropertyChange(nameof(LastReadingIndex));
                 NotifyOfPropertyChange(nameof(LastReadingIndexHint));
+            }
+        }
+
+        /// <summary>
+        /// 最后一次浏览时的题目的索引（用于顺序练习）
+        /// </summary>
+        public Dictionary<QuestionBankType, int> DicLastReadingIndex
+        {
+            get
+            {
+                var dic = new Dictionary<QuestionBankType, int>();
+                Properties.Settings.Default.LastReadingIndex.Split(';').ToList().ForEach(x =>
+                {
+                    if (!x.IsNullOrWhiteSpace())
+                    {
+                        var dicSource = x.Split(':');
+                        var key = (QuestionBankType)Enum.Parse(typeof(QuestionBankType), dicSource[0]);
+                        var value = int.Parse(dicSource[1]);
+                        dic.Add(key, value);
+                    }
+                });
+                return dic;
             }
         }
 
@@ -730,6 +757,7 @@ namespace QTraining.ViewModels
                     IsLastReadingIndexHintVisible = false;
                 else
                     IsLastReadingIndexHintVisible = true;
+                LastReadingIndex = LastReadingIndex;
                 //练习开始
                 IsTrainingStart = true;
             }
@@ -806,7 +834,7 @@ namespace QTraining.ViewModels
                     trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
                 }
                 trainingResultStr.AppendLine();
-                countDownTimer.Stop();
+                countDownTimer?.Stop();
                 //弹窗显示练习结果
                 MessageHelper.Info(trainingResultStr.ToString());
                 IsCommited = true;
@@ -819,7 +847,10 @@ namespace QTraining.ViewModels
                         File.Create(trainingRecorderPath);
                     using (tw = File.AppendText(trainingRecorderPath))
                     {
-                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n";
+                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】"
+                            + SelectedQuestionType.ToString() + " "
+                            + (IsRadioOrderTrainingSelected ? $"{ResourceHelper.GetStrings("Text_OrderTraining")}\n"
+                            : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
                         str += trainingResultStr.ToString();
                         str += "\r\n";
                         tw.WriteLine(str);
@@ -829,6 +860,7 @@ namespace QTraining.ViewModels
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    SysLogHelper.WriteLog(ex.Message);
                 }
                 finally
                 {
@@ -923,7 +955,7 @@ namespace QTraining.ViewModels
         {
             string trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
             if (!File.Exists(trainingRecorderPath))
-                using (File.Create(trainingRecorderPath)) ;
+                using (File.Create(trainingRecorderPath)) { }
             var history = "";
             using (FileStream fsRead = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.Read))
             {
