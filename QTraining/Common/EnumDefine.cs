@@ -11,7 +11,8 @@ namespace QTraining.Common
         public enum QuestionBankType
         {
             SAA = 0,
-            SAP = 1
+            SAP = 1,
+            SAA_C02 = 2
         }
     }
 }

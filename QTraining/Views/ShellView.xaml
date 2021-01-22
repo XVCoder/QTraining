@@ -470,22 +470,18 @@
                     Margin="0 0 0 5"
                     Orientation="Horizontal"
                     VerticalAlignment="Bottom">
-                        <TextBlock
-                            Foreground="White"
-                            VerticalAlignment="Center"
-                            Margin="5 0"
-                            Text="{DynamicResource Text_QuestionType}"/>
-                        <ComboBox
-                            Height="25"
-                            SelectedIndex="{Binding SelectedQuestionTypeIndex}"
-                            Width="180"
-                            pu:ComboBoxHelper.CornerRadius="2"
-                            pu:ComboBoxHelper.ItemsHoverForeground="Salmon">
-                        <ComboBoxItem
-                            Content="{DynamicResource Text_QuestionTypeSAA}"/>
-                        <ComboBoxItem
-                            Content="{DynamicResource Text_QuestionTypeSAP}"/>
-                    </ComboBox>
+                    <TextBlock
+                        Foreground="White"
+                        VerticalAlignment="Center"
+                        Margin="5 0"
+                        Text="{DynamicResource Text_QuestionType}"/>
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding LstQuestionType}"
+                        SelectedIndex="{Binding SelectedQuestionTypeIndex}"
+                        Width="180"
+                        pu:ComboBoxHelper.CornerRadius="2"
+                        pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
                 </StackPanel>
                 <Grid
                     Grid.Row="2">

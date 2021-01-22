@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using Panuon.UI.Silver;
 using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.DAL;
@@ -7,18 +6,12 @@ using QTraining.Models;
 using QTraining.Views;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -56,12 +49,21 @@ namespace QTraining.ViewModels
 
         #region Fields & Properties
         private const string QUESTIONBANK_SAA = "./Resources/QuestionBank/SAA";
+        private const string QUESTIONBANK_SAA_C02 = "./Resources/QuestionBank/SAA_C02";
         private const string QUESTIONBANK_SAP = "./Resources/QuestionBank/SAP";
 
         private DoubtInfoDAL doubtInfoDAL;
         private QuestionInfoDAL questionInfoDAL;
         private TrainingInfoDAL trainingInfoDAL;
         DispatcherTimer countDownTimer;  //倒计时
+
+        /// <summary>
+        /// 试题类型
+        /// </summary>
+        public BindableCollection<string> LstQuestionType
+        {
+            get => new BindableCollection<string>(Enum.GetNames(typeof(QuestionBankType)));
+        }
 
         private int questionRangeCount;
         /// <summary>
@@ -142,11 +144,11 @@ namespace QTraining.ViewModels
             get => randomQuestionBank == null ? "" : $"{Path.GetFullPath(currentQuestionBankPath)}/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png";
         }
 
-        private ObservableCollection<QuestionInfoModel> questionInfoModels;
+        private BindableCollection<QuestionInfoModel> questionInfoModels;
         /// <summary>
         /// 题目信息集合
         /// </summary>
-        public ObservableCollection<QuestionInfoModel> QuestionInfoModels
+        public BindableCollection<QuestionInfoModel> QuestionInfoModels
         {
             get => questionInfoModels;
             set { questionInfoModels = value; NotifyOfPropertyChange(nameof(QuestionInfoModels)); }
@@ -590,6 +592,7 @@ namespace QTraining.ViewModels
             //} 
             #endregion
 
+            #region Old2
             ////从TXT文件中加载数据
             //var questionInfoPath = "./Resources/QuestionBank/QuestionInfo.txt";
             //using (FileStream fsRead = new FileStream(questionInfoPath, FileMode.Open, FileAccess.Read))
@@ -613,7 +616,9 @@ namespace QTraining.ViewModels
             //        lst.Add(model);
             //    }
             //    QuestionInfoModels = lst;
-            //}
+            //} 
+            #endregion
+
             IsRadioOrderTrainingSelected = true;
         }
 
@@ -677,20 +682,21 @@ namespace QTraining.ViewModels
         /// </summary>
         public void StartTraining()
         {
-            string questionInfoPath = "";
             switch ((QuestionBankType)SelectedQuestionTypeIndex)
             {
                 case QuestionBankType.SAA:
                     currentQuestionBankPath = QUESTIONBANK_SAA;
-                    questionInfoPath = QUESTIONBANK_SAA + "/QuestionInfo.txt";
                     break;
                 case QuestionBankType.SAP:
                     currentQuestionBankPath = QUESTIONBANK_SAP;
-                    questionInfoPath = QUESTIONBANK_SAP + "/QuestionInfo.txt";
+                    break;
+                case QuestionBankType.SAA_C02:
+                    currentQuestionBankPath = QUESTIONBANK_SAA_C02;
                     break;
                 default:
                     break;
             }
+            string questionInfoPath = currentQuestionBankPath + "/QuestionInfo.txt";
             if (!File.Exists(questionInfoPath))
             {//题库路径不存在，提示检查
                 MessageHelper.Error(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"));
@@ -703,7 +709,7 @@ namespace QTraining.ViewModels
                 fsRead.Read(buffer, 0, buffer.Length);
                 var questionInfo = Encoding.UTF8.GetString(buffer);
                 var lines = questionInfo.Split('\n');
-                var lst = new ObservableCollection<QuestionInfoModel>();
+                var lst = new BindableCollection<QuestionInfoModel>();
                 foreach (var item in lines)
                 {
                     var dataItem = item.Replace("\r", "");
@@ -895,12 +901,12 @@ namespace QTraining.ViewModels
                     eKey.Handled = eKey.Key == Key.Space;
                     if ((eKey.Key >= Key.D0 && eKey.Key <= Key.D9) || eKey.Key == Key.Enter)
                     {
-                        if (eKey.Key != Key.Enter)
-                            return;
                         if (int.TryParse((eKey.OriginalSource as TextBox).Text, out int value))
                             TurnToNum = value;
                         if (value == 0)
                             TurnToNum = 1;
+                        if (eKey.Key != Key.Enter)
+                            return;
                     }
                     else
                         return;
@@ -917,8 +923,11 @@ namespace QTraining.ViewModels
             //跳转到指定题号
             CurrentQuestionIndex = TurnToNum - 1;
             CurrentQuestionInitial();
-            CanPreQuestion = CurrentQuestionIndex != 0;
-            CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
+            if (CurrentQuestionIndex <= 0 || CurrentQuestionIndex == QuestionRangeCount - 1)
+            {
+                CanPreQuestion = true;
+                CanNextQuestion = true;
+            }
             IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsTurnToBoxFocusable = false;
         }
@@ -1003,8 +1012,11 @@ namespace QTraining.ViewModels
         {
             CurrentQuestionIndex = LastReadingIndex;
             CurrentQuestionInitial();
-            CanPreQuestion = CurrentQuestionIndex != 0;
-            CanNextQuestion = CurrentQuestionIndex != QuestionRangeCount - 1;
+            if (CurrentQuestionIndex <= 0 || CurrentQuestionIndex == QuestionRangeCount - 1)
+            {
+                CanPreQuestion = true;
+                CanNextQuestion = true;
+            }
             IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsLastReadingIndexHintVisible = false;
         }
