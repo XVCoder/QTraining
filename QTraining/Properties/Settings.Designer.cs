@@ -37,25 +37,37 @@ namespace QTraining.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SAA")]
-        public string QuestionBankType {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string QuestionBankInfos {
             get {
-                return ((string)(this["QuestionBankType"]));
+                return ((string)(this["QuestionBankInfos"]));
             }
             set {
-                this["QuestionBankType"] = value;
+                this["QuestionBankInfos"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SAA:0;SAP:0;")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LastReadingIndex {
             get {
                 return ((string)(this["LastReadingIndex"]));
             }
             set {
                 this["LastReadingIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastReadingQuestionBankName {
+            get {
+                return ((string)(this["LastReadingQuestionBankName"]));
+            }
+            set {
+                this["LastReadingQuestionBankName"] = value;
             }
         }
     }

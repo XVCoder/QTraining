@@ -21,7 +21,7 @@ using static QTraining.Common.EnumDefine;
 namespace QTraining.ViewModels
 {
     [Export(typeof(IShell))]
-    public class ShellViewModel : Caliburn.Micro.PropertyChangedBase, IShell
+    public class ShellViewModel : Screen
     {
         #region Constructors
         public ShellViewModel()
@@ -29,40 +29,36 @@ namespace QTraining.ViewModels
             doubtInfoDAL = new DoubtInfoDAL();
             questionInfoDAL = new QuestionInfoDAL();
             trainingInfoDAL = new TrainingInfoDAL();
-
-            //根据试题类型设置题数
-            var questionBankType = (QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType);
-            switch (questionBankType)
-            {
-                case QuestionBankType.SAA:
-                    QuestionRangeCount = 65;
-                    break;
-                case QuestionBankType.SAP:
-                    QuestionRangeCount = 75;
-                    break;
-                default:
-                    QuestionRangeCount = 100;
-                    break;
-            }
         }
         #endregion
 
         #region Fields & Properties
-        private const string QUESTIONBANK_SAA = "./Resources/QuestionBank/SAA";
-        private const string QUESTIONBANK_SAA_C02 = "./Resources/QuestionBank/SAA_C02";
-        private const string QUESTIONBANK_SAP = "./Resources/QuestionBank/SAP";
-
         private DoubtInfoDAL doubtInfoDAL;
         private QuestionInfoDAL questionInfoDAL;
         private TrainingInfoDAL trainingInfoDAL;
         DispatcherTimer countDownTimer;  //倒计时
 
-        /// <summary>
-        /// 试题类型
-        /// </summary>
-        public BindableCollection<string> LstQuestionType
+        private List<QuestionBankModel> lstQuestionBankModel
         {
-            get => new BindableCollection<string>(Enum.GetNames(typeof(QuestionBankType)));
+            get
+            {
+                var lst = new List<QuestionBankModel>(Properties.Settings.Default.QuestionBankInfos.Split(';').Where(x =>
+                !x.IsNullOrWhiteSpace()).ToList().Select(x => new QuestionBankModel { Name = x.Split(':')[0], QuestionRangeCount = int.Parse(x.Split(':')[1]), Minutes = int.Parse(x.Split(':')[2]) }));
+                return lst;
+            }
+            set
+            {
+                Properties.Settings.Default.QuestionBankInfos = string.Join(";", value.Select(x => x.Name + ":" + x.QuestionRangeCount + ":" + x.Minutes));
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        /// <summary>
+        /// 试题组名称列表
+        /// </summary>
+        public BindableCollection<string> LstQuestionBankName
+        {
+            get => new BindableCollection<string>(lstQuestionBankModel.Select(x => x.Name));
         }
 
         private int questionRangeCount;
@@ -79,30 +75,30 @@ namespace QTraining.ViewModels
             }
         }
 
-        private int selectedQuestionTypeIndex;
+        private int selectedQuestionBankIndex;
         /// <summary>
         /// 选中试题类型索引值
         /// </summary>
-        public int SelectedQuestionTypeIndex
+        public int SelectedQuestionBankIndex
         {
             get
             {
-                var index = (int)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType);
+                var index = LstQuestionBankName.IndexOf(Properties.Settings.Default.LastReadingQuestionBankName);
                 return index < 0 ? 0 : index;
             }
             set
             {
-                selectedQuestionTypeIndex = value;
-                Properties.Settings.Default.QuestionBankType = ((QuestionBankType)value).ToString();
+                selectedQuestionBankIndex = value;
+                Properties.Settings.Default.LastReadingQuestionBankName = LstQuestionBankName[value];
                 Properties.Settings.Default.Save();
-                NotifyOfPropertyChange(nameof(SelectedQuestionTypeIndex));
+                NotifyOfPropertyChange(nameof(SelectedQuestionBankIndex));
             }
         }
 
         /// <summary>
         /// 选中试题类型
         /// </summary>
-        private QuestionBankType SelectedQuestionType => (QuestionBankType)SelectedQuestionTypeIndex;
+        private string SelectedQuestionBankName => LstQuestionBankName.Count == 0 ? "" : LstQuestionBankName[SelectedQuestionBankIndex];
 
         private string currentQuestionBankPath = "";
 
@@ -339,21 +335,7 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond
-        {
-            get
-            {
-                switch ((QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType))
-                {
-                    case QuestionBankType.SAA:
-                        return 130 * 60;
-                    case QuestionBankType.SAP:
-                        return 190 * 60;
-                    default:
-                        return 120 * 60;
-                }
-            }
-        }
+        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().Minutes;
         /// <summary>
         /// 当前秒数
         /// </summary>
@@ -446,10 +428,10 @@ namespace QTraining.ViewModels
         /// </summary>
         public int LastReadingIndex
         {
-            get => DicLastReadingIndex[SelectedQuestionType];
+            get => DicLastReadingIndex.Count == 0 ? 0 : DicLastReadingIndex[SelectedQuestionBankName];
             set
             {
-                Properties.Settings.Default.LastReadingIndex = string.Join(";", DicLastReadingIndex.Select(x => $"{x.Key}:{(x.Key == SelectedQuestionType ? value : x.Value)}").ToList());
+                Properties.Settings.Default.LastReadingIndex = string.Join(";", DicLastReadingIndex.Select(x => $"{x.Key}:{(x.Key == SelectedQuestionBankName ? value : x.Value)}").ToList());
                 Properties.Settings.Default.Save();
                 NotifyOfPropertyChange(nameof(LastReadingIndex));
                 NotifyOfPropertyChange(nameof(LastReadingIndexHint));
@@ -459,20 +441,20 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 最后一次浏览时的题目的索引（用于顺序练习）
         /// </summary>
-        public Dictionary<QuestionBankType, int> DicLastReadingIndex
+        public Dictionary<string, int> DicLastReadingIndex
         {
             get
             {
-                if (Enum.GetNames(typeof(QuestionBankType)).ToList().Where(x => !Properties.Settings.Default.LastReadingIndex.Contains(x)).Count() > 0)
-                    Properties.Settings.Default.LastReadingIndex = string.Join(";", Enum.GetNames(typeof(QuestionBankType)).ToList().Select(x => x + ":0"));
+                if (lstQuestionBankModel.Count <= 0)
+                    Properties.Settings.Default.LastReadingIndex = string.Join(";", lstQuestionBankModel.Select(x => x.Name + ":0"));
 
-                var dic = new Dictionary<QuestionBankType, int>();
+                var dic = new Dictionary<string, int>();
                 Properties.Settings.Default.LastReadingIndex.Split(';').ToList().ForEach(x =>
                 {
                     if (!x.IsNullOrWhiteSpace())
                     {
                         var dicSource = x.Split(':');
-                        var key = (QuestionBankType)Enum.Parse(typeof(QuestionBankType), dicSource[0]);
+                        var key = dicSource[0];
                         var value = int.Parse(dicSource[1]);
                         dic.Add(key, value);
                     }
@@ -682,21 +664,14 @@ namespace QTraining.ViewModels
         /// </summary>
         public void StartTraining()
         {
-            switch ((QuestionBankType)SelectedQuestionTypeIndex)
+            if (lstQuestionBankModel.Count == 0)
             {
-                case QuestionBankType.SAA:
-                    currentQuestionBankPath = QUESTIONBANK_SAA;
-                    break;
-                case QuestionBankType.SAP:
-                    currentQuestionBankPath = QUESTIONBANK_SAP;
-                    break;
-                case QuestionBankType.SAA_C02:
-                    currentQuestionBankPath = QUESTIONBANK_SAA_C02;
-                    break;
-                default:
-                    break;
+                MessageHelper.Warning(ResourceHelper.GetStrings("Message_NoQuestionBankWarning"), GetView() as ShellView, MessageBoxButton.OK);
+                return;
             }
-            string questionInfoPath = currentQuestionBankPath + "/QuestionInfo.txt";
+
+            currentQuestionBankPath = "./Resources/QuestionBank/" + lstQuestionBankModel[SelectedQuestionBankIndex].Name;
+            var questionInfoPath = currentQuestionBankPath + "/QuestionInfo.txt";
             if (!File.Exists(questionInfoPath))
             {//题库路径不存在，提示检查
                 MessageHelper.Error(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"));
@@ -730,18 +705,7 @@ namespace QTraining.ViewModels
             {//模拟仿真
                 CountDownVisibility = Visibility.Visible;
                 //设置题数
-                switch ((QuestionBankType)Enum.Parse(typeof(QuestionBankType), Properties.Settings.Default.QuestionBankType))
-                {
-                    case QuestionBankType.SAA:
-                        QuestionRangeCount = 65;
-                        break;
-                    case QuestionBankType.SAP:
-                        QuestionRangeCount = 75;
-                        break;
-                    default:
-                        QuestionRangeCount = 100;
-                        break;
-                }
+                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().QuestionRangeCount;
                 //根据设定好的题组大小生成随机题组
                 GenerateRandomQuestionBank();
                 //初始化答题板
@@ -857,7 +821,7 @@ namespace QTraining.ViewModels
                     using (tw = File.AppendText(trainingRecorderPath))
                     {
                         var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】"
-                            + SelectedQuestionType.ToString() + " "
+                            + SelectedQuestionBankName.ToString() + " "
                             + (IsRadioOrderTrainingSelected ? $"{ResourceHelper.GetStrings("Text_OrderTraining")}\n"
                             : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
                         str += trainingResultStr.ToString();

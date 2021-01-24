@@ -470,18 +470,22 @@
                     Margin="0 0 0 5"
                     Orientation="Horizontal"
                     VerticalAlignment="Bottom">
+                    <!--选择题库-->
                     <TextBlock
                         Foreground="White"
                         VerticalAlignment="Center"
                         Margin="5 0"
-                        Text="{DynamicResource Text_QuestionType}"/>
+                        Text="{DynamicResource Text_SelectQuestionBank}"/>
                     <ComboBox
                         Height="25"
-                        ItemsSource="{Binding LstQuestionType}"
+                        ItemsSource="{Binding LstQuestionBankName}"
                         SelectedIndex="{Binding SelectedQuestionTypeIndex}"
                         Width="180"
                         pu:ComboBoxHelper.CornerRadius="2"
                         pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
+                    <!--题库导入-->
+                    <Button
+                        pu:ButtonHelper.ButtonStyle="Link"/>
                 </StackPanel>
                 <Grid
                     Grid.Row="2">

@@ -8,11 +8,5 @@ namespace QTraining.Common
 {
     public class EnumDefine
     {
-        public enum QuestionBankType
-        {
-            SAA = 0,
-            SAP = 1,
-            SAA_C02 = 2
-        }
     }
 }
