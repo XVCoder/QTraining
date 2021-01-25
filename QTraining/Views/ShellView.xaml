@@ -485,13 +485,23 @@
                         pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
                     <!--题库导入-->
                     <Button
-                        pu:ButtonHelper.ButtonStyle="Link"/>
+                        Content="+"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="Gainsboro"
+                        Margin="5 0 0 0"
+                        ToolTip="{DynamicResource Text_ImportQuestionBank}"
+                        VerticalAlignment="Center"
+                        pu:ButtonHelper.ButtonStyle="Link"
+                        pu:ButtonHelper.HoverBrush="Salmon"
+                        cal:Message.Attach="ImportQuestionBank"/>
                 </StackPanel>
                 <Grid
                     Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>
                     <!--顺序练习-->
                     <RadioButton

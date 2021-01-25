@@ -42,6 +42,7 @@
     <sys:String x:Key="Text_History">历史记录</sys:String>
     <sys:String x:Key="Text_ExitConfirm">确认退出？</sys:String>
     <sys:String x:Key="Text_SelectQuestionBank">选择题库</sys:String>
+    <sys:String x:Key="Text_ImportQuestionBank">导入题库</sys:String>
     <sys:String x:Key="Text_NoteEditHint">添加笔记或解析</sys:String>
     <sys:String x:Key="Text_ClickToEditNoteHint">点击此处添加或编辑笔记</sys:String>
 

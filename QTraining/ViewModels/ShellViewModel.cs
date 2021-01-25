@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Win32;
 using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.DAL;
@@ -602,6 +603,25 @@ namespace QTraining.ViewModels
             #endregion
 
             IsRadioOrderTrainingSelected = true;
+        }
+
+        /// <summary>
+        /// 导入题库
+        /// </summary>
+        public void ImportQuestionBank()
+        {
+            //OpenFileDialog ofd = new OpenFileDialog();
+            //ofd.Filter = CoffeeScript._ofdOutputFilter;
+            //ofd.FileName = "Filename will be ignored";
+            //ofd.CheckFileExists = false;
+            //ofd.CheckPathExists = true;
+            ////ofd.ValidateNames = false;
+            //if (ofd.ShowDialog() == true)
+            //{
+            //    ofd.FileName = ofd.FileName.TrimEnd('\r');
+            //    int lastSeparatorIndex = ofd.FileName.LastIndexOf('\\');
+            //    ofd.FileName = ofd.FileName.Remove(lastSeparatorIndex);
+            //}
         }
 
         /// <summary>
