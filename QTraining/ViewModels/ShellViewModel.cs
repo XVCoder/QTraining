@@ -1,8 +1,6 @@
 ﻿using Caliburn.Micro;
-using Microsoft.Win32;
 using Panuon.UI.Silver.Core;
 using QTraining.Common;
-using QTraining.DAL;
 using QTraining.Models;
 using QTraining.Views;
 using System;
@@ -17,7 +15,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using static QTraining.Common.EnumDefine;
 
 namespace QTraining.ViewModels
 {
@@ -25,31 +22,42 @@ namespace QTraining.ViewModels
     public class ShellViewModel : Screen
     {
         #region Constructors
-        public ShellViewModel()
+        public ShellViewModel(IWindowManager windowManager)
         {
-            doubtInfoDAL = new DoubtInfoDAL();
-            questionInfoDAL = new QuestionInfoDAL();
-            trainingInfoDAL = new TrainingInfoDAL();
+            this.windowManager = windowManager;
         }
         #endregion
 
         #region Fields & Properties
-        private DoubtInfoDAL doubtInfoDAL;
-        private QuestionInfoDAL questionInfoDAL;
-        private TrainingInfoDAL trainingInfoDAL;
+        private readonly IWindowManager windowManager;
         DispatcherTimer countDownTimer;  //倒计时
+        private const char QuestionBankParamSeparator = '|';
+        private const char QuestionBankSeparator = ';';
 
         private List<QuestionBankModel> lstQuestionBankModel
         {
             get
             {
-                var lst = new List<QuestionBankModel>(Properties.Settings.Default.QuestionBankInfos.Split(';').Where(x =>
-                !x.IsNullOrWhiteSpace()).ToList().Select(x => new QuestionBankModel { Name = x.Split(':')[0], QuestionRangeCount = int.Parse(x.Split(':')[1]), Minutes = int.Parse(x.Split(':')[2]) }));
+                var lst = new List<QuestionBankModel>(Properties.Settings.Default.QuestionBankInfos.Split(QuestionBankSeparator).Where(x =>
+                !x.IsNullOrWhiteSpace()).ToList().Select(x => new QuestionBankModel
+                {
+                    Name = x.Split(QuestionBankParamSeparator)[0],
+                    SimulationRangeCount = int.Parse(x.Split(QuestionBankParamSeparator)[1]),
+                    SimulationMinutes = int.Parse(x.Split(QuestionBankParamSeparator)[2]),
+                    OrderTrainingMinutes = int.Parse(x.Split(QuestionBankParamSeparator)[3]),
+                    QuestionBankRootPath = x.Split(QuestionBankParamSeparator)[4]
+                }));
                 return lst;
             }
             set
             {
-                Properties.Settings.Default.QuestionBankInfos = string.Join(";", value.Select(x => x.Name + ":" + x.QuestionRangeCount + ":" + x.Minutes));
+                Properties.Settings.Default.QuestionBankInfos = string.Join(QuestionBankSeparator.ToString(), value.Select(x =>
+                x.Name + QuestionBankParamSeparator.ToString()
+                + x.SimulationRangeCount + QuestionBankParamSeparator.ToString()
+                + x.SimulationMinutes + QuestionBankParamSeparator.ToString()
+                + x.OrderTrainingMinutes + QuestionBankParamSeparator.ToString()
+                + x.QuestionBankRootPath + QuestionBankParamSeparator.ToString()
+                ));
                 Properties.Settings.Default.Save();
             }
         }
@@ -336,7 +344,7 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().Minutes;
+        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationMinutes;
         /// <summary>
         /// 当前秒数
         /// </summary>
@@ -521,6 +529,7 @@ namespace QTraining.ViewModels
         }
 
         private bool isCheckBoxFVisible = false;
+
         /// <summary>
         /// 复选框F可见性
         /// </summary>
@@ -606,10 +615,15 @@ namespace QTraining.ViewModels
         }
 
         /// <summary>
-        /// 导入题库
+        /// 题库管理
         /// </summary>
-        public void ImportQuestionBank()
+        public void QuestionBankManage()
         {
+            if (windowManager.ShowDialog(new QuestionBankManageViewModel(windowManager, lstQuestionBankModel)) == true)
+            {
+
+            }
+
             //OpenFileDialog ofd = new OpenFileDialog();
             //ofd.Filter = CoffeeScript._ofdOutputFilter;
             //ofd.FileName = "Filename will be ignored";
@@ -725,7 +739,7 @@ namespace QTraining.ViewModels
             {//模拟仿真
                 CountDownVisibility = Visibility.Visible;
                 //设置题数
-                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().QuestionRangeCount;
+                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationRangeCount;
                 //根据设定好的题组大小生成随机题组
                 GenerateRandomQuestionBank();
                 //初始化答题板

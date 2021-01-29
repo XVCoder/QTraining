@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace QTraining.ViewModels
 {
     [Export(typeof(IShell))]
-    public class HistoryViewModel : PropertyChangedBase, IShell
+    public class HistoryViewModel : Screen
     {
         #region Constructor
         public HistoryViewModel()

@@ -13,6 +13,8 @@
     <sys:String x:Key="Common_FileNotExist">文件不存在</sys:String>
     <sys:String x:Key="Common_Save">保存</sys:String>
     <sys:String x:Key="Common_Cancel">取消</sys:String>
+    <sys:String x:Key="Common_Select">选择</sys:String>
+    <sys:String x:Key="Common_Search">检索</sys:String>
 
     <sys:String x:Key="Button_PreQuestion">上一题</sys:String>
     <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
@@ -42,9 +44,16 @@
     <sys:String x:Key="Text_History">历史记录</sys:String>
     <sys:String x:Key="Text_ExitConfirm">确认退出？</sys:String>
     <sys:String x:Key="Text_SelectQuestionBank">选择题库</sys:String>
+    <sys:String x:Key="Text_QuestionBankManage">题库管理</sys:String>
     <sys:String x:Key="Text_ImportQuestionBank">导入题库</sys:String>
     <sys:String x:Key="Text_NoteEditHint">添加笔记或解析</sys:String>
     <sys:String x:Key="Text_ClickToEditNoteHint">点击此处添加或编辑笔记</sys:String>
+    <sys:String x:Key="Text_QuestionImagesNotFound">未找到题库的图片资源</sys:String>
+    <sys:String x:Key="Text_QuestionBankName">题库名</sys:String>
+    <sys:String x:Key="Text_QuestionBankOrderTrainingMinutes">顺序练习时长</sys:String>
+    <sys:String x:Key="Text_QuestionBankSimulationMinutes">模拟考时长</sys:String>
+    <sys:String x:Key="Text_QuestionBankSimulationRangeCount">模拟考题数</sys:String>
+    <sys:String x:Key="Text_QuestionBankRootPath">题库路径</sys:String>
 
     <sys:String x:Key="ToolTip_ShowAnswerHotKey">快捷键 [Ctrl]</sys:String>
     <sys:String x:Key="ToolTip_PreQuestionHotKey">快捷键 [←]</sys:String>

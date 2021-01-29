@@ -483,18 +483,18 @@
                         Width="180"
                         pu:ComboBoxHelper.CornerRadius="2"
                         pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
-                    <!--题库导入-->
+                    <!--题库管理-->
                     <Button
                         Content="+"
                         FontSize="18"
                         FontWeight="Bold"
                         Foreground="Gainsboro"
                         Margin="5 0 0 0"
-                        ToolTip="{DynamicResource Text_ImportQuestionBank}"
+                        ToolTip="{DynamicResource Text_QuestionBankManage}"
                         VerticalAlignment="Center"
                         pu:ButtonHelper.ButtonStyle="Link"
                         pu:ButtonHelper.HoverBrush="Salmon"
-                        cal:Message.Attach="ImportQuestionBank"/>
+                        cal:Message.Attach="QuestionBankManage"/>
                 </StackPanel>
                 <Grid
                     Grid.Row="2">

@@ -88,6 +88,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -124,21 +125,23 @@
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Converters\VisibilityReverseConverter.cs" />
-    <Compile Include="DAL\DALBase.cs" />
-    <Compile Include="DAL\DoubtInfoDAL.cs" />
-    <Compile Include="DAL\QuestionInfoDAL.cs" />
     <Compile Include="Common\SqliteHelper.cs" />
-    <Compile Include="DAL\TrainingInfoDAL.cs" />
     <Compile Include="CaliburnPlugins\Input\KeySequence.cs" />
     <Compile Include="CaliburnPlugins\Input\KeyTrigger.cs" />
     <Compile Include="CaliburnPlugins\Input\MultiKeyGesture.cs" />
     <Compile Include="CaliburnPlugins\Input\MultiKeyGestureConverter.cs" />
     <Compile Include="IShell.cs" />
-    <Compile Include="Models\DoubtInfoModel.cs" />
     <Compile Include="Models\QuestionBankModel.cs" />
     <Compile Include="Models\QuestionInfoModel.cs" />
-    <Compile Include="Models\TrainingInfoModel.cs" />
+    <Compile Include="ViewModels\QuestionBankManageViewModel.cs" />
+    <Compile Include="ViewModels\QuestionBankImportViewModel.cs" />
     <Compile Include="ViewModels\HistoryViewModel.cs" />
+    <Compile Include="Views\QuestionBankManageView.xaml.cs">
+      <DependentUpon>QuestionBankManageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuestionBankImportView.xaml.cs">
+      <DependentUpon>QuestionBankImportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HistoryView.xaml.cs">
       <DependentUpon>HistoryView.xaml</DependentUpon>
     </Compile>
@@ -186,6 +189,14 @@
     <Page Include="Resources\Lan\cn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuestionBankManageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\QuestionBankImportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HistoryView.xaml">
       <SubType>Designer</SubType>

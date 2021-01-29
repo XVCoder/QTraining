@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QTraining.Models
+﻿namespace QTraining.Models
 {
     public class QuestionBankModel
     {
@@ -13,12 +7,20 @@ namespace QTraining.Models
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 模拟考分钟数
+        /// </summary>
+        public int SimulationMinutes { get; set; }
+        /// <summary>
         /// 题组大小（模拟测试题组）
         /// </summary>
-        public int QuestionRangeCount { get; set; }
+        public int SimulationRangeCount { get; set; }
         /// <summary>
-        /// 分钟数
+        /// 顺序练习分钟数
         /// </summary>
-        public int Minutes { get; set; }
+        public int OrderTrainingMinutes { get; set; }
+        /// <summary>
+        /// 题组路径
+        /// </summary>
+        public string QuestionBankRootPath { get; set; }
     }
 }
