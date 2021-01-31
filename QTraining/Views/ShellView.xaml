@@ -486,6 +486,7 @@
                     <!--题库管理-->
                     <Button
                         Content="+"
+                        Focusable="False"
                         FontSize="18"
                         FontWeight="Bold"
                         Foreground="Gainsboro"

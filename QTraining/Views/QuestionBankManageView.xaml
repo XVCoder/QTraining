@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QTraining.Views"
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
-        Title="{DynamicResource Text_QuestionBankManage}" Height="450" Width="600"
-        WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource Text_QuestionBankManage}" Height="450" Width="725"
+        WindowStartupLocation="CenterScreen"
+        cal:Message.Attach="[Loaded]=[Loaded()]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -17,50 +19,24 @@
         <StackPanel
             Orientation="Horizontal">
             <TextBox
+                Height="25"
                 Margin="5 0 0 0"
                 Text="{Binding SearchKeyword}"
                 Width="200"
                 pu:TextBoxHelper.CornerRadius="2"/>
             <Button
                 Content="{DynamicResource Common_Search}"
-                Height="28"
+                Height="25"
                 Margin="5 0 0 0"
+                Width="40"
                 pu:ButtonHelper.ButtonStyle="Hollow"
                 pu:ButtonHelper.CornerRadius="2"/>
         </StackPanel>
         <DataGrid
-            ItemsSource="{Binding LstQuestionBankModel}">
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            Text="{DynamicResource Text_QuestionBankName}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{DynamicResource Text_QuestionBankSimulationMinutes}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{DynamicResource Text_QuestionBankSimulationRangeCount}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{DynamicResource Text_QuestionBankRootPath}"
-                            VerticalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
+            Margin="0 5 0 0"
+            Grid.Row="1"
+            ItemsSource="{Binding LstQuestionBankModel}"
+            IsReadOnly="True">
             <DataGrid.ItemTemplate>
                 <DataTemplate>
                     <Grid>
