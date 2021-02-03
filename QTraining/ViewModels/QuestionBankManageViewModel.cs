@@ -48,7 +48,10 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ImportQuesionBank()
         {
+            if (windowManager.ShowDialog(new QuestionBankImportViewModel(new QuestionBankModel { })) == true)
+            {
 
+            }
         }
         #endregion
     }

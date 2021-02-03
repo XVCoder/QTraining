@@ -8,7 +8,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="{DynamicResource Text_QuestionBankManage}" Height="450" Width="725"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         cal:Message.Attach="[Loaded]=[Loaded()]">
     <Grid>
         <Grid.RowDefinitions>
@@ -22,52 +22,42 @@
                 Height="25"
                 Margin="5 0 0 0"
                 Text="{Binding SearchKeyword}"
-                Width="200"
-                pu:TextBoxHelper.CornerRadius="2"/>
+                Width="150"
+                pu:TextBoxHelper.CornerRadius="2"
+                pu:TextBoxHelper.Watermark="{DynamicResource Common_Search}"
+                pu:TextBoxHelper.Icon="&#xe928;"
+                pu:IconHelper.FontFamily="{StaticResource PanuonIconFont}"/>
             <Button
-                Content="{DynamicResource Common_Search}"
-                Height="25"
-                Margin="5 0 0 0"
-                Width="40"
-                pu:ButtonHelper.ButtonStyle="Hollow"
-                pu:ButtonHelper.CornerRadius="2"/>
+                Content="{DynamicResource Text_ImportQuestionBank}"
+                Margin="10 0 0 0"
+                pu:ButtonHelper.ButtonStyle="Link"
+                cal:Message.Attach="ImportQuesionBank"/>
         </StackPanel>
+        <!--列表-->
         <DataGrid
-            Margin="0 5 0 0"
             Grid.Row="1"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            Margin="0 5 0 0"
             ItemsSource="{Binding LstQuestionBankModel}"
             IsReadOnly="True">
-            <DataGrid.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            Text="{Binding Name}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{Binding SimulationMinutes}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{Binding OrderTrainingMinutes}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{Binding SimulationRangeCount}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock
-                            Grid.Column="1"
-                            Text="{Binding QuestionBankRootPath}"
-                            VerticalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </DataGrid.ItemTemplate>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Header="{DynamicResource Text_QuestionBankName}"
+                    Binding="{Binding Name}"/>
+                <DataGridTextColumn
+                    Header="{DynamicResource Text_QuestionBankSimulationMinutes}"
+                    Binding="{Binding SimulationMinutes}"/>
+                <DataGridTextColumn
+                    Header="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"
+                    Binding="{Binding OrderTrainingMinutes}"/>
+                <DataGridTextColumn
+                    Header="{DynamicResource Text_QuestionBankSimulationRangeCount}"
+                    Binding="{Binding SimulationRangeCount}"/>
+                <DataGridTextColumn
+                    Header="{DynamicResource Text_QuestionBankRootPath}"
+                    Binding="{Binding QuestionBankRootPath}"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </Window>

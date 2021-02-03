@@ -8,7 +8,7 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="{DynamicResource Text_ImportQuestionBank}" Height="300" Width="400"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -21,7 +21,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
         <!--题库名-->
         <TextBlock
@@ -34,6 +34,7 @@
             Grid.Column="1"
             Grid.Row="0"
             Height="30"
+            Margin="5 0 0 0"
             Text="{Binding Model.Name}"
             VerticalContentAlignment="Center"/>
         <!--顺序练习时长-->
@@ -46,7 +47,10 @@
         <TextBox
             Grid.Column="1"
             Grid.Row="1"
-            Text="{Binding Model.OrderTrainingMinutes}"/>
+            Height="30"
+            Margin="5 0 0 0"
+            Text="{Binding Model.OrderTrainingMinutes}"
+            VerticalAlignment="Center"/>
         <!--模拟考时长-->
         <TextBlock
             Grid.Column="0"
@@ -57,7 +61,10 @@
         <TextBox
             Grid.Column="1"
             Grid.Row="2"
-            Text="{Binding Model.SimulationMinutes}"/>
+            Height="30"
+            Margin="5 0 0 0"
+            Text="{Binding Model.SimulationMinutes}"
+            VerticalAlignment="Center"/>
         <!--模拟考题数-->
         <TextBlock
             Grid.Column="0"
@@ -68,7 +75,10 @@
         <TextBox
             Grid.Column="1"
             Grid.Row="3"
-            Text="{Binding Model.SimulationRangeCount}"/>
+            Height="30"
+            Margin="5 0 0 0"
+            Text="{Binding Model.SimulationRangeCount}"
+            VerticalAlignment="Center"/>
         <!--题库路径-->
         <TextBlock
             Grid.Column="0"
@@ -79,15 +89,19 @@
         <TextBox
             Grid.Column="1"
             Grid.Row="4"
-            Text="{Binding Model.QuestionBankRootPath}"/>
+            Height="30"
+            Margin="5 0 0 0"
+            Text="{Binding Model.QuestionBankRootPath}"
+            VerticalAlignment="Center"/>
         <Button
             Grid.Column="2"
             Grid.Row="4"
             Content="{DynamicResource Common_Select}"
             Height="28"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
             Width="45"
-            pu:ButtonHelper.ButtonStyle="Link"/>
+            pu:ButtonHelper.ButtonStyle="Link"
+            cal:Message.Attach="SelectQuestionBankPath"/>
         <!--保存-->
         <Button
             Grid.Column="1"
