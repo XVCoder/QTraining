@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using QTraining.Common;
 using QTraining.Models;
 using System;
@@ -41,15 +42,24 @@ namespace QTraining.ViewModels
             {
                 SelectedPath = Environment.CurrentDirectory
             };
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+
+            var cofd = new CommonOpenFileDialog();
+            cofd.IsFolderPicker = true;
+            cofd.DefaultDirectory = Environment.CurrentDirectory;
+            if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                var qPath = fbd.SelectedPath;
-                if (!Directory.Exists(qPath + "\\Images"))
+                var qPath = cofd.FileName;
+                if (!Directory.Exists(qPath + "\\Images") || Directory.GetFiles(qPath + "\\Images").Length == 0)
                 {
-                    MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionImagesNotFound"));
+                    MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionImagesNotFound"), null, System.Windows.MessageBoxButton.OK);
                     return;
                 }
-                File.ReadAllLines(qPath + "\\QustionInfo.txt");
+                if (!File.Exists(qPath + "\\QustionInfo.txt"))
+                {
+                    MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoNotFound"), null, System.Windows.MessageBoxButton.OK);
+                    return;
+                }
+                var qInfo = File.ReadAllLines(qPath + "\\QustionInfo.txt");
             }
         }
 

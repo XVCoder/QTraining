@@ -49,6 +49,7 @@
     <sys:String x:Key="Text_NoteEditHint">添加笔记或解析</sys:String>
     <sys:String x:Key="Text_ClickToEditNoteHint">点击此处添加或编辑笔记</sys:String>
     <sys:String x:Key="Text_QuestionImagesNotFound">未找到题库的图片资源</sys:String>
+    <sys:String x:Key="Text_QuestionInfoNotFound">未找到题库的配置信息</sys:String>
     <sys:String x:Key="Text_QuestionBankName">题库名</sys:String>
     <sys:String x:Key="Text_QuestionBankOrderTrainingMinutes">顺序练习时长</sys:String>
     <sys:String x:Key="Text_QuestionBankSimulationMinutes">模拟考时长</sys:String>
