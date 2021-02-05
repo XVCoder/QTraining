@@ -621,7 +621,7 @@ namespace QTraining.ViewModels
         {
             if (windowManager.ShowDialog(new QuestionBankManageViewModel(windowManager, lstQuestionBankModel)) == true)
             {
-
+                
             }
 
             //OpenFileDialog ofd = new OpenFileDialog();

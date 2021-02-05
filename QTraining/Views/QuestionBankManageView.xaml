@@ -11,7 +11,10 @@
         Height="450" Width="725"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
-        cal:Message.Attach="[Loaded]=[Loaded()]">
+        cal:Message.Attach="
+        [Loaded]=[Loaded()];
+        [Closing]=[Closing()]
+        ">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

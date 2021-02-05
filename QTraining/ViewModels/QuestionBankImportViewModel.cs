@@ -24,11 +24,11 @@ namespace QTraining.ViewModels
         #endregion
 
         #region Fields & Properties
-        private QuestionBankModel questionBankModel;
+        private QuestionBankModel model;
         public QuestionBankModel Model
         {
-            get => questionBankModel;
-            set { questionBankModel = value; NotifyOfPropertyChange(nameof(Model)); }
+            get => model;
+            set { model = value; NotifyOfPropertyChange(nameof(Model)); }
         }
         #endregion
 
@@ -54,12 +54,22 @@ namespace QTraining.ViewModels
                     MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionImagesNotFound"), null, System.Windows.MessageBoxButton.OK);
                     return;
                 }
-                if (!File.Exists(qPath + "\\QustionInfo.txt"))
+                if (!File.Exists(qPath + "\\QuestionInfo.txt"))
                 {
                     MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoNotFound"), null, System.Windows.MessageBoxButton.OK);
                     return;
                 }
-                var qInfo = File.ReadAllLines(qPath + "\\QustionInfo.txt");
+                var imageNames = Directory.GetFiles(qPath + "\\Images");
+                var qInfo = File.ReadAllLines(qPath + "\\QuestionInfo.txt");
+                if (imageNames.Length != qInfo.Length
+                    || imageNames.ToList().Where(x => !string.IsNullOrWhiteSpace(x)).Count() != qInfo.Length)
+                {
+                    MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoMismatch"), null, System.Windows.MessageBoxButton.OK);
+                    return;
+                }
+                Model.QuestionBankRootPath = qPath;
+                Model.SimulationRangeCount = imageNames.Length < 60 ? imageNames.Length : 60;
+                NotifyOfPropertyChange(nameof(Model));
             }
         }
 
@@ -68,7 +78,16 @@ namespace QTraining.ViewModels
         /// </summary>
         public void Save()
         {
-
+            if (string.IsNullOrWhiteSpace(Model.QuestionBankRootPath)
+                || string.IsNullOrWhiteSpace(Model.Name)
+                || Model.SimulationMinutes < 1
+                || Model.OrderTrainingMinutes < 1
+                || Model.SimulationRangeCount < 1)
+            {
+                MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoNotAvaliable"), null, System.Windows.MessageBoxButton.OK);
+                return;
+            }
+            (GetView() as Views.QuestionBankImportView).DialogResult = true;
         }
         #endregion
     }

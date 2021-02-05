@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
+using QTraining.Common;
 using QTraining.Models;
+using QTraining.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -48,10 +50,30 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ImportQuesionBank()
         {
-            if (windowManager.ShowDialog(new QuestionBankImportViewModel(new QuestionBankModel { })) == true)
+            var vm = new QuestionBankImportViewModel(new QuestionBankModel
             {
-
+                OrderTrainingMinutes = 120,
+                SimulationMinutes = 90
+            });
+            if (windowManager.ShowDialog(vm) == true)
+            {
+                if (questionBankModels.Where(x => x.QuestionBankRootPath == vm.Model.QuestionBankRootPath
+                || x.Name == vm.Model.Name).Count() > 0)
+                {
+                    MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionBankAlreadyExist"), null, System.Windows.MessageBoxButton.OK);
+                    return;
+                }
+                questionBankModels.Add(vm.Model);
+                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
             }
+        }
+
+        /// <summary>
+        /// 窗体关闭时
+        /// </summary>
+        public void Closing()
+        {
+            (GetView() as QuestionBankManageView).DialogResult = true;
         }
         #endregion
     }
