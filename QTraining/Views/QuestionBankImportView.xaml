@@ -7,7 +7,9 @@
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
-        Title="{DynamicResource Text_ImportQuestionBank}" Height="300" Width="400"
+        Title="{DynamicResource Text_ImportQuestionBank}"
+        ResizeMode="NoResize"
+        Height="300" Width="400"
         WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
