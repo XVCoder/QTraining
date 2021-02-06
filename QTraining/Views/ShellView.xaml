@@ -174,7 +174,6 @@
                         Height="22"
                         Margin="10 0 10 0"
                         Padding="5 2"
-                        Width="55"
                         pu:ButtonHelper.CornerRadius="5"
                         cal:Message.Attach="Commit">
                         <Button.Content>
@@ -187,15 +186,28 @@
                                     Visibility="{Binding IsCommited,Converter={StaticResource BoolConverter}}"/>
                             </StackPanel>
                         </Button.Content>
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Width" Value="55"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCommited}" Value="True">
+                                        <Setter Property="Width" Value="100"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsCommited}" Value="False">
+                                        <Setter Property="Width" Value="55"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                     <!--倒计时-->
                     <TextBlock
                         Height="25"
                         FontSize="14"
                         Foreground="OrangeRed"
-                        Padding="5 4 0 0"
+                        Padding="5 4 10 0"
                         Visibility="{Binding CountDownVisibility}"
-                        Width="180">
+                        Width="auto">
                         <Run Text="{DynamicResource Text_CountDown}"/>
                         <Run Text=": "/>
                         <Run Text="{Binding CountDown}"/>
@@ -456,16 +468,18 @@
             Background="Gray"
             Opacity="1"
             Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
-            <Grid
-                VerticalAlignment="Center">
+            <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel
+                    Grid.Row="1"
                     HorizontalAlignment="Center"
                     Margin="0 0 0 5"
                     Orientation="Horizontal"
@@ -479,7 +493,7 @@
                     <ComboBox
                         Height="25"
                         ItemsSource="{Binding LstQuestionBankName}"
-                        SelectedIndex="{Binding SelectedQuestionTypeIndex}"
+                        SelectedIndex="{Binding SelectedQuestionBankIndex}"
                         Width="180"
                         pu:ComboBoxHelper.CornerRadius="2"
                         pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
@@ -498,7 +512,7 @@
                         cal:Message.Attach="QuestionBankManage"/>
                 </StackPanel>
                 <Grid
-                    Grid.Row="2">
+                    Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -526,8 +540,9 @@
                         pu:RadioButtonHelper.CheckedBackground="Green"
                         pu:RadioButtonHelper.RadioButtonStyle="Button"/>
                 </Grid>
+                <!--开始-->
                 <Button
-                    Grid.Row="4"
+                    Grid.Row="5"
                     Foreground="Black"
                     FontSize="15"
                     FontWeight="Bold"
@@ -536,6 +551,19 @@
                     Width="100"
                     pu:ButtonHelper.CornerRadius="10"
                     cal:Message.Attach="StartTraining"/>
+                <!--查看历史记录-->
+                <Button
+                    Grid.Column="2"
+                    Grid.Row="6"
+                    Content="{DynamicResource Button_ShowHistory}"
+                    Focusable="False"
+                    FontSize="14"
+                    Foreground="LightGray"
+                    HorizontalAlignment="Right"
+                    Margin="0 0 10 10"
+                    VerticalAlignment="Bottom"
+                    pu:ButtonHelper.ButtonStyle="Link"
+                    cal:Message.Attach="ShowHistory"/>
             </Grid>
         </Grid>
     </Grid>

@@ -23,6 +23,7 @@
         </Grid.RowDefinitions>
         <StackPanel
             Orientation="Horizontal">
+            <!--检索-->
             <TextBox
                 Height="25"
                 Margin="5 0 0 0"
@@ -31,37 +32,63 @@
                 pu:TextBoxHelper.CornerRadius="2"
                 pu:TextBoxHelper.Watermark="{DynamicResource Common_Search}"
                 pu:TextBoxHelper.Icon="&#xe928;"
-                pu:IconHelper.FontFamily="{StaticResource PanuonIconFont}"/>
+                pu:IconHelper.FontFamily="{StaticResource PanuonIconFont}"
+                cal:Message.Attach="[TextChanged]=[SearchTextChanged]"/>
+            <!--导入题库-->
             <Button
                 Content="{DynamicResource Text_ImportQuestionBank}"
+                Background="Green"
+                BorderThickness="0"
+                Foreground="White"
+                Height="22"
                 Margin="10 0 0 0"
-                pu:ButtonHelper.ButtonStyle="Link"
+                Padding="4 0"
+                pu:ButtonHelper.ButtonStyle="Hollow"
+                pu:ButtonHelper.CornerRadius="5"
+                pu:ButtonHelper.HoverBrush="DarkGreen"
                 cal:Message.Attach="ImportQuesionBank"/>
+            <!--移除-->
+            <Button
+                Content="{DynamicResource Common_Remove}"
+                Background="OrangeRed"
+                BorderThickness="0"
+                Foreground="White"
+                Height="22"
+                Margin="10 0 0 0"
+                Padding="4 0"
+                pu:ButtonHelper.ButtonStyle="Hollow"
+                pu:ButtonHelper.CornerRadius="5"
+                pu:ButtonHelper.HoverBrush="DarkRed"
+                cal:Message.Attach="Remove(dataList)"/>
         </StackPanel>
         <!--列表-->
         <DataGrid
+            x:Name="dataList"
             Grid.Row="1"
             AutoGenerateColumns="False"
             CanUserReorderColumns="False"
             Margin="0 5 0 0"
+            SelectionMode="Single"
             ItemsSource="{Binding LstQuestionBankModel}"
-            IsReadOnly="True">
+            IsReadOnly="True"
+            pu:DataGridHelper.UnitSelectedBackground="DodgerBlue"
+            pu:DataGridHelper.UnitSelectedForeground="White">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Header="{DynamicResource Text_QuestionBankName}"
-                    Binding="{Binding Name}"/>
+                    Binding="{Binding Name}"
+                    Header="{DynamicResource Text_QuestionBankName}"/>
                 <DataGridTextColumn
-                    Header="{DynamicResource Text_QuestionBankSimulationMinutes}"
-                    Binding="{Binding SimulationMinutes}"/>
+                    Binding="{Binding SimulationMinutes}"
+                    Header="{DynamicResource Text_QuestionBankSimulationMinutes}"/>
                 <DataGridTextColumn
-                    Header="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"
-                    Binding="{Binding OrderTrainingMinutes}"/>
+                    Binding="{Binding OrderTrainingMinutes}"
+                    Header="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"/>
                 <DataGridTextColumn
-                    Header="{DynamicResource Text_QuestionBankSimulationRangeCount}"
-                    Binding="{Binding SimulationRangeCount}"/>
+                    Binding="{Binding SimulationRangeCount}"
+                    Header="{DynamicResource Text_QuestionBankSimulationRangeCount}"/>
                 <DataGridTextColumn
-                    Header="{DynamicResource Text_QuestionBankRootPath}"
-                    Binding="{Binding QuestionBankRootPath}"/>
+                    Binding="{Binding QuestionBankRootPath}"
+                    Header="{DynamicResource Text_QuestionBankRootPath}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

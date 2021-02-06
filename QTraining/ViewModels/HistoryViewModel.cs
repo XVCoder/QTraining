@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
+using QTraining.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,24 @@ namespace QTraining.ViewModels
         {
             get { return history; }
             set { history = value; NotifyOfPropertyChange(() => History); }
+        }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// 清空
+        /// </summary>
+        public void Clear()
+        {
+            if (MessageHelper.Warning(ResourceHelper.GetStrings("Text_ClearConfirm")) == System.Windows.MessageBoxResult.Yes)
+            {
+                string trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
+                using (FileStream fsWrite = new FileStream(trainingRecorderPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    fsWrite.SetLength(0);
+                }
+                History = "";
+            }
         }
         #endregion
     }

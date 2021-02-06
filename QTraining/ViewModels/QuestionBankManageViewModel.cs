@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace QTraining.ViewModels
 {
@@ -24,7 +25,7 @@ namespace QTraining.ViewModels
 
         #region Fields & Properties
         private readonly IWindowManager windowManager;
-        private List<QuestionBankModel> questionBankModels;
+        public List<QuestionBankModel> questionBankModels;
         private BindableCollection<QuestionBankModel> lstQuestionBankModel;
         /// <summary>
         /// 图库列表
@@ -74,6 +75,23 @@ namespace QTraining.ViewModels
         public void Closing()
         {
             (GetView() as QuestionBankManageView).DialogResult = true;
+        }
+
+        /// <summary>
+        /// 移除
+        /// </summary>
+        public void Remove(QuestionBankModel selectedModel)
+        {
+            if (selectedModel == null)
+            {
+                MessageHelper.Warning(ResourceHelper.GetStrings("Text_RemovingQuestionBankNotSelected"), null, System.Windows.MessageBoxButton.OK);
+                return;
+            }
+            if (MessageHelper.Warning(String.Format(ResourceHelper.GetStrings("Format_RemoveConfirmHint"), selectedModel.Name)) == System.Windows.MessageBoxResult.Yes)
+            {
+                questionBankModels.Remove(selectedModel);
+                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+            }
         }
         #endregion
     }

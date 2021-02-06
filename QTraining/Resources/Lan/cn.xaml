@@ -15,19 +15,24 @@
     <sys:String x:Key="Common_Cancel">取消</sys:String>
     <sys:String x:Key="Common_Select">选择</sys:String>
     <sys:String x:Key="Common_Search">检索</sys:String>
+    <sys:String x:Key="Common_Option">操作</sys:String>
+    <sys:String x:Key="Common_Delete">删除</sys:String>
+    <sys:String x:Key="Common_Remove">移除</sys:String>
 
     <sys:String x:Key="Button_PreQuestion">上一题</sys:String>
     <sys:String x:Key="Button_NextQuestion">下一题</sys:String>
     <sys:String x:Key="Button_Commit">交卷</sys:String>
-    <sys:String x:Key="Button_Reset">重置</sys:String>
+    <sys:String x:Key="Button_Reset">重置(返回首页)</sys:String>
     <sys:String x:Key="Button_Strat">开始</sys:String>
     <sys:String x:Key="Button_ShowRealResult">显示答案</sys:String>
     <sys:String x:Key="Button_HideRealResult">隐藏答案</sys:String>
     <sys:String x:Key="Button_ShowHistory">查看历史记录</sys:String>
     <sys:String x:Key="Button_TurnTo">跳转</sys:String>
+    <sys:String x:Key="Button_Clear">清空</sys:String>
 
     <sys:String x:Key="Format_LastReadingIndexHint">上次浏览到第 {0} 题，点击跳转</sys:String>
     <sys:String x:Key="Format_QuestionBankNotExistHint">题库不存在，请检查路径【{0}】是否正确。</sys:String>
+    <sys:String x:Key="Format_RemoveConfirmHint">确认移除题库【{0}】？</sys:String>
 
     <sys:String x:Key="Message_ProgramIsRunning">程序运行中！</sys:String>
     <sys:String x:Key="Message_TrainingModeSelectRequired">请选择模式！</sys:String>
@@ -53,6 +58,8 @@
     <sys:String x:Key="Text_QuestionInfoMismatch">题库配置信息与题库图片资源不匹配（个数等）</sys:String>
     <sys:String x:Key="Text_QuestionInfoNotAvaliable">题库配置不正确，请更正后重试</sys:String>
     <sys:String x:Key="Text_QuestionBankAlreadyExist">题库已存在！</sys:String>
+    <sys:String x:Key="Text_RemovingQuestionBankNotSelected">请选择要移除的题库！</sys:String>
+    <sys:String x:Key="Text_ClearConfirm">确认清空？</sys:String>
     <sys:String x:Key="Text_QuestionBankName">题库名</sys:String>
     <sys:String x:Key="Text_QuestionBankOrderTrainingMinutes">顺序练习时长</sys:String>
     <sys:String x:Key="Text_QuestionBankSimulationMinutes">模拟考时长</sys:String>

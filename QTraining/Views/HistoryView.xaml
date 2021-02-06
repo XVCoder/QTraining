@@ -5,11 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QTraining.Views"
         xmlns:pu="clr-namespace:Panuon.UI.Silver;assembly=Panuon.UI.Silver"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="{DynamicResource Text_History}" Height="450" Width="600"
         WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="22"/>
+        </Grid.RowDefinitions>
         <TextBox
+            Grid.Row="0"
             FontSize="12"
             IsReadOnly="True"
             Text="{Binding History}"
@@ -17,5 +23,13 @@
             VerticalScrollBarVisibility="Auto"
             pu:ScrollViewerHelper.ScrollButtons="TopBottom"
             pu:ScrollViewerHelper.ScrollBarThickness="8"/>
+        <Button
+            Grid.Row="1"
+            Content="{DynamicResource Button_Clear}"
+            HorizontalAlignment="Right"
+            Margin="0 0 5 0"
+            Width="55"
+            pu:ButtonHelper.ButtonStyle="Link"
+            cal:Message.Attach="Clear"/>
     </Grid>
 </Window>

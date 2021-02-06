@@ -68,6 +68,7 @@ namespace QTraining.ViewModels
                     return;
                 }
                 Model.QuestionBankRootPath = qPath;
+                Model.Name = qPath.Split('\\')[qPath.Split('\\').Length - 1];
                 Model.SimulationRangeCount = imageNames.Length < 60 ? imageNames.Length : 60;
                 NotifyOfPropertyChange(nameof(Model));
             }

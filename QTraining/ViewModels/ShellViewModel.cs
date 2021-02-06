@@ -56,7 +56,7 @@ namespace QTraining.ViewModels
                 + x.SimulationRangeCount + QuestionBankParamSeparator.ToString()
                 + x.SimulationMinutes + QuestionBankParamSeparator.ToString()
                 + x.OrderTrainingMinutes + QuestionBankParamSeparator.ToString()
-                + x.QuestionBankRootPath + QuestionBankParamSeparator.ToString()
+                + x.QuestionBankRootPath
                 ));
                 Properties.Settings.Default.Save();
             }
@@ -97,6 +97,7 @@ namespace QTraining.ViewModels
             }
             set
             {
+                value = value < 0 ? 0 : value;
                 selectedQuestionBankIndex = value;
                 Properties.Settings.Default.LastReadingQuestionBankName = LstQuestionBankName[value];
                 Properties.Settings.Default.Save();
@@ -344,7 +345,7 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationMinutes;
+        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationMinutes * 60;
         /// <summary>
         /// 当前秒数
         /// </summary>
@@ -454,7 +455,7 @@ namespace QTraining.ViewModels
         {
             get
             {
-                if (lstQuestionBankModel.Count <= 0)
+                if (Properties.Settings.Default.LastReadingIndex.IsNullOrWhiteSpace() && lstQuestionBankModel.Count > 0)
                     Properties.Settings.Default.LastReadingIndex = string.Join(";", lstQuestionBankModel.Select(x => x.Name + ":0"));
 
                 var dic = new Dictionary<string, int>();
@@ -619,23 +620,12 @@ namespace QTraining.ViewModels
         /// </summary>
         public void QuestionBankManage()
         {
-            if (windowManager.ShowDialog(new QuestionBankManageViewModel(windowManager, lstQuestionBankModel)) == true)
+            var questionBankModels = new List<QuestionBankModel>(lstQuestionBankModel);
+            if (windowManager.ShowDialog(new QuestionBankManageViewModel(windowManager, questionBankModels)) == true)
             {
-                
+                lstQuestionBankModel = new List<QuestionBankModel>(questionBankModels);
+                NotifyOfPropertyChange(nameof(LstQuestionBankName));
             }
-
-            //OpenFileDialog ofd = new OpenFileDialog();
-            //ofd.Filter = CoffeeScript._ofdOutputFilter;
-            //ofd.FileName = "Filename will be ignored";
-            //ofd.CheckFileExists = false;
-            //ofd.CheckPathExists = true;
-            ////ofd.ValidateNames = false;
-            //if (ofd.ShowDialog() == true)
-            //{
-            //    ofd.FileName = ofd.FileName.TrimEnd('\r');
-            //    int lastSeparatorIndex = ofd.FileName.LastIndexOf('\\');
-            //    ofd.FileName = ofd.FileName.Remove(lastSeparatorIndex);
-            //}
         }
 
         /// <summary>
@@ -704,11 +694,11 @@ namespace QTraining.ViewModels
                 return;
             }
 
-            currentQuestionBankPath = "./Resources/QuestionBank/" + lstQuestionBankModel[SelectedQuestionBankIndex].Name;
-            var questionInfoPath = currentQuestionBankPath + "/QuestionInfo.txt";
+            currentQuestionBankPath = lstQuestionBankModel[SelectedQuestionBankIndex].QuestionBankRootPath;
+            var questionInfoPath = currentQuestionBankPath + "\\QuestionInfo.txt";
             if (!File.Exists(questionInfoPath))
             {//题库路径不存在，提示检查
-                MessageHelper.Error(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"));
+                MessageHelper.Error(string.Format(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"), questionInfoPath));
                 return;
             }
             //从TXT文件中加载数据
@@ -877,11 +867,13 @@ namespace QTraining.ViewModels
             }
             else
             {//已交卷，重置试题
+                if (IsTrainingStart && IsRadioOrderTrainingSelected && IsRadioOrderTrainingSelected)
+                {//顺序练习模式，保存最后浏览的题号
+                    LastReadingIndex = CurrentQuestionIndex;
+                    var dic = DicLastReadingIndex;
+                }
                 IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
                 IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
-                //GenerateRandomQuestionBank();
-                //answers = new string[QuestionRangeCount];
-                //CurrentQuestionIndex = 0;
                 IsCommited = false;
                 IsTrainingStart = false;
             }
@@ -973,11 +965,10 @@ namespace QTraining.ViewModels
                 fsRead.Read(buffer, 0, buffer.Length);
                 history = Encoding.UTF8.GetString(buffer);
             }
-            var historyView = new HistoryView
+            windowManager.ShowDialog(new HistoryViewModel
             {
-                DataContext = new HistoryViewModel { History = history }
-            };
-            historyView.Show();
+                History = history
+            });
         }
 
         /// <summary>
