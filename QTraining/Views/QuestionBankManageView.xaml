@@ -66,11 +66,11 @@
             x:Name="dataList"
             Grid.Row="1"
             AutoGenerateColumns="False"
+            CanUserAddRows="False"
             CanUserReorderColumns="False"
             Margin="0 5 0 0"
             SelectionMode="Single"
             ItemsSource="{Binding LstQuestionBankModel}"
-            IsReadOnly="True"
             pu:DataGridHelper.UnitSelectedBackground="DodgerBlue"
             pu:DataGridHelper.UnitSelectedForeground="White">
             <DataGrid.Columns>
