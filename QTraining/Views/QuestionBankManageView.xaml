@@ -81,9 +81,6 @@
                     Binding="{Binding SimulationMinutes}"
                     Header="{DynamicResource Text_QuestionBankSimulationMinutes}"/>
                 <DataGridTextColumn
-                    Binding="{Binding OrderTrainingMinutes}"
-                    Header="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"/>
-                <DataGridTextColumn
                     Binding="{Binding SimulationRangeCount}"
                     Header="{DynamicResource Text_QuestionBankSimulationRangeCount}"/>
                 <DataGridTextColumn
