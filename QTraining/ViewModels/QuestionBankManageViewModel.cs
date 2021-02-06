@@ -53,7 +53,6 @@ namespace QTraining.ViewModels
         {
             var vm = new QuestionBankImportViewModel(new QuestionBankModel
             {
-                OrderTrainingMinutes = 120,
                 SimulationMinutes = 90
             });
             if (windowManager.ShowDialog(vm) == true)

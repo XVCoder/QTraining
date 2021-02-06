@@ -44,8 +44,7 @@ namespace QTraining.ViewModels
                     Name = x.Split(QuestionBankParamSeparator)[0],
                     SimulationRangeCount = int.Parse(x.Split(QuestionBankParamSeparator)[1]),
                     SimulationMinutes = int.Parse(x.Split(QuestionBankParamSeparator)[2]),
-                    OrderTrainingMinutes = int.Parse(x.Split(QuestionBankParamSeparator)[3]),
-                    QuestionBankRootPath = x.Split(QuestionBankParamSeparator)[4]
+                    QuestionBankRootPath = x.Split(QuestionBankParamSeparator)[3]
                 }));
                 return lst;
             }
@@ -55,7 +54,6 @@ namespace QTraining.ViewModels
                 x.Name + QuestionBankParamSeparator.ToString()
                 + x.SimulationRangeCount + QuestionBankParamSeparator.ToString()
                 + x.SimulationMinutes + QuestionBankParamSeparator.ToString()
-                + x.OrderTrainingMinutes + QuestionBankParamSeparator.ToString()
                 + x.QuestionBankRootPath
                 ));
                 Properties.Settings.Default.Save();

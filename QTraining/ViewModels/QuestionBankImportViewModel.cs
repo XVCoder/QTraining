@@ -82,7 +82,6 @@ namespace QTraining.ViewModels
             if (string.IsNullOrWhiteSpace(Model.QuestionBankRootPath)
                 || string.IsNullOrWhiteSpace(Model.Name)
                 || Model.SimulationMinutes < 1
-                || Model.OrderTrainingMinutes < 1
                 || Model.SimulationRangeCount < 1)
             {
                 MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoNotAvaliable"), null, System.Windows.MessageBoxButton.OK);

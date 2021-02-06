@@ -17,7 +17,6 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -63,30 +62,16 @@
             Margin="5 0 0 0"
             Text="{Binding Model.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
             VerticalContentAlignment="Center"/>
-        <!--顺序练习时长-->
-        <TextBlock
-            Grid.Column="0"
-            Grid.Row="2"
-            HorizontalAlignment="Right"
-            Text="{DynamicResource Text_QuestionBankOrderTrainingMinutes}"
-            VerticalAlignment="Center"/>
-        <TextBox
-            Grid.Column="1"
-            Grid.Row="2"
-            Height="30"
-            Margin="5 0 0 0"
-            Text="{Binding Model.OrderTrainingMinutes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            VerticalAlignment="Center"/>
         <!--模拟考时长-->
         <TextBlock
             Grid.Column="0"
-            Grid.Row="3"
+            Grid.Row="2"
             HorizontalAlignment="Right"
             Text="{DynamicResource Text_QuestionBankSimulationMinutes}"
             VerticalAlignment="Center"/>
         <TextBox
             Grid.Column="1"
-            Grid.Row="3"
+            Grid.Row="2"
             Height="30"
             Margin="5 0 0 0"
             Text="{Binding Model.SimulationMinutes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -94,13 +79,13 @@
         <!--模拟考题数-->
         <TextBlock
             Grid.Column="0"
-            Grid.Row="4"
+            Grid.Row="3"
             HorizontalAlignment="Right"
             Text="{DynamicResource Text_QuestionBankSimulationRangeCount}"
             VerticalAlignment="Center"/>
         <TextBox
             Grid.Column="1"
-            Grid.Row="4"
+            Grid.Row="3"
             Height="30"
             Margin="5 0 0 0"
             Text="{Binding Model.SimulationRangeCount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -108,7 +93,7 @@
         <!--保存-->
         <Button
             Grid.Column="1"
-            Grid.Row="5"
+            Grid.Row="4"
             Background="MediumSeaGreen"
             Content="{DynamicResource Common_Save}"
             Foreground="White"

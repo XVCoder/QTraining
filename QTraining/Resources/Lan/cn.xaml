@@ -61,7 +61,6 @@
     <sys:String x:Key="Text_RemovingQuestionBankNotSelected">请选择要移除的题库！</sys:String>
     <sys:String x:Key="Text_ClearConfirm">确认清空？</sys:String>
     <sys:String x:Key="Text_QuestionBankName">题库名</sys:String>
-    <sys:String x:Key="Text_QuestionBankOrderTrainingMinutes">顺序练习时长</sys:String>
     <sys:String x:Key="Text_QuestionBankSimulationMinutes">模拟考时长</sys:String>
     <sys:String x:Key="Text_QuestionBankSimulationRangeCount">模拟考题数</sys:String>
     <sys:String x:Key="Text_QuestionBankRootPath">题库路径</sys:String>
