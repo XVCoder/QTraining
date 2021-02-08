@@ -64,6 +64,7 @@
     <sys:String x:Key="Text_QuestionBankSimulationMinutes">模拟考时长</sys:String>
     <sys:String x:Key="Text_QuestionBankSimulationRangeCount">模拟考题数</sys:String>
     <sys:String x:Key="Text_QuestionBankRootPath">题库路径</sys:String>
+    <sys:String x:Key="Text_QuestionBankImportHint">题库导入说明</sys:String>
 
     <sys:String x:Key="ToolTip_ShowAnswerHotKey">快捷键 [Ctrl]</sys:String>
     <sys:String x:Key="ToolTip_PreQuestionHotKey">快捷键 [←]</sys:String>

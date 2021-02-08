@@ -61,6 +61,14 @@
                 pu:ButtonHelper.HoverBrush="DarkRed"
                 cal:Message.Attach="Remove(dataList)"/>
         </StackPanel>
+        <Button
+            Grid.Row="0"
+            Content="{DynamicResource Text_QuestionBankImportHint}"
+            HorizontalAlignment="Right"
+            Margin="0 0 10 0"
+            VerticalAlignment="Center"
+            pu:ButtonHelper.ButtonStyle="Link"
+            cal:Message.Attach="QuestionBankImportHint"/>
         <!--列表-->
         <DataGrid
             x:Name="dataList"
