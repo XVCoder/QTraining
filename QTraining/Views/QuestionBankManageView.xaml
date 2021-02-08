@@ -33,7 +33,7 @@
                 pu:TextBoxHelper.Watermark="{DynamicResource Common_Search}"
                 pu:TextBoxHelper.Icon="&#xe928;"
                 pu:IconHelper.FontFamily="{StaticResource PanuonIconFont}"
-                cal:Message.Attach="[TextChanged]=[SearchTextChanged]"/>
+                cal:Message.Attach="[TextChanged]=[SearchTextChanged($this)]"/>
             <!--导入题库-->
             <Button
                 Content="{DynamicResource Text_ImportQuestionBank}"

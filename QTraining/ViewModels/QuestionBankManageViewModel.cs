@@ -92,6 +92,19 @@ namespace QTraining.ViewModels
                 this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
             }
         }
+
+        /// <summary>
+        /// 检索
+        /// </summary>
+        public void SearchTextChanged(string keyword)
+        {
+            if (keyword != null)
+                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(
+                    questionBankModels.Where(x => x.Name.ToLower().Contains(keyword.ToLower())
+                    || x.QuestionBankRootPath.ToLower().Contains(keyword.ToLower()))
+                    .ToList()
+                    );
+        }
         #endregion
     }
 }
