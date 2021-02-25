@@ -393,7 +393,7 @@
                     Focusable="{Binding IsTurnToBoxFocusable}"
                     FontSize="10"
                     input:InputMethod.IsInputMethodEnabled="False"
-                    Text="{Binding TurnToNum,Mode=TwoWay}"
+                    Text="{Binding TurnToNum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                     Width="50"
                     pu:TextBoxHelper.CornerRadius="3"
                     cal:Message.Attach="

@@ -809,7 +809,7 @@ namespace QTraining.ViewModels
                 commitConfirmMsg.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
-                    commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]]};  ");
+                    commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
                 }
                 //确认交卷弹窗提示
                 if (MessageHelper.Warning(commitConfirmMsg.ToString()) == MessageBoxResult.No)
@@ -868,12 +868,12 @@ namespace QTraining.ViewModels
                 if (IsTrainingStart && IsRadioOrderTrainingSelected && IsRadioOrderTrainingSelected)
                 {//顺序练习模式，保存最后浏览的题号
                     LastReadingIndex = CurrentQuestionIndex;
-                    var dic = DicLastReadingIndex;
                 }
                 IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
                 IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
                 IsCommited = false;
                 IsTrainingStart = false;
+                CurrentQuestionIndex = 0;
             }
         }
 
@@ -911,11 +911,12 @@ namespace QTraining.ViewModels
             //跳转到指定题号
             CurrentQuestionIndex = TurnToNum - 1;
             CurrentQuestionInitial();
-            if (CurrentQuestionIndex <= 0 || CurrentQuestionIndex == QuestionRangeCount - 1)
-            {
-                CanPreQuestion = true;
-                CanNextQuestion = true;
-            }
+            CanPreQuestion = TurnToNum > 1;
+            CanNextQuestion = TurnToNum < QuestionRangeCount;
+            if (CanPreQuestion)
+                NotifyOfPropertyChange(nameof(CanPreQuestion));
+            if (CanNextQuestion)
+                NotifyOfPropertyChange(nameof(CanNextQuestion));
             IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsTurnToBoxFocusable = false;
         }
@@ -999,11 +1000,12 @@ namespace QTraining.ViewModels
         {
             CurrentQuestionIndex = LastReadingIndex;
             CurrentQuestionInitial();
-            if (CurrentQuestionIndex <= 0 || CurrentQuestionIndex == QuestionRangeCount - 1)
-            {
-                CanPreQuestion = true;
-                CanNextQuestion = true;
-            }
+            CanPreQuestion = TurnToNum > 1;
+            CanNextQuestion = TurnToNum < QuestionRangeCount;
+            if (CanPreQuestion)
+                NotifyOfPropertyChange(nameof(CanPreQuestion));
+            if (CanNextQuestion)
+                NotifyOfPropertyChange(nameof(CanNextQuestion));
             IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsLastReadingIndexHintVisible = false;
         }
@@ -1053,7 +1055,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public void SelectOpt5()
         {
-            IsCheckESelected = !IsCheckESelected;
+            IsCheckESelected = CurrentQuestion.ResultCount >= 5 && !IsCheckESelected;
         }
 
         /// <summary>
@@ -1061,7 +1063,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public void SelectOpt6()
         {
-            IsCheckFSelected = !IsCheckFSelected;
+            IsCheckFSelected = CurrentQuestion.ResultCount >= 6 && !IsCheckFSelected;
         }
 
         /// <summary>
