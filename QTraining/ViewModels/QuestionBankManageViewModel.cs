@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Panuon.UI.Silver;
+using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.Models;
 using QTraining.Views;
@@ -65,7 +66,23 @@ namespace QTraining.ViewModels
                     return;
                 }
                 questionBankModels.Add(vm.Model);
-                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+                LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+                //更新最后浏览位置配置项内容
+                var dic = new Dictionary<string, int>();
+                LstQuestionBankModel.ToList().ForEach(x => dic.Add(x.Name, 0));
+                Properties.Settings.Default.LastReadingIndex.Split(';').ToList().ForEach(x =>
+                {
+                    if (!x.IsNullOrWhiteSpace())
+                    {
+                        var dicSource = x.Split(':');
+                        var key = dicSource[0];
+                        var value = int.Parse(dicSource[1]);
+                        if (dic.ContainsKey(key))
+                            dic[key] = value;
+                    }
+                });
+                Properties.Settings.Default.LastReadingIndex = string.Join(";", dic.Select(x => $"{x.Key}:{x.Value}").ToList());
+                Properties.Settings.Default.Save();
             }
         }
 
