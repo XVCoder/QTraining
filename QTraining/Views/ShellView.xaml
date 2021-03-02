@@ -153,6 +153,7 @@
                         Margin="10 0 0 0"
                         Padding="5 2"
                         ToolTip="{DynamicResource ToolTip_ShowAnswerHotKey}"
+                        Visibility="{Binding CountDownVisibility,Converter={StaticResource VisibilityReverseConverter}}"
                         pu:ButtonHelper.CornerRadius="5"
                         cal:Message.Attach="ShowRealResult">
                         <Button.Content>

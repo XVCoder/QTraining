@@ -343,7 +343,7 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond => lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationMinutes * 60;
+        private int countSecond => lstQuestionBankModel.Where(x => x.Name == SelectedQuestionBankName).FirstOrDefault().SimulationMinutes * 60;
         /// <summary>
         /// 当前秒数
         /// </summary>
@@ -743,7 +743,7 @@ namespace QTraining.ViewModels
             {//模拟仿真
                 CountDownVisibility = Visibility.Visible;
                 //设置题数
-                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == Properties.Settings.Default.LastReadingQuestionBankName).FirstOrDefault().SimulationRangeCount;
+                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == SelectedQuestionBankName).FirstOrDefault().SimulationRangeCount;
                 //根据设定好的题组大小生成随机题组
                 GenerateRandomQuestionBank();
                 //初始化答题板
@@ -828,55 +828,73 @@ namespace QTraining.ViewModels
                     commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
                 }
                 //确认交卷弹窗提示
-                if (MessageHelper.Warning(commitConfirmMsg.ToString()) == MessageBoxResult.No)
+                var dialogResult = Panuon.UI.Silver.MessageBoxX.Show(GetView() as ShellView, commitConfirmMsg.ToString(), ResourceHelper.GetStrings("Common_Warning"),
+                    MessageBoxButton.YesNoCancel, Panuon.UI.Silver.MessageBoxIcon.Warning, Panuon.UI.Silver.DefaultButton.YesOK);
+                if (dialogResult == MessageBoxResult.Cancel)
                     return;
-                StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
-                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {QuestionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
-                trainingResultStr.AppendLine();
-                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
-                for (int i = 0; i < wrongAnswers.Count; i++)
-                {//错题
-                    trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
-                }
-                trainingResultStr.AppendLine();
-                trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
-                for (int i = 0; i < noAnswers.Count; i++)
-                {//未答
-                    trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
-                }
-                trainingResultStr.AppendLine();
-                countDownTimer?.Stop();
-                //弹窗显示练习结果
-                MessageHelper.Info(trainingResultStr.ToString());
-                IsCommited = true;
-                //将练习记录写到txt文件中
-                var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
-                StreamWriter tw = null;
-                try
+                else if (dialogResult == MessageBoxResult.Yes)
                 {
-                    if (!File.Exists(trainingRecorderPath))
-                        File.Create(trainingRecorderPath);
-                    using (tw = File.AppendText(trainingRecorderPath))
+
+                    StringBuilder trainingResultStr = new StringBuilder();  //练习结果消息
+                    trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_TrueAnswer")} ]  {QuestionRangeCount - wrongAnswers.Count - noAnswers.Count}个");
+                    trainingResultStr.AppendLine();
+                    trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
+                    for (int i = 0; i < wrongAnswers.Count; i++)
+                    {//错题
+                        trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
+                    }
+                    trainingResultStr.AppendLine();
+                    trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
+                    for (int i = 0; i < noAnswers.Count; i++)
+                    {//未答
+                        trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
+                    }
+                    trainingResultStr.AppendLine();
+                    countDownTimer?.Stop();
+                    //弹窗显示练习结果
+                    MessageHelper.Info(trainingResultStr.ToString());
+                    IsCommited = true;
+                    //将练习记录写到txt文件中
+                    var trainingRecorderPath = Environment.CurrentDirectory + "\\training_recorder.txt";
+                    StreamWriter tw = null;
+                    try
                     {
-                        var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】"
-                            + SelectedQuestionBankName.ToString() + " "
-                            + (IsRadioOrderTrainingSelected ? $"{ResourceHelper.GetStrings("Text_OrderTraining")}\n"
-                            : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
-                        str += trainingResultStr.ToString();
-                        str += "\r\n";
-                        tw.WriteLine(str);
-                        tw.Flush();
+                        if (!File.Exists(trainingRecorderPath))
+                            File.Create(trainingRecorderPath);
+                        using (tw = File.AppendText(trainingRecorderPath))
+                        {
+                            var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】"
+                                + SelectedQuestionBankName.ToString() + " "
+                                + (IsRadioOrderTrainingSelected ? $"{ResourceHelper.GetStrings("Text_OrderTraining")}\n"
+                                : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
+                            str += trainingResultStr.ToString();
+                            str += "\r\n";
+                            tw.WriteLine(str);
+                            tw.Flush();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        SysLogHelper.WriteLog(ex.Message);
+                    }
+                    finally
+                    {
+                        if (tw != null)
+                            tw.Close();
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    SysLogHelper.WriteLog(ex.Message);
-                }
-                finally
-                {
-                    if (tw != null)
-                        tw.Close();
+                else
+                {//交卷但不保存记录，直接重置试题
+                    if (IsTrainingStart && IsRadioOrderTrainingSelected && IsRadioOrderTrainingSelected)
+                    {//顺序练习模式，保存最后浏览的题号
+                        LastReadingIndex = CurrentQuestionIndex;
+                    }
+                    IsRadioASelected = IsRadioBSelected = IsRadioCSelected = IsRadioDSelected = false;
+                    IsCheckASelected = IsCheckBSelected = IsCheckCSelected = IsCheckDSelected = IsCheckESelected = false;
+                    IsCommited = false;
+                    IsTrainingStart = false;
+                    CurrentQuestionIndex = 0;
                 }
             }
             else
@@ -935,6 +953,23 @@ namespace QTraining.ViewModels
                 NotifyOfPropertyChange(nameof(CanNextQuestion));
             IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
             IsTurnToBoxFocusable = false;
+        }
+
+        /// <summary>
+        /// 跳转到上次浏览的位置
+        /// </summary>
+        public void TurnToLastReadingIndex()
+        {
+            CurrentQuestionIndex = LastReadingIndex;
+            CurrentQuestionInitial();
+            CanPreQuestion = LastReadingIndex > 1;
+            CanNextQuestion = LastReadingIndex < QuestionRangeCount;
+            if (CanPreQuestion)
+                NotifyOfPropertyChange(nameof(CanPreQuestion));
+            if (CanNextQuestion)
+                NotifyOfPropertyChange(nameof(CanNextQuestion));
+            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
+            IsLastReadingIndexHintVisible = false;
         }
 
         /// <summary>
@@ -1007,23 +1042,6 @@ namespace QTraining.ViewModels
             {//顺序练习模式，保存最后浏览的题号
                 LastReadingIndex = CurrentQuestionIndex;
             }
-        }
-
-        /// <summary>
-        /// 跳转到上次浏览的位置
-        /// </summary>
-        public void TurnToLastReadingIndex()
-        {
-            CurrentQuestionIndex = LastReadingIndex;
-            CurrentQuestionInitial();
-            CanPreQuestion = TurnToNum > 1;
-            CanNextQuestion = TurnToNum < QuestionRangeCount;
-            if (CanPreQuestion)
-                NotifyOfPropertyChange(nameof(CanPreQuestion));
-            if (CanNextQuestion)
-                NotifyOfPropertyChange(nameof(CanNextQuestion));
-            IsNoteEditorVisible = IsNoteVisible = IsRealResultVisible = false;
-            IsLastReadingIndexHintVisible = false;
         }
 
         /// <summary>
