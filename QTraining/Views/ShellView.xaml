@@ -464,11 +464,38 @@
                 pu:ButtonHelper.ButtonStyle="Link"
                 cal:Message.Attach="ShowHistory"/>
         </Grid>
-        <!--蒙版+开始按钮-->
+        <!--背景蒙版+开始按钮-->
         <Grid
-            Background="Gray"
             Opacity="1"
             Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
+            <Grid.Background>
+                <ImageBrush
+                    ImageSource="{Binding BackgroundImageSource}"
+                    d:ImageSource="../Resources/Images/background01.jpg"
+                    Stretch="UniformToFill"/>
+            </Grid.Background>
+            <Button
+                Content="⟳"
+                FontSize="22"
+                FontWeight="Bold"
+                Foreground="DodgerBlue"
+                Height="25"
+                HorizontalAlignment="Left"
+                Margin="10"
+                ToolTip="{StaticResource ToolTip_ChangeBackgroundImage}"
+                VerticalAlignment="Bottom"
+                Width="25"
+                pu:ButtonHelper.ButtonStyle="Link"
+                pu:ButtonHelper.CornerRadius="8"
+                pu:ButtonHelper.HoverBrush="Blue"
+                cal:Message.Attach="ChangeBackgroundImage"/>
+            <!--半透明面板-->
+            <Border
+                Background="#66000000"
+                CornerRadius="25"
+                Height="300"
+                Width="500">
+            </Border>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>

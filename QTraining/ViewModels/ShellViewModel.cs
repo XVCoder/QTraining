@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.Models;
 using QTraining.Views;
@@ -14,6 +13,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace QTraining.ViewModels
@@ -25,6 +26,14 @@ namespace QTraining.ViewModels
         public ShellViewModel(IWindowManager windowManager)
         {
             this.windowManager = windowManager;
+            lstBackgroundImagePath = new List<string>
+            {
+                Environment.CurrentDirectory+"/Resources/Images/background01.jpg",
+                Environment.CurrentDirectory+"/Resources/Images/background02.jpg",
+                Environment.CurrentDirectory+"/Resources/Images/background03.jpg"
+            };
+
+            BackgroundImagePath = lstBackgroundImagePath[currentBackgroundImageIndex];
         }
         #endregion
 
@@ -33,6 +42,20 @@ namespace QTraining.ViewModels
         DispatcherTimer countDownTimer;  //倒计时
         private const char QuestionBankParamSeparator = '|';
         private const char QuestionBankSeparator = ';';
+        private readonly List<string> lstBackgroundImagePath;
+
+        /// <summary>
+        /// 当前背景图索引值
+        /// </summary>
+        private int currentBackgroundImageIndex
+        {
+            get => Properties.Settings.Default.CurrentBackgroundImageIndex;
+            set
+            {
+                Properties.Settings.Default.CurrentBackgroundImageIndex = value;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         private List<QuestionBankModel> lstQuestionBankModel
         {
@@ -541,6 +564,34 @@ namespace QTraining.ViewModels
                 NotifyOfPropertyChange(nameof(IsCheckBoxFVisible));
             }
         }
+
+        private string backgroundImagePath;
+        /// <summary>
+        /// 背景图路径
+        /// </summary>
+        public string BackgroundImagePath
+        {
+            get => backgroundImagePath;
+            set
+            {
+                backgroundImagePath = value;
+                BackgroundImageSource = new BitmapImage(new Uri(value));
+            }
+        }
+
+        private ImageSource backgroundImageSource;
+        /// <summary>
+        /// 背景图源数据
+        /// </summary>
+        public ImageSource BackgroundImageSource
+        {
+            get => backgroundImageSource;
+            set
+            {
+                backgroundImageSource = value;
+                NotifyOfPropertyChange(nameof(BackgroundImageSource));
+            }
+        }
         #endregion
 
         #region Events
@@ -755,7 +806,7 @@ namespace QTraining.ViewModels
             }
             else if (IsRadioOrderTrainingSelected)
             {//顺序练习
-                //设置题数
+             //设置题数
                 QuestionRangeCount = QuestionInfoModels.Count;
                 //隐藏倒计时
                 CountDownVisibility = Visibility.Collapsed;
@@ -795,7 +846,7 @@ namespace QTraining.ViewModels
         {
             if (!IsCommited)
             {//没交卷
-                //保存当前查看试题的回答
+             //保存当前查看试题的回答
                 SaveCurrentQuestionAnswer();
                 var trainingResult = new string[QuestionRangeCount];  //练习结果
                 for (int i = 0; i < answers.Length; i++)
@@ -1164,6 +1215,22 @@ namespace QTraining.ViewModels
         {
             IsNoteEditorVisible = false;
             IsNoteVisible = true;
+        }
+
+        /// <summary>
+        /// 更换背景图片
+        /// </summary>
+        public void ChangeBackgroundImage()
+        {
+            if (currentBackgroundImageIndex == lstBackgroundImagePath.Count - 1)
+            {
+                BackgroundImagePath = lstBackgroundImagePath.First();
+                currentBackgroundImageIndex = 0;
+            }
+            else
+            {
+                BackgroundImagePath = lstBackgroundImagePath[++currentBackgroundImageIndex];
+            }
         }
         #endregion
 

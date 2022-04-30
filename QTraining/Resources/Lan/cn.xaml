@@ -71,4 +71,5 @@
     <sys:String x:Key="ToolTip_NextQuestionHotKey">快捷键 [→]</sys:String>
     <sys:String x:Key="ToolTip_SaveNoteHotKey">快捷键 [Enter]</sys:String>
     <sys:String x:Key="ToolTip_SaveNoteCancelHotKey">快捷键 [Esc]</sys:String>
+    <sys:String x:Key="ToolTip_ChangeBackgroundImage">点击切换背景图</sys:String>
 </ResourceDictionary>

@@ -1,6 +1,5 @@
 ﻿using Caliburn.Micro;
 using Panuon.UI.Silver;
-using Panuon.UI.Silver.Core;
 using QTraining.Common;
 using QTraining.Models;
 using QTraining.Views;
@@ -160,7 +159,14 @@ SAA
 Q1; 4; B; this is a test
 Q2; 5; AD; 这是一个测试
 Q3; 6; ABC; 这是笔记或解析...
-Q999; 4; A; 解析解析解析", ResourceHelper.GetStrings("Text_QuestionBankImportHint"));
+Q999; 4; A; 解析解析解析
+
+-------------------------------------------------------------------------------
+走过的路，认识的人，遇见的事，皆为人生长河中不可或缺的一部分。
+仅以此更新致敬曾经BCCEC项目组的所有成员，共勉！
+
+-- Developed by Xn.U
+", ResourceHelper.GetStrings("Text_QuestionBankImportHint"));
         }
         #endregion
     }
