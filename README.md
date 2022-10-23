@@ -1,5 +1,10 @@
 ﻿### QTraining - question training tool
 
+![.NET: 4.7.2](https://img.shields.io/badge/.NET-4.7.2-blue) 
+<a href="https://www.nuget.org/packages/Panuon.WPF.UI" target='_blank'><img src="https://img.shields.io/badge/UI-Panuon.UI.Silver_2.0-blue"></a>(自2.2.20版本开始已更名为Panuon.WPF.UI)
+<a href="https://caliburnmicro.com/documentation/" target='_blank'><img src="https://img.shields.io/badge/MVVM-Caliburn.Micro_3.2.0-blue"></a>
+
+
 #### 0. 来自作者（也就是本人）的碎碎念
 
 这是一个用于模拟刷题的小工具，目前仅适用于选择题，包括单选和多选。  
