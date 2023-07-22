@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -19,7 +15,7 @@ namespace QTraining.Converter
             if (value is Visibility valueVisibility)
             {
                 if (targetType == typeof(bool))
-                    return valueVisibility == Visibility.Visible ? false : true;
+                    return valueVisibility == Visibility.Visible;
                 if (targetType == typeof(Visibility))
                     return valueVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
             }

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QTraining.Common
 {
     public class SqliteHelper
     {
         private SQLiteTransaction trs;
-        private bool bIsOpen = false;
-        private bool bIsTran = false;
-        private string sConnectionString;
-        private SQLiteConnection cnn;
-        private SQLiteCommand cmd;
+        private bool _isOpen = false;
+        private bool _isTran = false;
+        private string _connectionString;
+        private SQLiteConnection _cnn;
+        private SQLiteCommand _cmd;
 
         /// <summary>
         /// 构造函数
@@ -26,14 +22,14 @@ namespace QTraining.Common
         {
             if (String.IsNullOrWhiteSpace(connectString))
             {
-                sConnectionString = GetconnectString();
+                _connectionString = GetconnectString();
             }
             else
             {
-                sConnectionString = connectString;
+                _connectionString = connectString;
             }
-            cnn = new SQLiteConnection();
-            cmd = new SQLiteCommand();
+            _cnn = new SQLiteConnection();
+            _cmd = new SQLiteCommand();
         }
 
         #region Public method
@@ -48,18 +44,18 @@ namespace QTraining.Common
             try
             {
                 DbOpen();
-                cmd.CommandText = sSql;
+                _cmd.CommandText = sSql;
 
                 if (oParameter != null)
                 {
-                    cmd.Parameters.Clear();
+                    _cmd.Parameters.Clear();
                     foreach (string Key in oParameter.Keys)
                     {
-                        cmd.Parameters.AddWithValue(Key, oParameter[Key]);
+                        _cmd.Parameters.AddWithValue(Key, oParameter[Key]);
                     }
                 }
 
-                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(cmd);
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(_cmd);
                 dataAdapter.Fill(dt);
             }
             catch (Exception ex)
@@ -93,20 +89,20 @@ namespace QTraining.Common
 
 
                 // 执行SQL
-                cmd.CommandText = sql;
+                _cmd.CommandText = sql;
 
                 if (oParameter != null)
                 {
-                    cmd.Parameters.Clear();
+                    _cmd.Parameters.Clear();
                     foreach (string Key in oParameter.Keys)
                     {
-                        cmd.Parameters.AddWithValue(Key, oParameter[Key]);
+                        _cmd.Parameters.AddWithValue(Key, oParameter[Key]);
                     }
                 }
-                affectedRows = cmd.ExecuteNonQuery();
-                cmd.CommandText = "select last_insert_rowid();";
-                newid = Convert.ToInt32(cmd.ExecuteScalar());
-                if (!bIsTran)
+                affectedRows = _cmd.ExecuteNonQuery();
+                _cmd.CommandText = "select last_insert_rowid();";
+                newid = Convert.ToInt32(_cmd.ExecuteScalar());
+                if (!_isTran)
                 {
                     DbClose();
                 }
@@ -136,11 +132,11 @@ namespace QTraining.Common
                 DbOpen();
 
                 // 执行SQL
-                cmd.CommandText = sql;
-                affectedRows = cmd.ExecuteNonQuery();
-                cmd.CommandText = "select last_insert_rowid();";
-                newid = Convert.ToInt32(cmd.ExecuteScalar());
-                if (!bIsTran)
+                _cmd.CommandText = sql;
+                affectedRows = _cmd.ExecuteNonQuery();
+                _cmd.CommandText = "select last_insert_rowid();";
+                newid = Convert.ToInt32(_cmd.ExecuteScalar());
+                if (!_isTran)
                 {
                     DbClose();
                 }
@@ -204,8 +200,8 @@ namespace QTraining.Common
         {
             try
             {
-                trs = cnn.BeginTransaction();
-                cmd.Transaction = trs;
+                trs = _cnn.BeginTransaction();
+                _cmd.Transaction = trs;
             }
             catch (Exception ex)
             {
@@ -223,7 +219,7 @@ namespace QTraining.Common
             {
                 DbOpen();
                 ExecBeginTrans();
-                bIsTran = true;
+                _isTran = true;
             }
             catch (Exception ex)
             {
@@ -241,7 +237,7 @@ namespace QTraining.Common
             {
                 DbOpen();
                 ExecCommitTrans();
-                bIsTran = true;
+                _isTran = true;
             }
             catch (Exception ex)
             {
@@ -258,11 +254,11 @@ namespace QTraining.Common
             try
             {
                 DbOpen();
-                if (bIsTran)
+                if (_isTran)
                 {
                     ExecRollbackTrans();
                 }
-                bIsTran = false;
+                _isTran = false;
             }
             catch (Exception ex)
             {
@@ -325,19 +321,19 @@ namespace QTraining.Common
         /// </summary>
         public void DbOpen()
         {
-            if (bIsOpen)
+            if (_isOpen)
             {
                 return;
             }
 
-            if (cnn == null)
+            if (_cnn == null)
             {
-                cnn = new SQLiteConnection();
+                _cnn = new SQLiteConnection();
             }
-            cnn.ConnectionString = sConnectionString;
-            cnn.Open();
-            cmd.Connection = cnn;
-            bIsOpen = true;
+            _cnn.ConnectionString = _connectionString;
+            _cnn.Open();
+            _cmd.Connection = _cnn;
+            _isOpen = true;
 
         }
         /// <summary>
@@ -345,12 +341,11 @@ namespace QTraining.Common
         /// </summary>
         public void DbClose()
         {
-            if (cnn != null && bIsOpen)
+            if (_cnn != null && _isOpen)
             {
-                cnn.Close();
-                bIsOpen = false;
+                _cnn.Close();
+                _isOpen = false;
             }
-            return;
         }
 
         /// <summary>
@@ -364,9 +359,9 @@ namespace QTraining.Common
             try
             {
                 DbOpen();
-                cmd.CommandText = sSql;
+                _cmd.CommandText = sSql;
 
-                SQLiteDataAdapter oracleDataAdapter = new SQLiteDataAdapter(cmd);
+                SQLiteDataAdapter oracleDataAdapter = new SQLiteDataAdapter(_cmd);
                 oracleDataAdapter.Fill(dt);
             }
             catch (Exception ex)

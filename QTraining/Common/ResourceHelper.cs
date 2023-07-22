@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 
 namespace QTraining.Common
 {
-    public class ResourceHelper
+    public static class ResourceHelper
     {
         /// <summary>
         /// 获取一个或多个静态字符串资源
@@ -22,7 +21,7 @@ namespace QTraining.Common
         /// <returns></returns>
         public static string GetStringsWithSeparate(string separateStr = " ", params string[] keys)
         {
-            List<string> lstStr = new List<string>();
+            var lstStr = new List<string>();
             if (keys != null)
             {
                 foreach (var key in keys)

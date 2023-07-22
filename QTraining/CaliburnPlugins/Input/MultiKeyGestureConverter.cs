@@ -111,7 +111,7 @@ namespace QTraining.CaliburnPlugins.Input
                         var keyString = keyStrings[i];
                         if (keyString != null)
                         {
-                           var key = (Key)keyConverter.ConvertFrom(keyString.Trim());
+                            var key = (Key)keyConverter.ConvertFrom(keyString.Trim());
                             keys.Add(key);
                         }
                     }

@@ -1,15 +1,11 @@
-﻿using Caliburn.Micro;
-using Panuon.UI.Silver;
-using QTraining.Common;
-using QTraining.Models;
-using QTraining.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using Caliburn.Micro;
+using QTraining.Common;
+using QTraining.Models;
+using QTraining.Views;
 
 namespace QTraining.ViewModels
 {
@@ -19,14 +15,14 @@ namespace QTraining.ViewModels
         #region Constructor
         public QuestionBankManageViewModel(IWindowManager windowManager, List<QuestionBankModel> questionBankModels)
         {
-            this.windowManager = windowManager;
-            this.questionBankModels = questionBankModels;
+            _windowManager = windowManager;
+            _questionBankModels = questionBankModels;
         }
         #endregion
 
         #region Fields & Properties
-        private readonly IWindowManager windowManager;
-        public List<QuestionBankModel> questionBankModels;
+        private readonly IWindowManager _windowManager;
+        private List<QuestionBankModel> _questionBankModels;
         private BindableCollection<QuestionBankModel> lstQuestionBankModel;
         /// <summary>
         /// 图库列表
@@ -44,7 +40,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public void Loaded()
         {
-            this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+            LstQuestionBankModel = new BindableCollection<QuestionBankModel>(_questionBankModels);
         }
 
         /// <summary>
@@ -56,16 +52,16 @@ namespace QTraining.ViewModels
             {
                 SimulationMinutes = 90
             });
-            if (windowManager.ShowDialog(vm) == true)
+            if (_windowManager.ShowDialog(vm) == true)
             {
-                if (questionBankModels.Where(x => x.QuestionBankRootPath == vm.Model.QuestionBankRootPath
+                if (_questionBankModels.Where(x => x.QuestionBankRootPath == vm.Model.QuestionBankRootPath
                 || x.Name == vm.Model.Name).Count() > 0)
                 {
                     MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionBankAlreadyExist"), null, System.Windows.MessageBoxButton.OK);
                     return;
                 }
-                questionBankModels.Add(vm.Model);
-                LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+                _questionBankModels.Add(vm.Model);
+                LstQuestionBankModel = new BindableCollection<QuestionBankModel>(_questionBankModels);
                 //更新最后浏览位置配置项内容
                 var dic = new Dictionary<string, int>();
                 LstQuestionBankModel.ToList().ForEach(x => dic.Add(x.Name, 0));
@@ -105,8 +101,8 @@ namespace QTraining.ViewModels
             }
             if (MessageHelper.Warning(String.Format(ResourceHelper.GetStrings("Format_RemoveConfirmHint"), selectedModel.Name)) == System.Windows.MessageBoxResult.Yes)
             {
-                questionBankModels.Remove(selectedModel);
-                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(questionBankModels);
+                _questionBankModels.Remove(selectedModel);
+                LstQuestionBankModel = new BindableCollection<QuestionBankModel>(_questionBankModels);
             }
         }
 
@@ -116,11 +112,11 @@ namespace QTraining.ViewModels
         public void SearchTextChanged(string keyword)
         {
             if (keyword != null)
-                this.LstQuestionBankModel = new BindableCollection<QuestionBankModel>(
-                    questionBankModels.Where(x => x.Name.ToLower().Contains(keyword.ToLower())
-                    || x.QuestionBankRootPath.ToLower().Contains(keyword.ToLower()))
-                    .ToList()
-                    );
+            {
+                LstQuestionBankModel = new BindableCollection<QuestionBankModel>(
+                    _questionBankModels.Where(x => x.Name.ToLower().Contains(keyword.ToLower())
+                                              || x.QuestionBankRootPath.ToLower().Contains(keyword.ToLower())));
+            }
         }
 
         /// <summary>

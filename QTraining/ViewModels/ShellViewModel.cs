@@ -1,8 +1,4 @@
-﻿using Caliburn.Micro;
-using QTraining.Common;
-using QTraining.Models;
-using QTraining.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
@@ -16,6 +12,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Caliburn.Micro;
+using QTraining.Common;
+using QTraining.Models;
+using QTraining.Views;
 
 namespace QTraining.ViewModels
 {
@@ -25,24 +25,24 @@ namespace QTraining.ViewModels
         #region Constructors
         public ShellViewModel(IWindowManager windowManager)
         {
-            this.windowManager = windowManager;
-            lstBackgroundImagePath = new List<string>
+            _windowManager = windowManager;
+            _lstBackgroundImagePath = new List<string>
             {
                 Environment.CurrentDirectory+"/Resources/Images/background01.jpg",
                 Environment.CurrentDirectory+"/Resources/Images/background02.jpg",
                 Environment.CurrentDirectory+"/Resources/Images/background03.jpg"
             };
 
-            BackgroundImagePath = lstBackgroundImagePath[currentBackgroundImageIndex];
+            BackgroundImagePath = _lstBackgroundImagePath[currentBackgroundImageIndex];
         }
         #endregion
 
         #region Fields & Properties
-        private readonly IWindowManager windowManager;
+        private readonly IWindowManager _windowManager;
         DispatcherTimer countDownTimer;  //倒计时
         private const char QuestionBankParamSeparator = '|';
         private const char QuestionBankSeparator = ';';
-        private readonly List<string> lstBackgroundImagePath;
+        private readonly List<string> _lstBackgroundImagePath;
 
         /// <summary>
         /// 当前背景图索引值
@@ -62,7 +62,7 @@ namespace QTraining.ViewModels
             get
             {
                 var lst = new List<QuestionBankModel>(Properties.Settings.Default.QuestionBankInfos.Split(QuestionBankSeparator).Where(x =>
-                !x.IsNullOrWhiteSpace()).ToList().Select(x => new QuestionBankModel
+                !x.IsNullOrWhiteSpace()).Select(x => new QuestionBankModel
                 {
                     Name = x.Split(QuestionBankParamSeparator)[0],
                     SimulationRangeCount = int.Parse(x.Split(QuestionBankParamSeparator)[1]),
@@ -105,7 +105,6 @@ namespace QTraining.ViewModels
             }
         }
 
-        private int selectedQuestionBankIndex;
         /// <summary>
         /// 选中试题类型索引值
         /// </summary>
@@ -119,7 +118,6 @@ namespace QTraining.ViewModels
             set
             {
                 value = value < 0 ? 0 : value;
-                selectedQuestionBankIndex = value;
                 Properties.Settings.Default.LastReadingQuestionBankName = LstQuestionBankName[value];
                 Properties.Settings.Default.Save();
                 NotifyOfPropertyChange(nameof(SelectedQuestionBankIndex));
@@ -131,14 +129,14 @@ namespace QTraining.ViewModels
         /// </summary>
         private string SelectedQuestionBankName => LstQuestionBankName.Count == 0 ? "" : LstQuestionBankName[SelectedQuestionBankIndex];
 
-        private string currentQuestionBankPath = "";
+        private string _currentQuestionBankPath = "";
 
-        private List<int> randomQuestionBank;  //题目索引随机组合
-        private string[] answers;  //用户回答结果
+        private List<int> _randomQuestionBank;  //题目索引随机组合
+        private string[] _answers;  //用户回答结果
 
         public QuestionInfoModel CurrentQuestion
         {
-            get => QuestionInfoModels == null || randomQuestionBank == null ? null : QuestionInfoModels[randomQuestionBank[CurrentQuestionIndex]];
+            get => QuestionInfoModels == null || _randomQuestionBank == null ? null : QuestionInfoModels[_randomQuestionBank[CurrentQuestionIndex]];
         }
 
         private int currentQuestionIndex = 0;
@@ -168,7 +166,7 @@ namespace QTraining.ViewModels
         /// </summary>
         public string CurrentQuestionImage
         {
-            get => randomQuestionBank == null ? "" : $"{Path.GetFullPath(currentQuestionBankPath)}/Images/Q{ randomQuestionBank[currentQuestionIndex] + 1}.png";
+            get => _randomQuestionBank == null ? "" : $"{Path.GetFullPath(_currentQuestionBankPath)}/Images/Q{_randomQuestionBank[currentQuestionIndex] + 1}.png";
         }
 
         private BindableCollection<QuestionInfoModel> questionInfoModels;
@@ -366,15 +364,15 @@ namespace QTraining.ViewModels
         /// <summary>
         /// 倒计时秒数
         /// </summary>
-        private int countSecond => lstQuestionBankModel.Where(x => x.Name == SelectedQuestionBankName).FirstOrDefault().SimulationMinutes * 60;
+        private int _countSecond => lstQuestionBankModel.FirstOrDefault(x => x.Name == SelectedQuestionBankName).SimulationMinutes * 60;
         /// <summary>
         /// 当前秒数
         /// </summary>
-        private long currentSeconds;
+        private long _currentSeconds;
         /// <summary>
         /// 开始时的计时周期数
         /// </summary>
-        private long startTimeTicks;
+        private long _startTimeTicks;
 
         private bool isTrainingStart = false;
         /// <summary>
@@ -670,7 +668,7 @@ namespace QTraining.ViewModels
         public void QuestionBankManage()
         {
             var questionBankModels = new List<QuestionBankModel>(lstQuestionBankModel);
-            if (windowManager.ShowDialog(new QuestionBankManageViewModel(windowManager, questionBankModels)) == true)
+            if (_windowManager.ShowDialog(new QuestionBankManageViewModel(_windowManager, questionBankModels)) == true)
             {
                 lstQuestionBankModel = new List<QuestionBankModel>(questionBankModels);
                 NotifyOfPropertyChange(nameof(LstQuestionBankName));
@@ -759,8 +757,8 @@ namespace QTraining.ViewModels
                 return;
             }
 
-            currentQuestionBankPath = lstQuestionBankModel[SelectedQuestionBankIndex].QuestionBankRootPath;
-            var questionInfoPath = currentQuestionBankPath + "\\QuestionInfo.txt";
+            _currentQuestionBankPath = lstQuestionBankModel[SelectedQuestionBankIndex].QuestionBankRootPath;
+            var questionInfoPath = _currentQuestionBankPath + "\\QuestionInfo.txt";
             if (!File.Exists(questionInfoPath))
             {//题库路径不存在，提示检查
                 MessageHelper.Error(string.Format(ResourceHelper.GetStrings("Format_QuestionBankNotExistHint"), questionInfoPath));
@@ -772,7 +770,7 @@ namespace QTraining.ViewModels
                 var buffer = new byte[fsRead.Length];
                 fsRead.Read(buffer, 0, buffer.Length);
                 var questionInfo = Encoding.UTF8.GetString(buffer);
-                var lines = questionInfo.Split('\n');
+                var lines = questionInfo.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 var lst = new BindableCollection<QuestionInfoModel>();
                 foreach (var item in lines)
                 {
@@ -794,7 +792,7 @@ namespace QTraining.ViewModels
             {//模拟仿真
                 CountDownVisibility = Visibility.Visible;
                 //设置题数
-                QuestionRangeCount = lstQuestionBankModel.Where(x => x.Name == SelectedQuestionBankName).FirstOrDefault().SimulationRangeCount;
+                QuestionRangeCount = lstQuestionBankModel.FirstOrDefault(x => x.Name == SelectedQuestionBankName).SimulationRangeCount;
                 //根据设定好的题组大小生成随机题组
                 GenerateRandomQuestionBank();
                 //初始化答题板
@@ -819,7 +817,7 @@ namespace QTraining.ViewModels
                     IsLastReadingIndexHintVisible = false;
                 else
                     IsLastReadingIndexHintVisible = true;
-                LastReadingIndex = LastReadingIndex;
+                NotifyOfPropertyChange(nameof(LastReadingIndex));
                 //练习开始
                 IsTrainingStart = true;
             }
@@ -849,10 +847,10 @@ namespace QTraining.ViewModels
              //保存当前查看试题的回答
                 SaveCurrentQuestionAnswer();
                 var trainingResult = new string[QuestionRangeCount];  //练习结果
-                for (int i = 0; i < answers.Length; i++)
+                for (int i = 0; i < _answers.Length; i++)
                 {
-                    trainingResult[i] = string.IsNullOrEmpty(answers[i]) ? "noanswer" :
-                        (QuestionInfoModels[randomQuestionBank[i]].RealResult.ToUpper() == answers[i].ToUpper()).ToString();
+                    trainingResult[i] = string.IsNullOrEmpty(_answers[i]) ? "noanswer" :
+                        (QuestionInfoModels[_randomQuestionBank[i]].RealResult.ToUpper() == _answers[i].ToUpper()).ToString();
                 }
                 //整理答题结果
                 var wrongAnswers = new List<int>();
@@ -876,13 +874,15 @@ namespace QTraining.ViewModels
                 commitConfirmMsg.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                 for (int i = 0; i < noAnswers.Count; i++)
                 {//未答
-                    commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
+                    commitConfirmMsg.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{_randomQuestionBank[noAnswers[i]] + 1};  ");
                 }
                 //确认交卷弹窗提示
                 var dialogResult = Panuon.UI.Silver.MessageBoxX.Show(GetView() as ShellView, commitConfirmMsg.ToString(), ResourceHelper.GetStrings("Common_Warning"),
                     MessageBoxButton.YesNoCancel, Panuon.UI.Silver.MessageBoxIcon.Warning, Panuon.UI.Silver.DefaultButton.YesOK);
                 if (dialogResult == MessageBoxResult.Cancel)
+                {
                     return;
+                }
                 else if (dialogResult == MessageBoxResult.Yes)
                 {
 
@@ -892,13 +892,13 @@ namespace QTraining.ViewModels
                     trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_WrongAnswer")} ]  {wrongAnswers.Count}个");
                     for (int i = 0; i < wrongAnswers.Count; i++)
                     {//错题
-                        trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[wrongAnswers[i]] + 1} {answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
+                        trainingResultStr.AppendLine($"({wrongAnswers[i] + 1}/{QuestionRangeCount}) Q{_randomQuestionBank[wrongAnswers[i]] + 1} {_answers[wrongAnswers[i]]} [×]  {QuestionInfoModels[_randomQuestionBank[wrongAnswers[i]]].RealResult} [√]");
                     }
                     trainingResultStr.AppendLine();
                     trainingResultStr.AppendLine($"[ {ResourceHelper.GetStrings("Text_NoAnswer")} ]  {noAnswers.Count}个");
                     for (int i = 0; i < noAnswers.Count; i++)
                     {//未答
-                        trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{randomQuestionBank[noAnswers[i]] + 1};  ");
+                        trainingResultStr.Append($"({noAnswers[i] + 1}/{QuestionRangeCount}) Q{_randomQuestionBank[noAnswers[i]] + 1};  ");
                     }
                     trainingResultStr.AppendLine();
                     countDownTimer?.Stop();
@@ -917,7 +917,7 @@ namespace QTraining.ViewModels
                             var str = $"【{DateTime.Now:yyyy-MM-dd HH:mm}】"
                                 + SelectedQuestionBankName.ToString() + " "
                                 + (IsRadioOrderTrainingSelected ? $"{ResourceHelper.GetStrings("Text_OrderTraining")}\n"
-                                : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {currentSeconds / 60}':{(currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
+                                : $"{ResourceHelper.GetStrings("Text_TimeCosts")}  {_currentSeconds / 60}':{(_currentSeconds % 60).ToString().PadLeft(2, '0')}''\n");
                             str += trainingResultStr.ToString();
                             str += "\r\n";
                             tw.WriteLine(str);
@@ -1066,7 +1066,7 @@ namespace QTraining.ViewModels
                 fsRead.Read(buffer, 0, buffer.Length);
                 history = Encoding.UTF8.GetString(buffer);
             }
-            windowManager.ShowDialog(new HistoryViewModel
+            _windowManager.ShowDialog(new HistoryViewModel
             {
                 History = history
             });
@@ -1182,13 +1182,13 @@ namespace QTraining.ViewModels
             if (IsRadioOrderTrainingSelected)
                 QuestionInfoModels[CurrentQuestionIndex].Note = note.Replace(';', '；');
             else
-                QuestionInfoModels[randomQuestionBank[CurrentQuestionIndex]].Note = note.Replace(';', '；');
+                QuestionInfoModels[_randomQuestionBank[CurrentQuestionIndex]].Note = note.Replace(';', '；');
             NotifyOfPropertyChange(nameof(CurrentQuestion));
             IsNoteEditorVisible = false;
             IsNoteVisible = true;
 
             //更新笔记到txt文件
-            using (FileStream fsWrite = new FileStream(currentQuestionBankPath + "/QuestionInfo.txt", FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fsWrite = new FileStream(_currentQuestionBankPath + "/QuestionInfo.txt", FileMode.OpenOrCreate, FileAccess.Write))
             {
                 var lstStr = new List<string>();
                 QuestionInfoModels.ToList().ForEach(x =>
@@ -1222,14 +1222,14 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ChangeBackgroundImage()
         {
-            if (currentBackgroundImageIndex == lstBackgroundImagePath.Count - 1)
+            if (currentBackgroundImageIndex == _lstBackgroundImagePath.Count - 1)
             {
-                BackgroundImagePath = lstBackgroundImagePath.First();
+                BackgroundImagePath = _lstBackgroundImagePath.First();
                 currentBackgroundImageIndex = 0;
             }
             else
             {
-                BackgroundImagePath = lstBackgroundImagePath[++currentBackgroundImageIndex];
+                BackgroundImagePath = _lstBackgroundImagePath[++currentBackgroundImageIndex];
             }
         }
         #endregion
@@ -1242,14 +1242,14 @@ namespace QTraining.ViewModels
         /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
-            currentSeconds = (DateTime.Now.Ticks - startTimeTicks) / TimeSpan.TicksPerSecond;
-            if (currentSeconds >= countSecond)
+            _currentSeconds = (DateTime.Now.Ticks - _startTimeTicks) / TimeSpan.TicksPerSecond;
+            if (_currentSeconds >= _countSecond)
             {
                 (sender as DispatcherTimer).Stop();
                 Commit();  //自动交卷计算结果
                 return;
             }
-            CountDown = $"{(countSecond - currentSeconds) / 60}:{((countSecond - currentSeconds) % 60).ToString().PadLeft(2, '0')} / {countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+            CountDown = $"{(_countSecond - _currentSeconds) / 60}:{((_countSecond - _currentSeconds) % 60).ToString().PadLeft(2, '0')} / {_countSecond / 60}:{(_countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -1260,7 +1260,7 @@ namespace QTraining.ViewModels
             countDownTimer = new DispatcherTimer();
             countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
             countDownTimer.Tick += Timer_Tick;
-            startTimeTicks = DateTime.Now.Ticks;
+            _startTimeTicks = DateTime.Now.Ticks;
             countDownTimer.Start();
         }
 
@@ -1272,7 +1272,7 @@ namespace QTraining.ViewModels
             CurrentQuestionIndex = 0;
             CanPreQuestion = false;
             CanNextQuestion = true;
-            answers = new string[QuestionRangeCount];  //初始化用户回答的结果
+            _answers = new string[QuestionRangeCount];  //初始化用户回答的结果
             if (CurrentQuestion.ResultCount < 4)
             {
                 IsRadioDVisible = false;
@@ -1285,7 +1285,7 @@ namespace QTraining.ViewModels
                 IsRadioDVisible = true;
             }
             IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
-            CountDown = $"{(countSecond - startTimeTicks) / 60}:{((countSecond - startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{countSecond / 60}:{(countSecond % 60).ToString().PadLeft(2, '0')}";
+            CountDown = $"{(_countSecond - _startTimeTicks) / 60}:{((_countSecond - _startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{_countSecond / 60}:{(_countSecond % 60).ToString().PadLeft(2, '0')}";
         }
 
         /// <summary>
@@ -1302,7 +1302,7 @@ namespace QTraining.ViewModels
                 while (questionRange.Contains(randomNum));
                 questionRange[i] = randomNum;
             }
-            randomQuestionBank = questionRange.ToList();
+            _randomQuestionBank = questionRange.ToList();
         }
 
         /// <summary>
@@ -1315,7 +1315,7 @@ namespace QTraining.ViewModels
             {
                 questionRange[i] = i;
             }
-            randomQuestionBank = questionRange.ToList();
+            _randomQuestionBank = questionRange.ToList();
         }
 
         /// <summary>
@@ -1323,7 +1323,7 @@ namespace QTraining.ViewModels
         /// </summary>
         private void CurrentQuestionInitial()
         {
-            var answer = answers[CurrentQuestionIndex];  //当前题目用户选择的答案
+            var answer = _answers[CurrentQuestionIndex];  //当前题目用户选择的答案
             if (CurrentQuestion.ResultCount < 5)
             {//单选题，需要判断是否显示C、D选项
                 if (CurrentQuestion.ResultCount < 4)
@@ -1449,7 +1449,7 @@ namespace QTraining.ViewModels
                     answer += "F";
             }
             //切换前先保存当前题目的答案
-            answers[CurrentQuestionIndex] = answer;
+            _answers[CurrentQuestionIndex] = answer;
         }
         #endregion
     }

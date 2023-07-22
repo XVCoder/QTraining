@@ -1,16 +1,16 @@
-﻿using Caliburn.Micro;
-using QTraining.CaliburnPlugins.Input;
-using QTraining.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using Caliburn.Micro;
+using QTraining.CaliburnPlugins.Input;
+using QTraining.ViewModels;
 
 namespace QTraining
 {
     public class AppBoostrapper : BootstrapperBase
     {
-        SimpleContainer container = new SimpleContainer();
+        SimpleContainer _container = new SimpleContainer();
 
         public AppBoostrapper()
         {
@@ -24,9 +24,9 @@ namespace QTraining
 
         protected override void Configure()
         {
-            container.Singleton<IWindowManager, WindowManager>();
-            container.Singleton<IEventAggregator, EventAggregator>();
-            container.Singleton<IScreen, ShellViewModel>();
+            _container.Singleton<IWindowManager, WindowManager>();
+            _container.Singleton<IEventAggregator, EventAggregator>();
+            _container.Singleton<IScreen, ShellViewModel>();
 
             //组合键监听
             var defaultCreateTrigger = Parser.CreateTrigger;
@@ -59,19 +59,16 @@ namespace QTraining
             };
         }
 
-        protected override object GetInstance(Type serviceType, string key)
-        {
-            return container.GetInstance(serviceType, key);
-        }
+        protected override object GetInstance(Type serviceType, string key) => _container.GetInstance(serviceType, key);
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
-            return container.GetAllInstances(serviceType);
+            return _container.GetAllInstances(serviceType);
         }
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _container.BuildUp(instance);
         }
     }
 }

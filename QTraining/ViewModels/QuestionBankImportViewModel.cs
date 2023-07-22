@@ -1,14 +1,11 @@
-﻿using Caliburn.Micro;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using QTraining.Common;
-using QTraining.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Caliburn.Micro;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using QTraining.Common;
+using QTraining.Models;
 
 namespace QTraining.ViewModels
 {
@@ -38,14 +35,11 @@ namespace QTraining.ViewModels
         /// </summary>
         public void SelectQuestionBankPath()
         {
-            var fbd = new System.Windows.Forms.FolderBrowserDialog
+            var cofd = new CommonOpenFileDialog
             {
-                SelectedPath = Environment.CurrentDirectory
+                IsFolderPicker = true,
+                DefaultDirectory = Environment.CurrentDirectory
             };
-
-            var cofd = new CommonOpenFileDialog();
-            cofd.IsFolderPicker = true;
-            cofd.DefaultDirectory = Environment.CurrentDirectory;
             if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 var qPath = cofd.FileName;
@@ -61,8 +55,7 @@ namespace QTraining.ViewModels
                 }
                 var imageNames = Directory.GetFiles(qPath + "\\Images");
                 var qInfo = File.ReadAllLines(qPath + "\\QuestionInfo.txt");
-                if (imageNames.Length != qInfo.Length
-                    || imageNames.ToList().Where(x => !string.IsNullOrWhiteSpace(x)).Count() != qInfo.Length)
+                if (imageNames.Length != qInfo.Length || imageNames.Count(x => !string.IsNullOrWhiteSpace(x)) != qInfo.Length)
                 {
                     MessageHelper.Warning(ResourceHelper.GetStrings("Text_QuestionInfoMismatch"), null, System.Windows.MessageBoxButton.OK);
                     return;

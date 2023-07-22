@@ -3,7 +3,7 @@ using System.IO;
 
 namespace QTraining.Common
 {
-    public class SysLogHelper
+    public static class SysLogHelper
     {
         private readonly static string logDir = Environment.CurrentDirectory.ToString() + "\\syslog";
 
@@ -35,8 +35,7 @@ namespace QTraining.Common
             }
             finally
             {
-                if (tw != null)
-                    tw.Close();
+                tw?.Close();
             }
         }
     }
