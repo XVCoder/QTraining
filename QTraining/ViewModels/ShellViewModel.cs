@@ -20,10 +20,13 @@ using QTraining.Views;
 namespace QTraining.ViewModels
 {
     [Export(typeof(IShell))]
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Screen, IHandle<object>
     {
+        private readonly IEventAggregator _eventAggregator;
+
         #region Constructors
-        public ShellViewModel(IWindowManager windowManager)
+        public ShellViewModel(IWindowManager windowManager
+            , IEventAggregator eventAggregator)
         {
             _windowManager = windowManager;
             _lstBackgroundImagePath = new List<string>
@@ -34,6 +37,8 @@ namespace QTraining.ViewModels
             };
 
             BackgroundImagePath = _lstBackgroundImagePath[currentBackgroundImageIndex];
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
         }
         #endregion
 
@@ -43,6 +48,7 @@ namespace QTraining.ViewModels
         private const char QuestionBankParamSeparator = '|';
         private const char QuestionBankSeparator = ';';
         private readonly List<string> _lstBackgroundImagePath;
+        private bool _isHistoryDisplaying = false;
 
         /// <summary>
         /// 当前背景图索引值
@@ -590,6 +596,7 @@ namespace QTraining.ViewModels
                 NotifyOfPropertyChange(nameof(BackgroundImageSource));
             }
         }
+
         #endregion
 
         #region Events
@@ -1056,6 +1063,9 @@ namespace QTraining.ViewModels
         /// </summary>
         public void ShowHistory()
         {
+            if (_isHistoryDisplaying)
+                return;
+
             string trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
             if (!File.Exists(trainingRecorderPath))
                 using (File.Create(trainingRecorderPath)) { }
@@ -1066,10 +1076,11 @@ namespace QTraining.ViewModels
                 fsRead.Read(buffer, 0, buffer.Length);
                 history = Encoding.UTF8.GetString(buffer);
             }
-            _windowManager.ShowDialog(new HistoryViewModel
+            _windowManager.ShowWindow(new HistoryViewModel(_eventAggregator)
             {
                 History = history
             });
+            _isHistoryDisplaying = true;
         }
 
         /// <summary>
@@ -1326,16 +1337,13 @@ namespace QTraining.ViewModels
             var answer = _answers[CurrentQuestionIndex];  //当前题目用户选择的答案
             if (CurrentQuestion.ResultCount < 5)
             {//单选题，需要判断是否显示C、D选项
+                IsRadioCVisible = true;
+                IsRadioDVisible = true;
                 if (CurrentQuestion.ResultCount < 4)
                 {
                     IsRadioDVisible = false;
                     if (CurrentQuestion.ResultCount < 3)
                         IsRadioCVisible = false;
-                }
-                else
-                {
-                    IsRadioCVisible = true;
-                    IsRadioDVisible = true;
                 }
                 IsMultiSelect = false;
             }
@@ -1450,6 +1458,19 @@ namespace QTraining.ViewModels
             }
             //切换前先保存当前题目的答案
             _answers[CurrentQuestionIndex] = answer;
+        }
+        #endregion
+
+        #region Public methods
+        public void Handle(object message)
+        {
+            if (message is string str)
+            {
+                if (str.Equals("HISTORY CLOSED"))
+                {
+                    _isHistoryDisplaying = false;
+                }
+            }
         }
         #endregion
     }

@@ -9,10 +9,12 @@ namespace QTraining.ViewModels
     [Export(typeof(IShell))]
     public class HistoryViewModel : Screen
     {
-        #region Constructor
-        public HistoryViewModel()
-        {
+        private readonly IEventAggregator _eventAggregator;
 
+        #region Constructor
+        public HistoryViewModel(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
         }
         #endregion
 
@@ -43,6 +45,11 @@ namespace QTraining.ViewModels
                 }
                 History = "";
             }
+        }
+
+        public void Closed()
+        {
+            _eventAggregator.PublishOnUIThread("HISTORY CLOSED");
         }
         #endregion
     }

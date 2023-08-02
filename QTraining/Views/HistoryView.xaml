@@ -8,7 +8,8 @@
         xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="{DynamicResource Text_History}" Height="450" Width="600"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        cal:Message.Attach="[Closed]=[Closed]">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
