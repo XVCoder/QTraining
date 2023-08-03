@@ -540,6 +540,17 @@ namespace QTraining.ViewModels
             set { isTurnToBoxFocusable = value; NotifyOfPropertyChange(nameof(IsTurnToBoxFocusable)); }
         }
 
+        private bool isCheckBoxDVisible = true;
+        public bool IsCheckBoxDVisible
+        {
+            get => isCheckBoxDVisible;
+            set
+            {
+                isCheckBoxDVisible = value;
+                NotifyOfPropertyChange(nameof(IsCheckBoxDVisible));
+            }
+        }
+
         private bool isCheckBoxEVisible = true;
         /// <summary>
         /// 复选框E可见性
@@ -938,8 +949,7 @@ namespace QTraining.ViewModels
                     }
                     finally
                     {
-                        if (tw != null)
-                            tw.Close();
+                        tw?.Close();
                     }
                 }
                 else
@@ -1104,6 +1114,14 @@ namespace QTraining.ViewModels
             {//顺序练习模式，保存最后浏览的题号
                 LastReadingIndex = CurrentQuestionIndex;
             }
+        }
+
+        /// <summary>
+        /// 退出主进程
+        /// </summary>
+        public void Closed()
+        {
+            Application.Current.Shutdown();
         }
 
         /// <summary>
@@ -1334,9 +1352,9 @@ namespace QTraining.ViewModels
         /// </summary>
         private void CurrentQuestionInitial()
         {
-            var answer = _answers[CurrentQuestionIndex];  //当前题目用户选择的答案
-            if (CurrentQuestion.ResultCount < 5)
-            {//单选题，需要判断是否显示C、D选项
+            var answer = _answers[CurrentQuestionIndex];  // 当前题目用户选择的答案
+            if (CurrentQuestion.RealResult.Length < 2)
+            {// 单选题，需要判断是否显示C、D选项
                 IsRadioCVisible = true;
                 IsRadioDVisible = true;
                 if (CurrentQuestion.ResultCount < 4)
@@ -1348,16 +1366,21 @@ namespace QTraining.ViewModels
                 IsMultiSelect = false;
             }
             else
-            {//多选
+            {// 多选
                 IsMultiSelect = true;
-                if (CurrentQuestion.ResultCount == 5)
-                {//显示E，隐藏F
-                    IsCheckBoxEVisible = true;
-                    IsCheckBoxFVisible = false;
+                IsCheckBoxDVisible = false;
+                IsCheckBoxEVisible = false;
+                IsCheckBoxFVisible = false;
+                if (CurrentQuestion.ResultCount > 3)
+                {// 显示D
+                    IsCheckBoxDVisible = true;
                 }
-                else if (CurrentQuestion.ResultCount == 6)
-                {//显示E和F
+                if (CurrentQuestion.ResultCount > 4)
+                {// 显示E
                     IsCheckBoxEVisible = true;
+                }
+                if (CurrentQuestion.ResultCount > 5)
+                {// 显示F
                     IsCheckBoxFVisible = true;
                 }
             }
@@ -1436,9 +1459,9 @@ namespace QTraining.ViewModels
                     answer += "A";
                 if (IsRadioBSelected)
                     answer += "B";
-                if (IsRadioCSelected)
+                if (IsRadioCSelected && CurrentQuestion.ResultCount > 2)
                     answer += "C";
-                if (IsRadioDSelected)
+                if (IsRadioDSelected && CurrentQuestion.ResultCount > 3)
                     answer += "D";
             }
             else
@@ -1447,13 +1470,13 @@ namespace QTraining.ViewModels
                     answer += "A";
                 if (IsCheckBSelected)
                     answer += "B";
-                if (IsCheckCSelected)
+                if (IsCheckCSelected && CurrentQuestion.ResultCount > 2)
                     answer += "C";
-                if (IsCheckDSelected)
+                if (IsCheckDSelected && CurrentQuestion.ResultCount > 3)
                     answer += "D";
-                if (IsCheckESelected)
+                if (IsCheckESelected && CurrentQuestion.ResultCount > 4)
                     answer += "E";
-                if (IsCheckFSelected)
+                if (IsCheckFSelected && CurrentQuestion.ResultCount > 5)
                     answer += "F";
             }
             //切换前先保存当前题目的答案

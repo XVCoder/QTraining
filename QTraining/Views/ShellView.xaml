@@ -8,12 +8,16 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
         mc:Ignorable="d"
-        Title="{DynamicResource Common_ProgramName}" Height="600" Width="800"
-        MinHeight="600" MinWidth="800"
+        Title="{DynamicResource Common_ProgramName}"
+        Height="600"
+        Width="800"
+        MinHeight="600"
+        MinWidth="800"
         WindowStartupLocation="CenterScreen"
         Icon="/logo.ico"
         cal:Message.Attach="
         [Event Closing]=[Exit($eventArgs)];
+        [Event Closed]=[Closed];
         [Event Loaded]=[Loaded];
         [Gesture LeftCtrl]=[ShowRealResult];
         [Gesture RightCtrl]=[ShowRealResult];
@@ -34,555 +38,396 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto" MaxHeight="120"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto"
+                               MaxHeight="120" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel
-                    Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <!--上一题-->
-                    <Button
-                        Content="{DynamicResource Button_PreQuestion}"
-                        Focusable="False"
-                        Height="22"
-                        Margin="10 0 0 0"
-                        Padding="5 2"
-                        ToolTip="{DynamicResource ToolTip_PreQuestionHotKey}"
-                        pu:ButtonHelper.CornerRadius="5"
-                        cal:Message.Attach="PreQuestion"/>
+                    <Button Content="{DynamicResource Button_PreQuestion}"
+                            Focusable="False"
+                            Height="22"
+                            Margin="10 0 0 0"
+                            Padding="5 2"
+                            ToolTip="{DynamicResource ToolTip_PreQuestionHotKey}"
+                            pu:ButtonHelper.CornerRadius="5"
+                            cal:Message.Attach="PreQuestion" />
                     <!--下一题-->
-                    <Button
-                        Content="{DynamicResource Button_NextQuestion}"
-                        Focusable="False"
-                        Height="22"
-                        Margin="10 0 10 0"
-                        Padding="5 2"
-                        ToolTip="{DynamicResource ToolTip_NextQuestionHotKey}"
-                        pu:ButtonHelper.CornerRadius="5"
-                        cal:Message.Attach="NextQuestion"/>
+                    <Button Content="{DynamicResource Button_NextQuestion}"
+                            Focusable="False"
+                            Height="22"
+                            Margin="10 0 10 0"
+                            Padding="5 2"
+                            ToolTip="{DynamicResource ToolTip_NextQuestionHotKey}"
+                            pu:ButtonHelper.CornerRadius="5"
+                            cal:Message.Attach="NextQuestion" />
                     <!--单选-->
-                    <StackPanel
-                        Orientation="Horizontal"
-                        Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolReverseConverter}}">
-                        <RadioButton
-                            Content="A"
-                            Focusable="False"
-                            IsChecked="{Binding IsRadioASelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            Margin="10 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <RadioButton
-                            Content="B"
-                            Focusable="False"
-                            IsChecked="{Binding IsRadioBSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <RadioButton
-                            Content="C"
-                            Focusable="False"
-                            IsChecked="{Binding IsRadioCSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding IsRadioCVisible,Converter={StaticResource BoolConverter}}"/>
-                        <RadioButton
-                            Content="D"
-                            Focusable="False"
-                            IsChecked="{Binding IsRadioDSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding IsRadioDVisible,Converter={StaticResource BoolConverter}}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolReverseConverter}}">
+                        <RadioButton Content="A"
+                                     Focusable="False"
+                                     IsChecked="{Binding IsRadioASelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="10 0 15 0"
+                                     VerticalAlignment="Center" />
+                        <RadioButton Content="B"
+                                     Focusable="False"
+                                     IsChecked="{Binding IsRadioBSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0 0 15 0"
+                                     VerticalAlignment="Center" />
+                        <RadioButton Content="C"
+                                     Focusable="False"
+                                     IsChecked="{Binding IsRadioCSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0 0 15 0"
+                                     VerticalAlignment="Center"
+                                     Visibility="{Binding IsRadioCVisible,Converter={StaticResource BoolConverter}}" />
+                        <RadioButton Content="D"
+                                     Focusable="False"
+                                     IsChecked="{Binding IsRadioDSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0 0 15 0"
+                                     VerticalAlignment="Center"
+                                     Visibility="{Binding IsRadioDVisible,Converter={StaticResource BoolConverter}}" />
                     </StackPanel>
                     <!--多选-->
-                    <StackPanel
-                        Orientation="Horizontal"
-                        Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolConverter}}">
-                        <CheckBox
-                            Content="A"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckASelected,Mode=TwoWay}"
-                            Margin="10 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <CheckBox
-                            Content="B"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckBSelected,Mode=TwoWay}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <CheckBox
-                            Content="C"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckCSelected,Mode=TwoWay}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <CheckBox
-                            Content="D"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckDSelected,Mode=TwoWay}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"/>
-                        <CheckBox
-                            Content="E"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckESelected,Mode=TwoWay}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding IsCheckBoxEVisible,Converter={StaticResource BoolConverter}}"/>
-                        <CheckBox
-                            Content="F"
-                            Focusable="False"
-                            IsChecked="{Binding IsCheckFSelected,Mode=TwoWay}"
-                            Margin="0 0 15 0"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding IsCheckBoxFVisible,Converter={StaticResource BoolConverter}}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding IsMultiSelect,Mode=OneWay,Converter={StaticResource BoolConverter}}">
+                        <CheckBox Content="A"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckASelected,Mode=TwoWay}"
+                                  Margin="10 0 15 0"
+                                  VerticalAlignment="Center" />
+                        <CheckBox Content="B"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckBSelected,Mode=TwoWay}"
+                                  Margin="0 0 15 0"
+                                  VerticalAlignment="Center" />
+                        <CheckBox Content="C"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckCSelected,Mode=TwoWay}"
+                                  Margin="0 0 15 0"
+                                  VerticalAlignment="Center" />
+                        <CheckBox Content="D"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckDSelected,Mode=TwoWay}"
+                                  Margin="0 0 15 0"
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding IsCheckBoxDVisible,Converter={StaticResource BoolConverter}}" />
+                        <CheckBox Content="E"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckESelected,Mode=TwoWay}"
+                                  Margin="0 0 15 0"
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding IsCheckBoxEVisible,Converter={StaticResource BoolConverter}}" />
+                        <CheckBox Content="F"
+                                  Focusable="False"
+                                  IsChecked="{Binding IsCheckFSelected,Mode=TwoWay}"
+                                  Margin="0 0 15 0"
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding IsCheckBoxFVisible,Converter={StaticResource BoolConverter}}" />
                     </StackPanel>
                 </StackPanel>
                 <!--操作按钮-->
-                <StackPanel
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
                     <!--显示答案/隐藏答案-->
-                    <Button
-                        Focusable="False"
-                        Height="22"
-                        Margin="10 0 0 0"
-                        Padding="5 2"
-                        ToolTip="{DynamicResource ToolTip_ShowAnswerHotKey}"
-                        Visibility="{Binding CountDownVisibility,Converter={StaticResource VisibilityReverseConverter}}"
-                        pu:ButtonHelper.CornerRadius="5"
-                        cal:Message.Attach="ShowRealResult">
+                    <Button Focusable="False"
+                            Height="22"
+                            Margin="10 0 0 0"
+                            Padding="5 2"
+                            ToolTip="{DynamicResource ToolTip_ShowAnswerHotKey}"
+                            Visibility="{Binding CountDownVisibility,Converter={StaticResource VisibilityReverseConverter}}"
+                            pu:ButtonHelper.CornerRadius="5"
+                            cal:Message.Attach="ShowRealResult">
                         <Button.Content>
                             <StackPanel>
                                 <!--显示答案-->
-                                <TextBlock
-                                    Text="{DynamicResource Button_ShowRealResult}"
-                                    Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolReverseConverter}}"/>
+                                <TextBlock Text="{DynamicResource Button_ShowRealResult}"
+                                           Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolReverseConverter}}" />
                                 <!--隐藏答案-->
-                                <TextBlock
-                                    Text="{DynamicResource Button_HideRealResult}"
-                                    Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"/>
+                                <TextBlock Text="{DynamicResource Button_HideRealResult}"
+                                           Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
                     <!--交卷-->
-                    <Button
-                        Focusable="False"
-                        Height="22"
-                        Margin="10 0 10 0"
-                        Padding="5 2"
-                        pu:ButtonHelper.CornerRadius="5"
-                        cal:Message.Attach="Commit">
+                    <Button Focusable="False"
+                            Height="22"
+                            Margin="10 0 10 0"
+                            Padding="5 2"
+                            pu:ButtonHelper.CornerRadius="5"
+                            cal:Message.Attach="Commit">
                         <Button.Content>
                             <StackPanel>
-                                <TextBlock
-                                    Text="{DynamicResource Button_Commit}"
-                                    Visibility="{Binding IsCommited,Converter={StaticResource BoolReverseConverter}}"/>
-                                <TextBlock
-                                    Text="{DynamicResource Button_Reset}"
-                                    Visibility="{Binding IsCommited,Converter={StaticResource BoolConverter}}"/>
+                                <TextBlock Text="{DynamicResource Button_Commit}"
+                                           Visibility="{Binding IsCommited,Converter={StaticResource BoolReverseConverter}}" />
+                                <TextBlock Text="{DynamicResource Button_Reset}"
+                                           Visibility="{Binding IsCommited,Converter={StaticResource BoolConverter}}" />
                             </StackPanel>
                         </Button.Content>
                         <Button.Style>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Width" Value="55"/>
+                            <Style TargetType="{x:Type Button}"
+                                   BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Width"
+                                        Value="55" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCommited}" Value="True">
-                                        <Setter Property="Width" Value="100"/>
+                                    <DataTrigger Binding="{Binding IsCommited}"
+                                                 Value="True">
+                                        <Setter Property="Width"
+                                                Value="100" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsCommited}" Value="False">
-                                        <Setter Property="Width" Value="55"/>
+                                    <DataTrigger Binding="{Binding IsCommited}"
+                                                 Value="False">
+                                        <Setter Property="Width"
+                                                Value="55" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
                     </Button>
                     <!--倒计时-->
-                    <TextBlock
-                        Height="25"
-                        FontSize="14"
-                        Foreground="OrangeRed"
-                        Padding="5 4 10 0"
-                        Visibility="{Binding CountDownVisibility}"
-                        Width="auto">
-                        <Run Text="{DynamicResource Text_CountDown}"/>
-                        <Run Text=": "/>
-                        <Run Text="{Binding CountDown}"/>
+                    <TextBlock Height="25"
+                               FontSize="14"
+                               Foreground="OrangeRed"
+                               Padding="5 4 10 0"
+                               Visibility="{Binding CountDownVisibility}"
+                               Width="auto">
+                        <Run Text="{DynamicResource Text_CountDown}" />
+                        <Run Text=": " />
+                        <Run Text="{Binding CountDown}" />
                     </TextBlock>
                 </StackPanel>
             </Grid>
             <!--试题显示区域-->
-            <ScrollViewer
-                Grid.Row="1"
-                Focusable="False"
-                pu:ScrollViewerHelper.ScrollBarThickness="8"
-                pu:ScrollViewerHelper.ScrollBarCornerRadius="5">
+            <ScrollViewer Grid.Row="1"
+                          Focusable="False"
+                          pu:ScrollViewerHelper.ScrollBarThickness="8"
+                          pu:ScrollViewerHelper.ScrollBarCornerRadius="5">
                 <!--试题-->
-                <Image
-                    HorizontalAlignment="Left"
-                    Margin="3"
-                    Source="{Binding CurrentQuestionImage}"
-                    VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left"
+                       Margin="3"
+                       Source="{Binding CurrentQuestionImage}"
+                       VerticalAlignment="Top" />
             </ScrollViewer>
             <!--翻页板-->
-            <Grid
-                Grid.Row="1">
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--上一题-->
-                <Grid
-                    Grid.Column="0"
-                    Height="80"
-                    HorizontalAlignment="Left"
-                    ToolTip="{DynamicResource Button_PreQuestion}"
-                    Width="40"
-                    cal:Message.Attach="[Event MouseDown]=[PreQuestion]">
+                <Grid Grid.Column="0"
+                      Height="80"
+                      HorizontalAlignment="Left"
+                      ToolTip="{DynamicResource Button_PreQuestion}"
+                      Width="40"
+                      cal:Message.Attach="[Event MouseDown]=[PreQuestion]">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Background"
+                                    Value="Transparent" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#23333333"/>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="#23333333" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Grid.Resources>
-                    <TextBlock
-                        FontFamily="{StaticResource PanuonIconFont}"
-                        Foreground="DimGray"
-                        HorizontalAlignment="Center"
-                        Opacity=".8"
-                        Text="&#xe91c;"
-                        VerticalAlignment="Center"/>
+                    <TextBlock FontFamily="{StaticResource PanuonIconFont}"
+                               Foreground="DimGray"
+                               HorizontalAlignment="Center"
+                               Opacity=".8"
+                               Text="&#xe91c;"
+                               VerticalAlignment="Center" />
                 </Grid>
                 <!--下一题-->
-                <Grid
-                    Grid.Column="2"
-                    Height="80"
-                    HorizontalAlignment="Right"
-                    ToolTip="{DynamicResource Button_NextQuestion}"
-                    Width="40"
-                    cal:Message.Attach="[Event MouseDown]=[NextQuestion]">
+                <Grid Grid.Column="2"
+                      Height="80"
+                      HorizontalAlignment="Right"
+                      ToolTip="{DynamicResource Button_NextQuestion}"
+                      Width="40"
+                      cal:Message.Attach="[Event MouseDown]=[NextQuestion]">
                     <Grid.Resources>
                         <Style TargetType="{x:Type Grid}">
-                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Background"
+                                    Value="Transparent" />
                             <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#23333333"/>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="#23333333" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Grid.Resources>
-                    <TextBlock
-                        FontFamily="{StaticResource PanuonIconFont}"
-                        Foreground="DimGray"
-                        HorizontalAlignment="Center"
-                        Opacity=".8"
-                        Text="&#xe91e;"
-                        VerticalAlignment="Center"/>
+                    <TextBlock FontFamily="{StaticResource PanuonIconFont}"
+                               Foreground="DimGray"
+                               HorizontalAlignment="Center"
+                               Opacity=".8"
+                               Text="&#xe91e;"
+                               VerticalAlignment="Center" />
                 </Grid>
             </Grid>
             <!--答案及解析模块-->
-            <Grid
-                Grid.Row="2">
+            <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <!--答案-->
-                <TextBlock
-                    Foreground="Green"
-                    HorizontalAlignment="Left"
-                    Margin="10 5 0 5"
-                    ToolTip="{DynamicResource Text_ClickToEditNoteHint}"
-                    Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"
-                    cal:Message.Attach="[Event MouseDown]=[EditNote]">
-                    <Run Text="{DynamicResource Common_RealResult}"/>
-                    <Run Text=": "/>
-                    <Run Text="{Binding CurrentQuestion.RealResult}"/>
+                <TextBlock Foreground="Green"
+                           HorizontalAlignment="Left"
+                           Margin="10 5 0 5"
+                           ToolTip="{DynamicResource Text_ClickToEditNoteHint}"
+                           Visibility="{Binding IsRealResultVisible,Converter={StaticResource BoolConverter}}"
+                           cal:Message.Attach="[Event MouseDown]=[EditNote]">
+                    <Run Text="{DynamicResource Common_RealResult}" />
+                    <Run Text=": " />
+                    <Run Text="{Binding CurrentQuestion.RealResult}" />
                 </TextBlock>
                 <!--解析-->
-                <TextBlock
-                    Grid.Row="1"
-                    Foreground="DimGray"
-                    HorizontalAlignment="Left"
-                    Margin="10 0 0 5"
-                    Text="{Binding CurrentQuestion.Note,Mode=OneWay}"
-                    TextWrapping="Wrap"
-                    ToolTip="{DynamicResource Text_ClickToEditNoteHint}"
-                    Visibility="{Binding IsNoteVisible,Converter={StaticResource BoolConverter}}"
-                    Width="750"
-                    cal:Message.Attach="[Event MouseDown]=[EditNote]"/>
+                <TextBlock Grid.Row="1"
+                           Foreground="DimGray"
+                           HorizontalAlignment="Left"
+                           Margin="10 0 0 5"
+                           Text="{Binding CurrentQuestion.Note,Mode=OneWay}"
+                           TextWrapping="Wrap"
+                           ToolTip="{DynamicResource Text_ClickToEditNoteHint}"
+                           Visibility="{Binding IsNoteVisible,Converter={StaticResource BoolConverter}}"
+                           Width="750"
+                           cal:Message.Attach="[Event MouseDown]=[EditNote]" />
                 <!--解析编辑框-->
-                <Border
-                    Grid.Row="1"
-                    BorderBrush="LightGray"
-                    BorderThickness="1"
-                    CornerRadius="5"
-                    Margin="10 5 10 5"
-                    Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}">
-                    <TextBox
-                        Grid.Row="1"
-                        BorderThickness="0"
-                        Height="50"
-                        Margin="2 5 110 5"
-                        HorizontalContentAlignment="Left"
-                        Text="{Binding EditingNote,Mode=TwoWay}"
-                        TextWrapping="Wrap"
-                        VerticalAlignment="Stretch"
-                        VerticalContentAlignment="Top"
-                        VerticalScrollBarVisibility="Auto"
-                        pu:TextBoxHelper.CornerRadius="5"
-                        pu:TextBoxHelper.FocusedBorderBrush="Transparent"
-                        pu:TextBoxHelper.FocusedShadowColor="Transparent"
-                        pu:TextBoxHelper.Watermark="{DynamicResource Text_NoteEditHint}"
-                        pu:ScrollViewerHelper.ScrollBarThickness="5"
-                        pu:ScrollViewerHelper.ScrollBarCornerRadius="3"
-                        cal:Message.Attach="
+                <Border Grid.Row="1"
+                        BorderBrush="LightGray"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Margin="10 5 10 5"
+                        Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}">
+                    <TextBox Grid.Row="1"
+                             BorderThickness="0"
+                             Height="50"
+                             Margin="2 5 110 5"
+                             HorizontalContentAlignment="Left"
+                             Text="{Binding EditingNote,Mode=TwoWay}"
+                             TextWrapping="Wrap"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Top"
+                             VerticalScrollBarVisibility="Auto"
+                             pu:TextBoxHelper.CornerRadius="5"
+                             pu:TextBoxHelper.FocusedBorderBrush="Transparent"
+                             pu:TextBoxHelper.FocusedShadowColor="Transparent"
+                             pu:TextBoxHelper.Watermark="{DynamicResource Text_NoteEditHint}"
+                             pu:ScrollViewerHelper.ScrollBarThickness="5"
+                             pu:ScrollViewerHelper.ScrollBarCornerRadius="3"
+                             cal:Message.Attach="
                         [Gesture Enter]=[SaveNote($source)];
                         [Gesture Esc]=[SaveNoteCancel]
-                        "/>
+                        " />
                 </Border>
                 <!--解析内容保存按钮-->
-                <Button
-                    Grid.Row="1"
-                    Background="MediumSeaGreen"
-                    Content="{DynamicResource Common_Save}"
-                    FontFamily="{StaticResource PanuonIconFont}"
-                    Foreground="White"
-                    HorizontalAlignment="Right"
-                    Margin="0 5 68 5"
-                    ToolTip="{DynamicResource ToolTip_SaveNoteHotKey}"
-                    Padding="8 5 8 6"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"
-                    pu:ButtonHelper.CornerRadius="5"
-                    pu:ButtonHelper.HoverBrush="Green"
-                    cal:Message.Attach="SaveNote($source)"/>
+                <Button Grid.Row="1"
+                        Background="MediumSeaGreen"
+                        Content="{DynamicResource Common_Save}"
+                        FontFamily="{StaticResource PanuonIconFont}"
+                        Foreground="White"
+                        HorizontalAlignment="Right"
+                        Margin="0 5 68 5"
+                        ToolTip="{DynamicResource ToolTip_SaveNoteHotKey}"
+                        Padding="8 5 8 6"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"
+                        pu:ButtonHelper.CornerRadius="5"
+                        pu:ButtonHelper.HoverBrush="Green"
+                        cal:Message.Attach="SaveNote($source)" />
                 <!--取消按钮-->
-                <Button
-                    Grid.Row="1"
-                    Background="Salmon"
-                    Content="{DynamicResource Common_Cancel}"
-                    FontFamily="{StaticResource PanuonIconFont}"
-                    Foreground="White"
-                    HorizontalAlignment="Right"
-                    Margin="0 5 22 5"
-                    ToolTip="{DynamicResource ToolTip_SaveNoteCancelHotKey}"
-                    Padding="8 5 8 6"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"
-                    pu:ButtonHelper.CornerRadius="5"
-                    pu:ButtonHelper.HoverBrush="OrangeRed"
-                    cal:Message.Attach="SaveNoteCancel"/>
+                <Button Grid.Row="1"
+                        Background="Salmon"
+                        Content="{DynamicResource Common_Cancel}"
+                        FontFamily="{StaticResource PanuonIconFont}"
+                        Foreground="White"
+                        HorizontalAlignment="Right"
+                        Margin="0 5 22 5"
+                        ToolTip="{DynamicResource ToolTip_SaveNoteCancelHotKey}"
+                        Padding="8 5 8 6"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsNoteEditorVisible,Converter={StaticResource BoolConverter}}"
+                        pu:ButtonHelper.CornerRadius="5"
+                        pu:ButtonHelper.HoverBrush="OrangeRed"
+                        cal:Message.Attach="SaveNoteCancel" />
             </Grid>
             <!--底部栏-->
-            <StackPanel
-                Grid.Row="3"
-                HorizontalAlignment="Left"
-                Margin="10 0 5 10"
-                Orientation="Horizontal"
-                VerticalAlignment="Bottom">
+            <StackPanel Grid.Row="3"
+                        HorizontalAlignment="Left"
+                        Margin="10 0 5 10"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Bottom">
                 <!--跳转输入框-->
-                <TextBox
-                    Focusable="{Binding IsTurnToBoxFocusable}"
-                    FontSize="10"
-                    input:InputMethod.IsInputMethodEnabled="False"
-                    Text="{Binding TurnToNum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                    Width="50"
-                    pu:TextBoxHelper.CornerRadius="3"
-                    cal:Message.Attach="
+                <TextBox Focusable="{Binding IsTurnToBoxFocusable}"
+                         FontSize="10"
+                         input:InputMethod.IsInputMethodEnabled="False"
+                         Text="{Binding TurnToNum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                         Width="50"
+                         pu:TextBoxHelper.CornerRadius="3"
+                         cal:Message.Attach="
                     [Event KeyUp]=[TurnTo($eventArgs)];
                     [Event PreviewTextInput]=[PreviewTextInput($eventArgs)];
                     [Event PreviewKeyDown]=[PreviewKeyDown($eventArgs)];
-                    [Event MouseDown]=[TurnToBoxMouseDown]"/>
+                    [Event MouseDown]=[TurnToBoxMouseDown]" />
                 <!--跳转按钮-->
-                <Button
-                    Content="{DynamicResource Button_TurnTo}"
-                    Focusable="False"
-                    Height="22"
-                    Margin="5 0 0 0"
-                    Padding="5 2"
-                    pu:ButtonHelper.CornerRadius="5"
-                    cal:Message.Attach="TurnTo($eventArgs)"/>
+                <Button Content="{DynamicResource Button_TurnTo}"
+                        Focusable="False"
+                        Height="22"
+                        Margin="5 0 0 0"
+                        Padding="5 2"
+                        pu:ButtonHelper.CornerRadius="5"
+                        cal:Message.Attach="TurnTo($eventArgs)" />
                 <!--试题索引-->
-                <TextBlock
-                    FontSize="12"
-                    Foreground="LightSlateGray"
-                    Margin="20 0 0 0"
-                    VerticalAlignment="Center">
-                    <Run Text="【"/>
-                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}"/>
-                    <Run Text=" / "/>
-                    <Run Text="{Binding QuestionRangeCount,Mode=OneWay}"/>
-                    <Run Text="】"/>
+                <TextBlock FontSize="12"
+                           Foreground="LightSlateGray"
+                           Margin="20 0 0 0"
+                           VerticalAlignment="Center">
+                    <Run Text="【" />
+                    <Run Text="{Binding CurrentQuestionIndexForDisplay,Mode=OneWay}" />
+                    <Run Text=" / " />
+                    <Run Text="{Binding QuestionRangeCount,Mode=OneWay}" />
+                    <Run Text="】" />
                 </TextBlock>
                 <!--上次阅读跳转提示-->
-                <Button
-                    Content="{Binding LastReadingIndexHint,Mode=OneWay}"
-                    Focusable="False"
-                    FontSize="12"
-                    Foreground="Salmon"
-                    Margin="10 0 0 0"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
-                    pu:ButtonHelper.ButtonStyle="Link"
-                    pu:ButtonHelper.HoverBrush="OrangeRed"
-                    cal:Message.Attach="TurnToLastReadingIndex"/>
+                <Button Content="{Binding LastReadingIndexHint,Mode=OneWay}"
+                        Focusable="False"
+                        FontSize="12"
+                        Foreground="Salmon"
+                        Margin="10 0 0 0"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
+                        pu:ButtonHelper.ButtonStyle="Link"
+                        pu:ButtonHelper.HoverBrush="OrangeRed"
+                        cal:Message.Attach="TurnToLastReadingIndex" />
                 <!--关闭跳转提示-->
-                <Button
-                    Content="&#xe92d;"
-                    Focusable="False"
-                    FontFamily="{StaticResource PanuonIconFont}"
-                    FontSize="10"
-                    FontWeight="Bold"
-                    Margin="0 2 0 0"
-                    VerticalAlignment="Center"
-                    Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
-                    Width="30"
-                    pu:ButtonHelper.ButtonStyle="Link"
-                    pu:ButtonHelper.HoverBrush="Red"
-                    cal:Message.Attach="HideLastReadingIndexHint"/>
+                <Button Content="&#xe92d;"
+                        Focusable="False"
+                        FontFamily="{StaticResource PanuonIconFont}"
+                        FontSize="10"
+                        FontWeight="Bold"
+                        Margin="0 2 0 0"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsLastReadingIndexHintVisible,Converter={StaticResource BoolConverter}}"
+                        Width="30"
+                        pu:ButtonHelper.ButtonStyle="Link"
+                        pu:ButtonHelper.HoverBrush="Red"
+                        cal:Message.Attach="HideLastReadingIndexHint" />
             </StackPanel>
             <!--查看历史记录-->
-            <Button
-                Grid.Column="2"
-                Grid.Row="3"
-                Content="{DynamicResource Button_ShowHistory}"
-                Focusable="False"
-                FontSize="14"
-                Foreground="LightGray"
-                HorizontalAlignment="Right"
-                Margin="0 0 10 10"
-                VerticalAlignment="Bottom"
-                pu:ButtonHelper.ButtonStyle="Link"
-                cal:Message.Attach="ShowHistory"/>
-        </Grid>
-        <!--背景蒙版+开始按钮-->
-        <Grid
-            Opacity="1"
-            Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
-            <Grid.Background>
-                <ImageBrush
-                    ImageSource="{Binding BackgroundImageSource}"
-                    d:ImageSource="../Resources/Images/background01.jpg"
-                    Stretch="UniformToFill"/>
-            </Grid.Background>
-            <Button
-                Content="⟳"
-                FontSize="22"
-                FontWeight="Bold"
-                Foreground="DodgerBlue"
-                Height="25"
-                HorizontalAlignment="Left"
-                Margin="10"
-                ToolTip="{StaticResource ToolTip_ChangeBackgroundImage}"
-                VerticalAlignment="Bottom"
-                Width="25"
-                pu:ButtonHelper.ButtonStyle="Link"
-                pu:ButtonHelper.CornerRadius="8"
-                pu:ButtonHelper.HoverBrush="Blue"
-                cal:Message.Attach="ChangeBackgroundImage"/>
-            <!--半透明面板-->
-            <Border
-                Background="#66000000"
-                CornerRadius="25"
-                Height="300"
-                Width="500">
-            </Border>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <StackPanel
-                    Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Margin="0 0 0 5"
-                    Orientation="Horizontal"
-                    VerticalAlignment="Bottom">
-                    <!--选择题库-->
-                    <TextBlock
-                        Foreground="White"
-                        VerticalAlignment="Center"
-                        Margin="5 0"
-                        Text="{DynamicResource Text_SelectQuestionBank}"/>
-                    <ComboBox
-                        Height="25"
-                        ItemsSource="{Binding LstQuestionBankName}"
-                        SelectedIndex="{Binding SelectedQuestionBankIndex}"
-                        Width="180"
-                        pu:ComboBoxHelper.CornerRadius="2"
-                        pu:ComboBoxHelper.ItemsHoverForeground="Salmon"/>
-                    <!--题库管理-->
-                    <Button
-                        Content="+"
-                        Focusable="False"
-                        FontSize="18"
-                        FontWeight="Bold"
-                        Foreground="Gainsboro"
-                        Margin="5 0 0 0"
-                        ToolTip="{DynamicResource Text_QuestionBankManage}"
-                        VerticalAlignment="Center"
-                        pu:ButtonHelper.ButtonStyle="Link"
-                        pu:ButtonHelper.HoverBrush="Salmon"
-                        cal:Message.Attach="QuestionBankManage"/>
-                </StackPanel>
-                <Grid
-                    Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="25"/>
-                    </Grid.ColumnDefinitions>
-                    <!--顺序练习-->
-                    <RadioButton
-                        Grid.Column="0"
-                        Content="{DynamicResource Text_OrderTraining}"
-                        Focusable="False"
-                        IsChecked="{Binding IsRadioOrderTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        HorizontalAlignment="Right"
-                        Width="120"
-                        pu:RadioButtonHelper.CheckedBackground="Green"
-                        pu:RadioButtonHelper.RadioButtonStyle="Button"/>
-                    <!--仿真模拟-->
-                    <RadioButton
-                        Grid.Column="1"
-                        Content="{DynamicResource Text_SimulationTraining}"
-                        Focusable="False"
-                        HorizontalAlignment="Left"
-                        Margin="1 0 0 0"
-                        IsChecked="{Binding IsRadioSimulationTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        Width="120"
-                        pu:RadioButtonHelper.CheckedBackground="Green"
-                        pu:RadioButtonHelper.RadioButtonStyle="Button"/>
-                </Grid>
-                <!--开始-->
-                <Button
-                    Grid.Row="5"
-                    Foreground="Black"
-                    FontSize="15"
-                    FontWeight="Bold"
-                    Content="{DynamicResource Button_Strat}"
-                    Height="40"
-                    Width="100"
-                    pu:ButtonHelper.CornerRadius="10"
-                    cal:Message.Attach="StartTraining"/>
-                <!--查看历史记录-->
-                <Button
-                    Grid.Column="2"
-                    Grid.Row="6"
+            <Button Grid.Column="2"
+                    Grid.Row="3"
                     Content="{DynamicResource Button_ShowHistory}"
                     Focusable="False"
                     FontSize="14"
@@ -591,7 +436,123 @@
                     Margin="0 0 10 10"
                     VerticalAlignment="Bottom"
                     pu:ButtonHelper.ButtonStyle="Link"
-                    cal:Message.Attach="ShowHistory"/>
+                    cal:Message.Attach="ShowHistory" />
+        </Grid>
+        <!--背景蒙版+开始按钮-->
+        <Grid Opacity="1"
+              Visibility="{Binding IsTrainingStart,Converter={StaticResource BoolReverseConverter}}">
+            <Grid.Background>
+                <ImageBrush ImageSource="{Binding BackgroundImageSource}"
+                            d:ImageSource="../Resources/Images/background01.jpg"
+                            Stretch="UniformToFill" />
+            </Grid.Background>
+            <Button Content="⟳"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="DodgerBlue"
+                    Height="25"
+                    HorizontalAlignment="Left"
+                    Margin="10"
+                    ToolTip="{StaticResource ToolTip_ChangeBackgroundImage}"
+                    VerticalAlignment="Bottom"
+                    Width="25"
+                    pu:ButtonHelper.ButtonStyle="Link"
+                    pu:ButtonHelper.CornerRadius="8"
+                    pu:ButtonHelper.HoverBrush="Blue"
+                    cal:Message.Attach="ChangeBackgroundImage" />
+            <!--半透明面板-->
+            <Border Background="#66000000"
+                    CornerRadius="25"
+                    Height="300"
+                    Width="500">
+            </Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            Margin="0 0 0 5"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Bottom">
+                    <!--选择题库-->
+                    <TextBlock Foreground="White"
+                               VerticalAlignment="Center"
+                               Margin="5 0"
+                               Text="{DynamicResource Text_SelectQuestionBank}" />
+                    <ComboBox Height="25"
+                              ItemsSource="{Binding LstQuestionBankName}"
+                              SelectedIndex="{Binding SelectedQuestionBankIndex}"
+                              Width="180"
+                              pu:ComboBoxHelper.CornerRadius="2"
+                              pu:ComboBoxHelper.ItemsHoverForeground="Salmon" />
+                    <!--题库管理-->
+                    <Button Content="+"
+                            Focusable="False"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="Gainsboro"
+                            Margin="5 0 0 0"
+                            ToolTip="{DynamicResource Text_QuestionBankManage}"
+                            VerticalAlignment="Center"
+                            pu:ButtonHelper.ButtonStyle="Link"
+                            pu:ButtonHelper.HoverBrush="Salmon"
+                            cal:Message.Attach="QuestionBankManage" />
+                </StackPanel>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="25" />
+                    </Grid.ColumnDefinitions>
+                    <!--顺序练习-->
+                    <RadioButton Grid.Column="0"
+                                 Content="{DynamicResource Text_OrderTraining}"
+                                 Focusable="False"
+                                 IsChecked="{Binding IsRadioOrderTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalAlignment="Right"
+                                 Width="120"
+                                 pu:RadioButtonHelper.CheckedBackground="Green"
+                                 pu:RadioButtonHelper.RadioButtonStyle="Button" />
+                    <!--仿真模拟-->
+                    <RadioButton Grid.Column="1"
+                                 Content="{DynamicResource Text_SimulationTraining}"
+                                 Focusable="False"
+                                 HorizontalAlignment="Left"
+                                 Margin="1 0 0 0"
+                                 IsChecked="{Binding IsRadioSimulationTrainingSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 Width="120"
+                                 pu:RadioButtonHelper.CheckedBackground="Green"
+                                 pu:RadioButtonHelper.RadioButtonStyle="Button" />
+                </Grid>
+                <!--开始-->
+                <Button Grid.Row="5"
+                        Foreground="Black"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Content="{DynamicResource Button_Strat}"
+                        Height="40"
+                        Width="100"
+                        pu:ButtonHelper.CornerRadius="10"
+                        cal:Message.Attach="StartTraining" />
+                <!--查看历史记录-->
+                <Button Grid.Column="2"
+                        Grid.Row="6"
+                        Content="{DynamicResource Button_ShowHistory}"
+                        Focusable="False"
+                        FontSize="14"
+                        Foreground="LightGray"
+                        HorizontalAlignment="Right"
+                        Margin="0 0 10 10"
+                        VerticalAlignment="Bottom"
+                        pu:ButtonHelper.ButtonStyle="Link"
+                        cal:Message.Attach="ShowHistory" />
             </Grid>
         </Grid>
     </Grid>
