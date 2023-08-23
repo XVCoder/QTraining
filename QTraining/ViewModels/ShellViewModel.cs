@@ -1322,15 +1322,10 @@ namespace QTraining.ViewModels
         /// </summary>
         private void GenerateRandomQuestionBank()
         {
-            int[] questionRange = new int[QuestionRangeCount];
+            var questionRange = new int[QuestionRangeCount];
             for (int i = 0; i < QuestionRangeCount; i++)
-            {
-                int randomNum;
-                do
-                    randomNum = new Random(Guid.NewGuid().GetHashCode()).Next(0, QuestionInfoModels.Count - 1);
-                while (questionRange.Contains(randomNum));
-                questionRange[i] = randomNum;
-            }
+                questionRange[i] = i;
+            questionRange = ShuffleArray(questionRange);
             _randomQuestionBank = questionRange.ToList();
         }
 
@@ -1481,6 +1476,28 @@ namespace QTraining.ViewModels
             }
             //切换前先保存当前题目的答案
             _answers[CurrentQuestionIndex] = answer;
+        }
+
+        /// <summary>
+        /// 数组元素洗牌
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        private int[] ShuffleArray(int[] array)
+        {
+            var r = new Random();
+
+            // 从最后一个元素开始，向前遍历整个数组
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                // 生成一个随机索引，范围是 [0, i]
+                int j = r.Next(0, i + 1);
+
+                // 将当前位置的元素与随机位置 j 处的元素交换
+                (array[j], array[i]) = (array[i], array[j]);
+            }
+
+            return array;
         }
         #endregion
 
