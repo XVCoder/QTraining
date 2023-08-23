@@ -1046,7 +1046,7 @@ namespace QTraining.ViewModels
         /// <param name="e"></param>
         public void PreviewTextInput(TextCompositionEventArgs e)
         {
-            Regex re = new Regex("[^0-9.-]+");  // new Regex("[^0-9.\\-]+");
+            var re = new Regex("[^0-9]+");  // new Regex("[^0-9.\\-]+");
             e.Handled = re.IsMatch(e.Text);
         }
 
@@ -1076,20 +1076,17 @@ namespace QTraining.ViewModels
             if (_isHistoryDisplaying)
                 return;
 
-            string trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
+            var trainingRecorderPath = $"{Environment.CurrentDirectory}\\training_recorder.txt";
             if (!File.Exists(trainingRecorderPath))
                 using (File.Create(trainingRecorderPath)) { }
             var history = "";
             using (FileStream fsRead = new FileStream(trainingRecorderPath, FileMode.Open, FileAccess.Read))
             {
-                byte[] buffer = new byte[fsRead.Length];
+                var buffer = new byte[fsRead.Length];
                 fsRead.Read(buffer, 0, buffer.Length);
                 history = Encoding.UTF8.GetString(buffer);
             }
-            _windowManager.ShowWindow(new HistoryViewModel(_eventAggregator)
-            {
-                History = history
-            });
+            _windowManager.ShowWindow(new HistoryViewModel(_eventAggregator) { History = history });
             _isHistoryDisplaying = true;
         }
 
@@ -1203,15 +1200,9 @@ namespace QTraining.ViewModels
         /// </summary>
         public void SaveNote(object o)
         {
-            var note = "";
-            if (o is TextBox editor)
-                note = editor.Text;  //按Enter键执行时EditingNote不会及时更新，需要从界面直接取值
-            else
-                note = EditingNote;
-            if (IsRadioOrderTrainingSelected)
-                QuestionInfoModels[CurrentQuestionIndex].Note = note.Replace(';', '；');
-            else
-                QuestionInfoModels[_randomQuestionBank[CurrentQuestionIndex]].Note = note.Replace(';', '；');
+            var note = o is TextBox editor ? editor.Text : EditingNote;
+            var currentIndex = IsRadioOrderTrainingSelected ? CurrentQuestionIndex : _randomQuestionBank[CurrentQuestionIndex];
+            QuestionInfoModels[currentIndex].Note = note.Replace(';', '；');
             NotifyOfPropertyChange(nameof(CurrentQuestion));
             IsNoteEditorVisible = false;
             IsNoteVisible = true;
@@ -1286,8 +1277,7 @@ namespace QTraining.ViewModels
         /// </summary>
         private void CountDownStart()
         {
-            countDownTimer = new DispatcherTimer();
-            countDownTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            countDownTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 1) };
             countDownTimer.Tick += Timer_Tick;
             _startTimeTicks = DateTime.Now.Ticks;
             countDownTimer.Start();
@@ -1302,17 +1292,15 @@ namespace QTraining.ViewModels
             CanPreQuestion = false;
             CanNextQuestion = true;
             _answers = new string[QuestionRangeCount];  //初始化用户回答的结果
-            if (CurrentQuestion.ResultCount < 4)
-            {
-                IsRadioDVisible = false;
-                if (CurrentQuestion.ResultCount < 3)
-                    IsRadioCVisible = false;
-            }
-            else
-            {
-                IsRadioCVisible = true;
-                IsRadioDVisible = true;
-            }
+
+            IsCheckBoxDVisible = false;
+            IsCheckBoxEVisible = false;
+            IsRadioCVisible = false;
+            IsRadioDVisible = false;
+            if (CurrentQuestion.ResultCount >= 3) IsRadioCVisible = true;
+            if (CurrentQuestion.ResultCount >= 4) IsCheckBoxDVisible = IsRadioDVisible = true;
+            if (CurrentQuestion.ResultCount >= 5) IsCheckBoxEVisible = true;
+
             IsMultiSelect = CurrentQuestion.RealResult.Length > 1;
             CountDown = $"{(_countSecond - _startTimeTicks) / 60}:{((_countSecond - _startTimeTicks) % 60).ToString().PadLeft(2, '0')}/{_countSecond / 60}:{(_countSecond % 60).ToString().PadLeft(2, '0')}";
         }
@@ -1334,11 +1322,9 @@ namespace QTraining.ViewModels
         /// </summary>
         private void GenerateOrderQuestionBank()
         {
-            int[] questionRange = new int[QuestionRangeCount];
+            var questionRange = new int[QuestionRangeCount];
             for (int i = 0; i < QuestionRangeCount; i++)
-            {
                 questionRange[i] = i;
-            }
             _randomQuestionBank = questionRange.ToList();
         }
 
